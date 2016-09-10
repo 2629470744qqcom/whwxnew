@@ -1,0 +1,252 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row"> <h3 class="page-header">订单管理</h3></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                	<label><a class="btn btn-primary export" >导出数据</a></label>
+                    <form action='{:U("GroupOrders/index")}' class="form-inline text-right fr m-b-5" >
+                产品名称：<input type="text" name='gname' value='{$Think.get.gname}' class="form-control mr20 w150" > 
+                支付方式：<select name='pay_type' class="form-control mr20 w150" >
+                              <option value='-1'>全部</option>
+                              <option value='0' <eq name='Think.get.pay_type' value='0'>selected</eq> >无支付 </option>
+                              <option value='1' <eq name='Think.get.pay_type' value='1'>selected</eq> >微信付款 </option>
+                              <option value='2' <eq name='Think.get.pay_type' value='2'>selected</eq> >货到付款 </option>
+                              <option value='3' <eq name='Think.get.pay_type' value='3'>selected</eq> >积分付款 </option>
+                        </select>
+                  状态：<select name='status' class="form-control mr20 w150" >
+                              <option value='-1'>全部</option>
+                              <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >未支付 </option>
+                              <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >已取消 </option>
+                              <option value='2' <eq name='Think.get.status' value='2'>selected</eq> >已支付 </option>
+                              <option value='3' <eq name='Think.get.status' value='3'>selected</eq> >已发货 </option>
+                              <option value='4' <eq name='Think.get.status' value='4'>selected</eq> >已收货 </option>
+                              <option value='5' <eq name='Think.get.status' value='5'>selected</eq> >已完成 </option>
+                              <option value='6' <eq name='Think.get.status' value='6'>selected</eq> >已删除 </option>
+                        </select>
+                        <button class="btn btn-primary" type="submit">搜索</button>
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="60">序号</th>
+                                    <th>订单号</th>
+                                    <th>下单时间</th>
+                                    <th>产品名称</th>
+                                    <th>小区</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>总价</th>
+                                    <th>支付方式</th>
+                                    <th>支付金额</th>
+                                    <th>支付时间</th>
+                                    <th width="75">状态</th>
+                                    <th width="200">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <volist name="list" id="list">
+                                    <tr class="odd gradeX">
+                                        <td>{$i}</td>
+                                        <td>{$list.id|sprintf='%08s',###}</td>
+                                        <td>{$list.single_time|date='Y-m-d H:i:s',###}</td>
+                                        <td>{$list.name}</td>
+                                        <td>{$list.area}</td>
+                                        <td>{$list.total}</td>
+                                        <td>{$list.prix}</td>
+                                        <td>{$list.order_amount}</td>
+                                        <td>
+                                            <switch name='list.pay_type'>
+                                                <case value='0'>未支付</case>
+                                                <case value='1'>微信付款</case>
+                                                <case value='2'>货到付款</case>
+                                                <case value='3'>积分付款</case>
+                                            </switch>
+                                        </td>
+                                        <td>{$list.pay_amount}</td>
+                                        <td><neq name='list.pay_type' value="0">{$list.pay_time|date='Y-m-d H:i:s',###}<else/>未支付</neq></td>
+                                        <td>
+                                            <switch name='list.status'>
+                                                <case value='0'>未支付</case>
+                                                <case value='1'>已取消</case>
+                                                <case value='2'>已支付</case>
+                                                <case value='3'>已发货</case>
+                                                <case value='4'>已收货</case>
+                                                <case value='5'>已完成</case>
+                                                <case value='6'>已删除</case>
+                                            </switch>
+                                        </td>
+                                        <td>
+                                            <button class="btn-sm btn btn-default look" data-id='{$list.id}' type="button">查看</button>
+                                            <egt name='list.status' value='2'><button class="btn-sm btn btn-default input" data-status='{$list.status}' type="button" data-id='{$list.id}'>发货</button></egt>
+                                             <gt name='list.status' value='2'><button class="btn-sm btn btn-default logistics" data-status='{$list.status}' type="button" data-id='{$list.id}'>物流</button></gt>
+                                        </td>
+                                    </tr>
+                                </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal fade in" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+      	        <form action="{:U('GroupOrders/input')}" id="myform1" class="form-horizontal">
+      	            <div class="modal-header">
+      	                <button data-dismiss="modal" class="close" type="button">×</button>
+      	                <h4 class="modal-title">录入/修改快递</h4>
+      	            </div>
+      	            <div class="modal-body">
+          	            <div class="form-group">
+            				        <label class="col-sm-3 control-label">快递公司：<span class="c-red">*</span></label>
+            				        <div class="col-sm-4">
+              				        	<select class="form-control" id="ems_name" name="ems_name">
+                				        		<option value="顺丰速递">顺丰速递</option>
+                				        		<option value="ems">EMS</option>
+                				        		<option value="申通快递">申通快递</option>
+                				        		<option value="圆通快递">圆通快递</option>
+                				        		<option value="中通快递">中通快递</option>
+                				        		<option value="韵达快递">韵达快递</option>
+                				        		<option value="百世汇通">百世汇通</option>
+                				        		<option value="宅急送">宅急送</option>
+                				        		<option value="天天快递">天天快递</option>
+                                    			<option value="商家配送">商家配送</option>
+              							</select>
+            				        </div>
+          				      </div>
+          				      <div class="form-group" id='ems_num'>
+            				        <label class="col-sm-3 control-label" id='em_num'>快递单号：<span class="c-red">*</span></label>
+                            <label class="col-sm-3 control-label" id='supplier_phone' style="display:none;">手机号：<span class="c-red">*</span></label>
+            				        <div class="col-sm-6">
+            				         	  <input class="form-control required digits" name="ems_num">
+            				        </div>
+          				      </div>
+      	            </div>
+      	            <div class="modal-footer">
+      	                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+      	                <input type="hidden" name="orderid" />
+      	                <button class="btn btn-primary ordersave" type="button">保存</button>
+      	            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="myModallook" class="modal fade in" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="html"></div>
+        </div>
+    </div>
+	<div id="myModallogistics" class="modal fade in" style="display: none;">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content" id="htmllogistics"></div>
+	    </div>
+	</div>
+	<div id="myModalExport" class="modal fade in" style="display: none;">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button data-dismiss="modal" class="close" type="button">×</button>
+	                <h4 class="modal-title">数据导出</h4>
+	            </div>
+	            <div class="modal-body">
+		            <form action="{:U('GroupOrders/export')}" id="myform" class="form-horizontal" data-callback="export_data">
+	                <div class="form-group">
+	                    <label class="col-sm-4 control-label">文件名：<span class="c-red">*</span></label>
+	                    <div class="col-sm-4">
+	                      <input class="form-control required" name="name" maxlength='10'>
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-4 control-label">产品名称：<span class="c-red">*</span></label>
+	                    <div class="col-sm-4">
+	                      <input type="text" name='gname' value='{$Think.get.gname}' class="form-control" > 
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-4 control-label">选择小区：<span class="c-red">*</span></label>
+	                    <div class="col-sm-4">
+	                      <select class="form-control" name="aid">
+	                        <option value="0">全部</option>
+	                        <volist name="areaList" id="areaList2">
+	                       		<option value='{$areaList2.id}'>{$areaList2.name}</option>
+	                        </volist>
+	                      </select>
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-4 control-label">选择时间：<span class="c-red">*</span></label>
+	                    <div class="col-sm-2"><input class="form-control datepicker required" placeholder="开始时间" name="start_time"></div>
+	                    <div class="col-sm-2"><input class="form-control datepicker required" placeholder="结束时间" name="end_time"></div>
+	                </div>
+	            </form>
+	            </div>
+	            <div class="modal-footer">
+	                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+	                <button class="btn btn-primary export_submit" type="button">导出</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+    <script type="text/javascript">
+    	$(function(){
+      		$('.input').click(function(){
+        		$('#myform')[0].reset();
+        		$('input[name="orderid"]').val($(this).data('id'));
+            	$("#ems_name").click(function(){
+	            	var $options=$('option:selected',this);
+	            	if($options.val()!='商家配送'){
+	                	$('#em_num').show();
+	                	$('#supplier_phone').hide();
+	            	}else if($options.val('商家配送')){
+	                	$('#em_num').hide();
+	                	$('#supplier_phone').show();
+	            	}
+              	});
+              	//alert($(this).data('status'));
+	       		if($(this).data('status') >= 3){
+	 				$.post('{:U("GroupOrders/input")}', {act : 1, id : $(this).data('id')}, function(data){
+						$('input[name="ems_num"]').val(data.ems_num);
+						$('#ems_name').val(data.ems_name);
+	         		});
+	       		}
+	        	$('#myModal').modal('show');
+      		});
+          $(".look").click(function(){
+              waiting();
+              $.get('{:U("GroupOrders/detail")}', {id : $(this).data('id')}, function(data){
+                  complete();$('#html').html(data);
+              });
+              $('#myModallook').modal('show');
+          });
+          $(".logistics").click(function(){
+              waiting();
+              $.get('{:U("GroupOrders/logistics")}', {id : $(this).data('id')}, function(data){
+                  complete();$('#htmllogistics').html(data);
+              });
+              $('#myModallogistics').modal('show');
+          });
+          $('.ordersave').click(function(){
+        	  waiting();
+        	  $.post("{:U('GroupOrders/input')}", $('#myform1').serialize(), function(data){
+        		  complete();showInfo(data.info);
+        		 $('#myModal').modal('hide');
+        	  });
+          });
+          //导出数据，时间选择插件
+          $('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+          //导出数据，选择小区和时间等
+          $('.export').click(function(){$('#myModalExport').modal('show');});
+          //导出数据，提交表单
+          $('.export_submit').click(function(){$('#myModalExport #myform').submit();});
+    	});
+    	//导出回调函数
+        function export_data(data){
+          $('#myModalExport').modal('hide');
+          location.href = data.url;
+        }
+    </script>

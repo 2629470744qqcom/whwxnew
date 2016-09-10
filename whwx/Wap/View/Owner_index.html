@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="notice pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		亲友/租客<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a><i class="i_edit">编辑</i>
+	</div>
+    <div class="main all">
+    	<volist name='list' id='list'>
+	    	<div class="list clearfix list{$list.id}">
+	            <div class="cont">
+	                <ul class="clearfix">
+	                    <li class="text">
+	                        <div class="owner_header_title">
+	                        	<!-- <span class="owner_header_img"></span> -->
+	                        	<eq name="list.pic" value=""><img style="height:100%;" src="{:IMG}public_heads.png"><else/><img src="{$list.pic}?imageView2/1/h/100/w/100" style="height:100%;" /></eq>
+	                        </div>
+	                        <a href="{:U('Owner/cont?id='.$list['id'])}" style="float:left;width:68%;">
+		                        <p style="overflow:inherit;width:100%;">
+			                        <span class="name">{$list.name}</span><br/>
+			                        <span class="date" style="text-align:left;width:100%;">{$list.phone}</span>
+		                        </p>
+	                        </a>
+	                    </li>
+	                    <switch name='list.status'>
+                       		<case value='0'><span class="status_owner_title status_red">未通过</span></case>
+                       		<case value='1'><span class="status_owner_title status_green" >已通过</span></case>
+                       		<default><span class='red'>审核不通过/已删除</span></default>
+                       	</switch>
+	                </ul>
+	            </div>
+	            <div class="ck">
+		            <span class="ckbox">
+			            <input type="checkbox" name="del" id="ckbox{$list.id}" value='{$list.id}' />
+			            <label for="ckbox{$list.id}"></label>
+		            </span>
+	            </div>
+	        </div>
+        </volist>
+    </div>
+    <div class="btn">
+    	<ul>
+        	<li class="del">删除</li>
+            <li class="ckAll">全选</li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+$(function(){
+	//编辑&完成
+	$('.top i').click(function(){
+		var html = $(this).html();
+		if(html=='编辑'){
+			$(this).html('完成');
+			$('.main ').removeClass('all');
+			$('.main ').addClass('edit');
+			$('ck').show();
+			$('.btn').show();
+		}else if(html=='完成'){
+			$(this).html('编辑');
+			$('.main ').removeClass('edit');
+			$('.main ').addClass('all');
+			$('ck').hide();
+			$('.btn').hide();
+		}
+	});
+	//全选
+	$('.ckAll').click(function(){
+		if($(this).hasClass('on')){
+			$(this).removeClass('on');
+			$('.ckbox').find('input').attr('checked',false);
+		}else{
+			$(this).addClass('on')
+			$('.ckbox').find('input').attr('checked',true);
+		}
+	});
+	$('.del').click(function(){
+		var str = 0;
+		$("input[name='del']:checkbox").each(function(){ 
+            if($(this).attr("checked")){
+                str += ',' + $(this).val();
+            }
+        });
+		waiting();
+		$.post('{:U("Owner/del")}', {ids : str}, function(data){
+			complete();
+			showInfo(data.info);
+			if(data.status == 1){
+				var strs = new Array();
+				strs = str.split(",");
+				for(var i = 0; i < strs.length; i++){ 
+					$('.list'+strs[i]).remove();
+				}
+			}
+		});
+	});
+});
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+  })
+</script> 
+</body>
+</html>

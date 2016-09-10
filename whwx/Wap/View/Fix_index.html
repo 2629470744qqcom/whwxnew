@@ -1,0 +1,37 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160308" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66 fl"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        在线报修
+        <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="title">业主报修</div>
+    <div class="box clearfix">
+        <a href="{:U('Fix/preson')}"><i class="icon1"></i>私人区域</a>
+        <a href="{:U('Fix/other')}"><i class="icon2"></i>公共区域</a>
+        <a href="{:U('Fix/mine')}"><i class="icon3"></i>我的报修</a>
+        <a href="{:U('Fix/other?type=2')}"><i class="icon4"></i>其他报修</a>
+    </div>
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

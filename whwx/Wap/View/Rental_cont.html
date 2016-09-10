@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>{:C('site_name')}</title>
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+</head>
+<body>
+<div class="rental pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        租售服务<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div id="banner_box" class="box_swipe">
+        <ul>
+            <volist name='info.pics' id='pic'> 
+                <li>
+                    <a href="javascript:void(0);">
+                        <img src="{$pic}?imageView2/1/h/352/w/618" style="width:100%;">
+                    </a>
+                </li>
+            </volist>
+        </ul>
+        <ol>
+            <volist name='info.pics' id='pic'>
+                <li class="on"></li>
+            </volist>
+        </ol>
+    </div>
+    <div class="rental_name">{$info.title}</div>
+    <div class="fix">
+        <div class="mine_cont fl">
+            <ul>
+                <li><label>价格：</label><p class="pcont"><span class="red"> ¥{$info.price} </span> 元/月</p></li>
+                <li id="car_line" style="display:none;"><label>车位:</label><p class="pcont"><eq name='info.type' value='3'>出租车位<else/>出售车位</eq></p></li>
+                <li id="room_line" style="display:none;"><label>房屋：</label><!-- 2 --><p class="pcont">{$info.room}室 {$info.hall}厅 {$info.toilet}卫  - {$info.size} m²  - {$info.floor_several}/{$info.floor_all}层</p></li>
+                <li><label>小区：</label><p class="pcont">{$info.area}</p></li>
+                <li><label>地址：</label><p class="pcont">{$info.address}</p></li>
+                <li><label>描述详情：</label><p class="pcont">{$info.desc}</p></li>
+            </ul>
+        </div>
+        <neq name="info.oid" value="$_SESSION['fansInfo']['oid']">
+            <div class="btn">
+                <a href="{:U('Rental/want?id='.$info['id'])}" class="post" style="float: left;margin-left: 2%;">我有意向</a>
+                <a href="tel:{$info.phone}" class="orange" style="float: left;margin-left: 2%;margin-bottom:60px">联系我们</a>
+            </div>
+        </neq>
+    </div>
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}swipe.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+    //幻灯片
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+    var obj={$info.type};
+    if(obj==3 || obj==4){
+        $('#room_line').hide();
+        $('#car_line').show();
+    }else{
+        $('#car_line').hide();
+        $('#room_line').show();
+    }
+});
+    // 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+    $("#banner_box ul").find('img').css("height",$(this).width()*0.57);
+</script>
+</body>
+</html>

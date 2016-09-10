@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>{:C('site_name')}</title>
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+</head>
+<body>
+<div class="rental pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a> 
+        租售服务<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+        <a href="#" class="i_edit">发布</a>
+    </div>
+    <div class="title">
+    	<ul class="clearfix">
+        	<li data-id='0' class="on"><a>出租</a></li>
+            <li data-id='1'><a href="{:U('Rental/sell_index')}">出售</a></li>
+            <li data-id='2' class="tit_filter"><a>筛选</a></li>
+        </ul>
+    </div>
+    <!--出租-->
+    <div class="rental_index clearfix">
+        <volist name='list' id='list' >
+            <ul>
+                <a href="{:U('Rental/cont?id='.$list['id'])}">
+                    <img src="{$list.pics.0|default='/Public/Wap/images/public_heads.png'}?imageView2/1/h/360/w/360"/>
+                    <li class="tit">{$list.title}</li>
+                    <li class="address">{$list.area}</li>
+                    <li class="price"><span class="red">{$list.price}</span> 元/月 </li>
+                </a>
+            </ul>
+        </volist>
+    </div>
+    {$page}
+    <!--筛选-->
+    <div class="mask" style="display:none"></div>
+	<div class="filter" style="display:none">
+        <form action="{:U('Rental/index')}" method='get'>
+        	<ul>
+                <li>
+                    <p class="name">选择租售</p>
+                    <p class="rate">
+                        <span class="rdio" id="rated1">
+                            <input type="radio" name="type_rate"  value='1'  checked id="rate1" />
+                            <label for="rate1">出租</label>
+                        </span>
+                        <span class="rdio" id="rated2">
+                            <input type="radio" name="type_rate" value='2' id="rate2" />
+                            <label for="rate2">出售</label>
+                        </span>
+                    </p>
+                </li>
+                 <li id="type_lease">
+                    <p class="name">出租类型</p>
+                    <p class="rate">
+                        <span class="rdio" id="rated1">
+                            <input type="radio" name="type"  value='1'  checked id="rate11" />
+                            <label for="rate11">整套</label>
+                        </span>
+
+                         <span class="rdio" id="rated3">
+                            <input type="radio" name="type" value='5' id="rate55" />
+                            <label for="rate55">单间</label>
+                        </span>
+                        <span class="rdio" id="rated2">
+                            <input type="radio" name="type" value='3' id="rate33" />
+                            <label for="rate33">车位</label>
+                        </span>
+                    </p>
+                </li>
+                <li style="display:none;" id="type_sell">
+                    <p class="name">出售类型</p>
+                    <p class="rate">
+                        <span class="rdio" id="rated1">
+                            <input type="radio" name="type"  value='2'  checked id="rate22" />
+                            <label for="rate22">房屋</label>
+                        </span>
+                       <span class="rdio" id="rated2">
+                            <input type="radio" name="type" value='4' id="rate44" />
+                            <label for="rate44">车位</label>
+                        </span>
+                    </p>
+                </li>
+                <li>
+                    <p class="name">小区选择</p>
+                    <p class="rate">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <select class="form-control" id="aid" name="area" style="width:150px">
+                                    <option value="0" >选择租售所在地</option>
+                                    <volist name='areaList' id='area'>
+                                        <option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+                                    </volist>
+                                </select>           
+                            </div>
+                        </div>
+                    </p>
+                </li>
+                <li class="btn">
+                    <button type="sumbit" class="green order" data-id='1'>价格升序</button>
+                    <button type="sumbit" class="orange order" data-id='2'>价格降序</button>
+                    <input type='hidden' name='sort'>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+<!--版权-->
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+	/*筛选*/
+	$('.tit_filter').click(function(){
+        $('.mask').show();
+        $('.filter').show();
+        $('.clearfix li').removeClass('on');
+        $(this).attr('class','on');
+    })
+	$('.mask').click(function(){
+        $('.mask').hide();
+        $('.filter').hide();
+    })
+    $('.order').click(function(){
+        $('input[name="sort"]').val($(this).data('id'));
+    });
+    $('input[name="type_rate"]').change(function(){
+        var  obj=$(this).val();
+        if(obj==1){
+            $("#type_lease").show();
+            $("#type_sell").hide();
+            $('form').attr('action',"{:U('Rental/index')}"); 
+        }else{
+            $("#type_lease").hide();
+            $("#type_sell").show();
+            $('form').attr('action',"{:U('Rental/sell_index')}"); 
+        }
+    });
+});
+$(function(){
+    $(".i_edit").click(function(){
+        // var type = '{$Think.session.fansInfo.type}';
+        var type='{$Think.session.fansInfo.type}';
+        if(type != 1){
+            showInfo('你没有权限，请注册', 2, function(){
+                $(this).attr("href",'#');
+                location.href = '{:U("Public/index")}';
+            })
+        }else{
+            $(this).attr("href","{:U('Rental/lease')}");
+        }
+    })
+})
+  // 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

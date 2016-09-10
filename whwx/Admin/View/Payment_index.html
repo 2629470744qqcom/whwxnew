@@ -1,0 +1,275 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row"><h3 class="page-header">缴费管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <label><a class="btn btn-primary export">数据导出</a></label>
+                <form action='{:U("Payment/index")}' class="form-inline text-right fr m-b-5"> 
+                 <div class="form-group">
+                    <select class="form-control" id="aid" name="aid" data-bid="#bid">
+                        <option value="0" >请选择小区</option>
+                        <volist name='areaList' id='area'>
+                            <option value='{$area.id}' <eq name='Think.get.aid' value='$area["id"]'>selected</eq>>{$area.name}</option>
+                        </volist>
+                    </select>           
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="bid" name="bid">
+                        <option value="0" >请选择账单</option>
+                        <volist name="bill_list" id="bill_list">
+                            <option value="{$bill_list.id}" <eq name="Think.get.bid" value="$bill_list['id']">selected</eq>>{$bill_list.name}</option>
+                        </volist>
+                    </select>           
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="pay_cate">
+                        <option value="">请选择费用类别</option>
+                        <option value="porperty" <eq name="Think.get.pay_cate" value="porperty">selected</eq>>物业费</option>
+                        <option value="energy" <eq name="Think.get.pay_cate" value="energy">selected</eq>>能耗费</option>
+                        <option value="water" <eq name="Think.get.pay_cate" value="water">selected</eq>>二次供水费</option>
+                        <option value="carport" <eq name="Think.get.pay_cate" value="carport">selected</eq>>车位费</option>
+                        <option value="arrear_money" <eq name="Think.get.pay_cate" value="arrear_money">selected</eq>>历年欠费</option>
+                        <option value="car_manger" <eq name="Think.get.pay_cate" value="car_manger">selected</eq>>车位管理费</option>
+                    </select>           
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="pay_type">
+                        <option value="0">缴费方式</option>
+                        <option value="1" <eq name="Think.get.pay_type" value="1">selected</eq>>微信支付</option>
+                        <option value="2" <eq name="Think.get.pay_type" value="2">selected</eq>>线下缴费</option>
+                        <option value="3" <eq name="Think.get.pay_type" value="3">selected</eq>>积分兑换</option>
+                    </select>           
+                </div>
+                缴费时间：<input type="text" name='start_time' value='{$Think.get.start_time}' placeholder="开始时间" class="form-control mr20 w100 datepicker" >
+                <input type="text" name='end_time' value='{$Think.get.end_time}' placeholder="结束时间" class="form-control mr20 w100 datepicker" >
+    			房间号：<input type="text" name='addr' value='{$Think.get.addr}' class="form-control mr20 w100" >
+                <button class="btn btn-primary" type="submit">搜索</button>
+                </form> 
+                <div class="table-responsive">
+                    <lt name="Think.get.p" value="2">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>物业费收款</th>
+                                    <th>能耗费收款</th>
+                                    <th>二次供水费收款</th>
+                                    <th>车位费收款</th>
+                                    <th>车位管理费收款</th>
+                                    <th>历年欠费收款</th>
+                                    <th>合计收款</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{$totalData.porperty|number_format} 元</td>
+                                    <td>{$totalData.energy|number_format} 元</td>
+                                    <td>{$totalData.water|number_format} 元</td>
+                                    <td>{$totalData.carport|number_format} 元</td>
+                                    <td>{$totalData.car_manger|number_format} 元</td>
+                                    <td>{$totalData.arrear_money|number_format} 元</td>
+                                    <td>{$totalData.total|number_format} 元</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </lt>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>所在小区</th>
+                                <th>房号</th>
+                                <th>缴费姓名</th>
+                                <th>手机号码</th>
+                                <th>账单名</th>
+                                <th>订单金额</th>
+                                <th>实际缴费</th>
+                                <th>缴费时间</th>
+                                <th>兑换积分</th>
+                                <th>兑换金额</th>
+                                <th>支付方式</th>
+                                <th>费用类别</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.area}</td>
+                                    <td>{$list.room}室</td>
+                                    <td>{$list.owner.name|default='后台缴费'}</td>
+                                    <td>{$list.owner.phone|default='后台缴费'}</td>
+                                    <td>{$list.bill}</td>
+                                    <td>{$list.money}元</td>
+                                    <td>{$list.real_money|default='0'}元</td>
+                                    <td>{$list.pay_time|date='Y-m-d H:i', ###}</td> 
+                                    <td>{$list.point}</td>
+                                    <td>{$list.change_money|default='0'}元</td>
+                                    <td>
+                                        <switch name='list.pay_type'>
+                                            <case value='1'>微信支付</case>
+                                            <case value='3'>积分兑换</case>
+                                            <default />线下支付
+                                        </switch>
+                                    </td>
+                                    <td>
+                                        <switch name='list.pay_cate'>
+                                            <case value='porperty'>物业费</case>
+                                            <case value='energy'>能耗费</case>
+                                            <case value='water'>二次供水费</case>
+                                            <case value='carport'>车位费</case>
+                                            <case value='car_manger'>车位管理费</case>
+                                            <case value='arrear_money'>历年欠费</case>
+                                            <default />未知
+                                        </switch>
+                                    </td>
+                                    <td>{$list.remark}</td>
+                                    <td>
+                                        <button data-id="{$list.id}" id="payment{$list.id}" class="btn-sm btn btn-default editRemark">备注</button>
+                                        <eq name="list.pay_type" value="2"><button data-url='{:U("Payment/delOffline?id=" . $list["id"])}' class="btn-sm btn btn-default delBtn" type="button" >删除</button></eq>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">数据导出</h4>
+            </div>
+            <div class="modal-body">
+              <form action="{:U('Payment/export')}" role="form" id="myform" class="form-horizontal" data-callback="export_data">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">文件名：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                      <input class="form-control required" name="name" maxlength='10'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">选择小区：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                      <select class="form-control" name="aid" id ="aid2" data-bid="#bid2">
+                        <option value="0">全部</option>
+                        <volist name="areaList" id="areaList2">
+                        <option value='{$areaList2.id}'>{$areaList2.name}</option>
+                        </volist>
+                      </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">选择账单：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                      <select class="form-control" name="bid" id="bid2">
+                        <option value="-1">请选择小区</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">费用类别：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="pay_cate">
+                            <option value="">请选择费用类别</option>
+                            <option value="porperty">物业费</option>
+                            <option value="energy">能耗费</option>
+                            <option value="water">二次供水费</option>
+                            <option value="carport">车位费</option>
+                            <option value="arrear_money">历年欠费</option>
+                            <option value="car_manger">车位管理费</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">缴费方式：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="pay_type">
+                            <option value="0">请选择缴费方式</option>
+                            <option value="1">微信支付</option>
+                            <option value="2">线下缴费</option>
+                            <option value="3">积分兑换</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">选择时间：<span class="c-red">*</span></label>
+                    <div class="col-sm-2"><input class="form-control datepicker required" placeholder="开始时间" name="start_time"></div>
+                    <div class="col-sm-2"><input class="form-control datepicker required" placeholder="结束时间" name="end_time"></div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+                <button class="btn btn-primary export_submit" type="button">导出</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal2" class="modal fade in" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">备注信息</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary saveRemark" type="button">保存</button>
+                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script type="text/javascript">
+//获取小区账单
+$('#aid,#aid2').change(function(){
+    waiting(); var obj = $(this);
+    $.get('{:U("Payment/getBillList")}', {aid: obj.val()}, function(data){
+        complete(); var html = '<option value="0" >请选择账单</option>';
+        $.each(data, function(i, v){
+            html += '<option value="' + v.id + '" >' + v.name + '</option>';
+        });
+        $(obj.data('bid')).html(html);
+    });
+});
+//导出数据，时间选择插件
+$('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+//导出数据，选择小区和时间等
+$('.export').click(function(){$('#myModal').modal('show');});
+//导出数据，提交表单
+$('.export_submit').click(function(){$('#myform').submit();});
+//导出回调函数
+function export_data(data){
+    $('#myModal3').modal('hide');
+    location.href = data.url;
+}
+//修改备注
+var payment_id = 0;
+$('.editRemark').click(function(){
+    $('#myModal2').modal('show');
+    $('#myModal2 textarea').val($(this).parent().prev().html());
+    payment_id = $(this).data('id');
+});
+//保存备注信息
+$('.saveRemark').click(function(){
+    waiting(); var remark = $('#myModal2 textarea').val();
+    $.post('{:U("Payment/editRemark")}', {id: payment_id, remark: remark}, function(data){
+        complete(); showInfo(data.info);
+        if(data.status == 1){
+            $('#payment' + payment_id).parent().prev().html(remark);
+            $('#myModal2').modal('hide');
+        }
+    });
+});
+</script>

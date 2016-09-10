@@ -1,0 +1,25 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">账单详情</h4>
+</div>
+<div class="modal-body" id="html">
+	<div>
+		<h3>
+			<p><label class='col-sm-3 control-label'>房号：</label>{$info.addr|default='0'}<br /></p>
+			<p><label class='col-sm-3 control-label'>面积：</label>{$info.size|default='0'}平方米<br /></p>
+			<p><label class='col-sm-3 control-label'>物业费：</label>应收：{$info.porperty|default='0'}元，实收：{$info.porperty_pay|default='0'}元<br/></p>
+			<p><label class='col-sm-3 control-label'>能耗费：</label>应收：{$info.energy|default='0'}元，实收：{$info.energy_pay|default='0'}元<br/></p>
+			<p><label class='col-sm-3 control-label'>二次供水费：</label>应收：{$info.water|default='0'}元，实收：{$info.water_pay|default='0'}元<br/></p>
+			<p><label class='col-sm-3 control-label'>车位费：</label>应收：{$info.carport|default='0'}元，实收：{$info.carport_pay|default='0'}元<br/></p>
+			<p><label class='col-sm-3 control-label'>车位管理费：</label>应收：{$info.car_manger|default='0'}元，实收：{$info.car_manger_pay|default='0'}元<br/></p>
+			<p><label class='col-sm-3 control-label'>历年欠费：</label>{$info.arrear_money|default='0'}元
+			<notempty name="info.arrear_money_note">（{$info.arrear_money_note}）</notempty>
+			<br/>
+			<p><label class='col-sm-3 control-label'>合计：</label>{$info.total_money}元</p>
+		</h3>
+	</div>
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+</div>

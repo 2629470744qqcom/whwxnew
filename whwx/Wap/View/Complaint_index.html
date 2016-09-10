@@ -1,0 +1,50 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix"><a href="javascript:history.go(-1);" class="return"></a>我的投诉/建议<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a></div>
+    <div class="mine">
+    	<volist name='list' id='list'>
+	    	<div class="list">
+	            <div class="cont">
+	                <ul class="clearfix">
+	                    <li><i class="icon"></i></li>
+	                    <li class="text">
+	                        <p><span class="name">{$list.desc}</span><span class="date">{$list.times|date='Y-m-d', ###}</span></p>
+	                        <p><span class="date fr">
+	              				<switch name='list.status'>
+	              					<case value='0'>未处理</case>
+	              					<case value='1'>已处理</case>
+	              					<case value='2'>已完成</case>
+	              				</switch>
+	                        </span></p>
+	                    </li>
+	                </ul>
+	            </div>
+	        	<div class="more"><a href="{:U('Complaint/detail?id='.$list['id'])}">查看详情</a></div>
+	        </div>
+        </volist>
+        {$page}
+    </div>
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	// 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

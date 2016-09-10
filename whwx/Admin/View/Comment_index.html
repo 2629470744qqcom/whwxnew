@@ -1,0 +1,115 @@
+<div class="row"><h3 class="page-header">评论管理</h3></div>
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-body"> 
+        
+            <form action='{:U("Comment/index")}' class="form-inline text-right fr m-b-5"> 
+        	负责人身份：	<select name='cate' id='cate' class="form-control mr20 cate" style="width: 150px;">
+        					<option value='0' <lt name='Think.get.cate' value='1'>selected</lt>>请选择身份</option>
+                     		<option value='1' <eq name='Think.get.cate' value='1'>selected</eq>>维修员</option>
+                      		<option value='2' <eq name='Think.get.cate' value='2'>selected</eq>>客服</option>
+                    	</select>
+            负责人：	<select name='cate_id' id='cate_id' class="form-control mr20 cate_id" style="width: 150px;">
+        					<option value='0' <lt name='Think.get.cate' value='1'>selected</lt>>请选择身份</option>
+                    	</select>
+		所在小区：<select name='aid' class="form-control mr20" style="width: 150px;">
+	                 <option value='0'>全部</option>
+	                 <volist name="areaList" id="areaList1">
+	                 	<option value='{$areaList1.id}' <eq name='Think.get.aid' value='$areaList1["id"]'>selected</eq> >{$areaList1.name}</option>
+	                 </volist>
+                 </select>
+                <button class="btn btn-primary" type="submit">搜索</button>
+            </form> 
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="60">序号</th>
+                            <th>业主</th>
+                            <th>联系方式</th>
+                            <th>负责人</th>
+                            <th>评分</th>
+                            <th>评论时间</th>
+                            <th>评论内容</th>
+                            <th width="130">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <volist name="list" id="list">
+                            <tr>
+                                <td>{$i}</td>
+                                <td>{$list.owner}<eq name='list.type' value='5'>（客服）</eq></td>
+                                <td>{$list.phone}</td>
+                                <td>{$list.catename}</td>
+                                <td>{$list.score}</td>
+                                <td>{$list.times|date='Y-m-d H:i', ###}</td> 
+                                <td>{$list.desc}</td>
+                                <td>
+                                    <button class="btn-sm btn btn-default look" data-id='{$list.id}'  data-rid='{$list.rid}' type="button">查看</button>
+                                </td>
+                            </tr>
+                        </volist>
+                    </tbody>
+                </table>
+            </div>
+            {$page}
+        </div>
+    </div>
+</div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="html"></div>
+    </div>
+</div>
+<script type="text/javascript">
+	var type = parseInt("{$_GET['type']}");
+	$('.look').click(function(){
+  		type = type > 0 ? type : 1;
+  		if(type == 1 || type == 2){
+    			waiting();
+    			$.get('{:U("Repair/detail")}', {id : $(this).data('rid')}, function(data){
+    				  complete();$('#html').html(data);
+  			});
+  		}
+  		$('#myModal').modal('show');
+	});
+	//根据身份获取负责人
+	function getCateName(cate, cate_id){
+		var html = '';
+		if(cate > 0){
+	          waiting();
+	          $.get('{:U("Repair/getCateName")}', {cate : cate}, function(data){
+	              complete();var list = data.list;
+	              if(data.status != 1){
+	            	  showInfo(data.info);
+	              }
+	              if(list){
+	                  html += '<option value="0" >请选择负责人</option>';
+	                  for(var i = 0; i< list.length; i++){
+	                  	if(list[i]['id'] == cate_id){
+		                      	html += '<option value="'+list[i]['id']+'" selected >'+list[i]['name']+'</option>';
+	                  	}else{
+	                  		html += '<option value="'+list[i]['id']+'" >'+list[i]['name']+'</option>';
+	                  	}
+	            	}
+              	}else{
+                 	 html = '<option value="0" >没有获取到负责人</option>';
+              	}
+              	$('.cate_id').html(html);
+          	});
+      	}else{
+    	  	html = '<option value="0" >请选择身份</option>';
+    	  	$('.cate_id').html(html);
+      	}
+	}
+	//根据身份获取维修工/客服
+	$('.cate').change(function(){
+        var cate = $(this).val();
+        getCateName(cate, 0);
+    });
+	var cate = "{$_GET['cate']}", cate_id = "{$_GET['cate_id']}";
+	getCateName(cate, cate_id);
+</script>
+    

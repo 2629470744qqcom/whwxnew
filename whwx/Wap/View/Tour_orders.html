@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+</head>
+<body>
+<div class="m_height"> 
+    <!-- TOP -->
+    <div class="top clearfix">
+        <a href="javascript:history.go(-1)" class="return"></a> 订单列表
+        <a href="{:U('Wap/Index/index')}"><span class="icon_home_index fr" style="margin:0;"></span></a>
+    </div>
+    <div class="tab">
+        <a href="{:U('Tour/orders', array('type' => 1))}"><div class="tab_item <neq name='Think.get.type' value='2'>on</neq>">我的订单</div></a>
+        <a href="{:U('Tour/orders', array('type' => 2))}"><div class="tab_item <eq name='Think.get.type' value='2'>on</eq>">个人定制</div></a>
+    </div>
+    <eq name='Think.get.type' value='2'>
+        <volist name='list' id='list'>
+            <div class="detail">
+                <ul class="clearfix upper">
+                    <p>{$list.times|date="Y-m-d", ###}</p>
+                </ul>
+                <ul class="clearfix midden">
+                    <li class="text" style="width:100%;">
+                        <p><b>线路详情：</b>{$list.date}日出发，{$list.origin}到{$list.target}{$list.day}日游，共{$list.people}人，{$list.money}元/人</p>
+                        <p><b>其他要求：</b>{$list.desc|default='无'}</p> 
+                    </li>
+                </ul>
+                <ul class="below"> <li class="clearfix"> <a class="btn_green" data-id='{$list.id}'> 取消订单 </a> <li> </ul>
+            </div>
+        </volist>
+        <script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+        <script type="text/javascript" src="{:JS}common.min.js"></script>
+        <script type="text/javascript">
+        $('.btn_green').click(function(){
+            waiting(); var obj =  $(this);
+            $.get('{:U("Tour/ajax")}', {type: 3, id: obj.data('id')}, function(data){
+                complete();
+                showInfo(data.info, 1, function(){
+                    if(data.status == 1){
+                        obj.parents('.detail').remove();
+                    }
+                });
+            });
+        });
+        </script>
+    <else/>
+        <volist name="list" id="list">
+            <div class="detail">
+                <ul class="clearfix upper">
+                    <p>{$list.times|date="Y-m-d", ###}</p>
+                    <p class="price">合计:<span class="red">￥{$list.money}</span></p>
+                </ul>
+                <ul class="clearfix midden">
+                    <a href="{:U('Tour/ordersInfo', array('orders_id' => $list['id']))}">
+                        <li class="pic"> <img src="{$list.pics}?imageView2/0/w/200" /> </li>
+                        <li class="text"> <p class="name">{$list.pname}</p> <p> <span class="red f16">￥{$list.pprice}</span> <span class="num">×{$list.pnum}</p> </li>
+                    </a>
+                </ul>
+                <eq name="list.status" value="1"><ul class="below"> <li class="clearfix"> <a href="{:U('Tour/ordersInfo', array('orders_id' => $list['id']))}" class="btn_green"> 去支付 </a> <li> </ul></eq>
+                <eq name="list.status" value="2"><ul class="below"> <li class="clearfix"> <a class="btn_green" style="background:red;"> 等待发团 </a> <li> </ul></eq>
+                <eq name="list.status" value="3"><ul class="below"> <li class="clearfix"> <a href="{:U('Tour/ordersInfo', array('orders_id' => $list['id']))}" class="btn_green"> 去评价 </a> <li> </ul></eq>
+                <eq name="list.status" value="4"><ul class="below"> <li class="clearfix"> <a class="btn_green" style="background:#bbb;"> 已完成 </a> <li> </ul></eq>
+                <eq name="list.status" value="5"><ul class="below"> <li class="clearfix"> <a class="btn_green" style="background:#bbb;"> 已取消 </a> <li> </ul></eq>
+                <eq name="list.status" value="6"><ul class="below"> <li class="clearfix"> <a class="btn_green" style="background:#bbb;"> 已完成 </a> <li> </ul></eq>
+            </div>
+        </volist>
+    </eq>
+</div>
+</body>
+</html>

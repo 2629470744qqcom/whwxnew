@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css">
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="rental"> 
+    <div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        发布信息<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+    </div>
+    <div class="title">
+        <ul class="clearfix">
+            <li data-id='0' class="on"><a href="{:U('Rental/lease')}">发布出租</a></li>
+            <li data-id='1'><a href="{:U('Rental/sell')}">发布出售</a></li>
+            <li data-id='2'><a href="{:U('Rental/mine')}">我的</a></li>
+        </ul>
+    </div>
+    <!--出租-->
+    <div class="main">
+        <div class="box">
+            <ul>         
+                <li>
+                    <p class="name">出租方式</p>
+                    <p class="rate" name='type'>
+                        <span class="rdio" id="rated1">
+                            <input type="radio" name="type" value="1" checked id="rate1" />
+                            <label for="rate1">整套</label>
+                        </span>
+                        <span class="rdio" id="rated2">
+                            <input type="radio" name="type" value="5" <eq name='info.type' value='5'>checked</eq> id="rate2" />
+                            <label for="rate2">单间</label>
+                        </span>
+                        <span class="rdio" id="rated3">
+                            <input type="radio" name="type" value="3" <eq name='info.type' value='3'>checked</eq> id="rate3" />
+                            <label for="rate3">车位</label>
+                        </span>
+                    </p>
+                </li>
+                <li class="rate_box">
+                    <if condition='($Think.get.id lt 1) or ($info.type eq 1)'> <ul class="all"><else /><ul class="all" style="display:none"></if>
+                        <form id="form1" method="post" action="{:U('Rental/sell?type=1')}">
+                            <li>
+                                <p class="name">标题</p> 
+                                <p><input type="text"  data-text='标题'  name="title" value="{$info.title}" placeholder="请填写标题"/></p>
+                            </li>
+                            <li>
+                                <p class="name">小区名称</p> 
+                                <p>
+                                    <div class="form-group">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" id="aid" name="aid" style="width:150px">
+                                                <option value="0" >请选择小区</option>
+                                                <volist name='areaList' id='area'>
+                                                    <option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+                                                </volist>
+                                            </select>           
+                                        </div>
+                                    </div>
+                                </p>
+                            </li>
+                            <li>
+                                <p class="name">房号</p> 
+                                <p><input type="text" name="house" data-text='房号'value="{$info.house}" placeholder="请填写房号"/> </p>
+                            </li>
+                            <li>
+                                <p class="name">房屋户型</p> 
+                                <p class="house">
+                                    <input type="text" data-text='室' id="input_id"  name="room" value="{$info.room}" /><em>室</em>
+                                    <input type="text" data-text='厅' id="input_id" name="hall" value="{$info.hall}"/><em>厅</em>
+                                    <input type="text" data-text='卫' id="input_id" name="toilet" value="{$info.toilet}"/><em>卫</em>
+                                </p>
+                            </li>
+                            <li>
+                                <p class="name">面积(m2)</p> 
+                                <p><input type="text" data-text='面积' id="input_id" name="size" value="{$info.size}" placeholder="请填写面积"/></p>
+                            </li>
+                            <li>
+                                <p class="name">楼层</p> 
+                                <p class="house">
+                                    <em>第</em><input data-text='楼层' id="input_id" type="text" name="floor_several" value="{$info.floor_several}"/><em>层</em> 
+                                    <em>共</em><input data-text='楼层' id="input_id" type="text" name="floor_all" value="{$info.floor_all}"/><em>层</em> 
+                                </p>
+                            </li>
+                            <li>
+                                <p class="name">租金(元/月)</p> 
+                                <p><input type="text" data-text='租金' id="input_id" name="price" value="{$info.price}" placeholder="请填写租金"/></p>
+                            </li>
+                            <li>
+                                <p class="name">房源描述</p> 
+                                <p><textarea placeholder="请填写房源描述，对租客的要求，周边交通及生活配套" name="desc" value='{$info.desc}'>{$info.desc}</textarea></p>
+                            </li>
+                            <li>
+                                <p class="name">详细地址</p> 
+                                <p><textarea name="address" value='{$info.address}' placeholder="请填写详细地址">{$info.address}</textarea></p>
+                            </li>
+                            <gt name='info.id' value='0'>
+                                <input type="hidden" name="id" value="{$info.id}">
+                                <volist name='info.pics' id='pic'>
+                                    <input type="hidden" value="{$pic}" data-status='1' name="pic[{$key}]" class="pics">
+                                </volist>
+                            </gt>
+                        </form>
+                    </ul>
+                    <if condition='($Think.get.id lt 1) or ($info.type neq 5)'> <ul style="display:none"><else /><ul></if>
+                    <form id="form2" method="post" action="{:U('Rental/sell?type=5')}">
+                        <li>
+                            <p class="name">标题</p> 
+                            <p><input type="text" name="title" value="{$info.title}" data-text='标题' placeholder="请填写标题"/></p>
+                        </li>
+                        <li>
+                            <p class="name">小区名称</p> 
+                            <p>
+                                <div class="form-group">
+                                <div class="col-sm-4">
+                                    <select class="form-control" id="aid" name="aid" style="width:150px">
+                                        <option value="0" >请选择小区</option>
+                                        <volist name='areaList' id='area'>
+                                            <option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+                                        </volist>
+                                    </select>           
+                                </div>
+                                </div>
+                            </p>
+                        </li>
+                        <li>
+                            <p class="name">房号</p> 
+                            <p><input type="text" name="house" data-text='房号' value="{$info.house}" placeholder="请填写房号"/> </p>
+                        </li>
+                        <li>
+                            <p class="name">房屋户型</p> 
+                            <p class="house">
+                                <input type="text" data-text='室' id="input_id" name="room" value="{$info.room}"/><em>室</em>
+                                <input type="text" data-text='厅' id="input_id" name="hall" value="{$info.hall}"/><em>厅</em>
+                                <input type="text" data-text='卫' id="input_id" name="toilet" value="{$info.toilet}"/><em>卫</em>
+                            </p>
+                        </li>
+                        <li>
+                            <p class="name">面积(m2)</p> 
+                            <p><input type="text" name="size" data-text='面积' id="input_id" value="{$info.size}" placeholder="请填写面积"/></p>
+                        </li>
+                        <li>
+                            <p class="name">楼层</p> 
+                            <p class="house">
+                                <em>第</em><input data-text='楼层' id="input_id" type="text" name="floor_several" value="{$info.floor_several}"/><em>层</em> 
+                                <em>共</em><input  data-text='楼层' id="input_id" type="text" name="floor_all" value="{$info.floor_all}"/><em>层</em> 
+                            </p>
+                        </li>
+                        <li>
+                            <p class="name">租金(元/月)</p> 
+                            <p><input type="text" name="price" data-text='租金' id="input_id" value="{$info.price}" placeholder="请填写租金"/></p>
+                        </li>
+                        <li>
+                            <p class="name">房源描述</p> 
+                            <p><textarea placeholder="请填写房源描述，对租客的要求，周边交通及生活配套" name="desc" value='{$info.desc}'>{$info.desc}</textarea></p>
+                        </li>
+                         <li><p class="name">详细地址</p> <p><textarea name="address" value='{$info.address}' placeholder="请填写详细地址">{$info.address}</textarea></p></li>
+                         <gt name='info.id' value='0'><input type="hidden" name="id" value="{$info.id}">
+                            <volist name='info.pics' id='pic'>
+                                <input type="hidden" data-status='1' value="{$pic}" name="pic[{$key}]" class="pics">
+                            </volist>
+                         </gt>
+                    </form>
+                    </ul>
+                    <if condition='($Think.get.id lt 1) or ($info.type neq 3)'> <ul style="display:none"><else /><ul class="car" ></if>
+                    <form id="form3" method="post" action="{:U('Rental/sell?type=3')}">
+                        <li>
+                            <p class="name">标题</p> 
+                            <p><input type="text" data-text='标题' name="title" value="{$info.title}" placeholder="请填写标题"/></p>
+                        </li>
+                        <li>
+                            <p class="name">小区名称</p> 
+                            <p>
+                                <div class="form-group">
+                                <div class="col-sm-4">
+                                    <select class="form-control" id="aid" name="aid" style="width:150px">
+                                        <option value="0" >请选择小区</option>
+                                        <volist name='areaList' id='area'>
+                                            <option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+                                        </volist>
+                                    </select>           
+                                </div>
+                                </div>
+                            </p>
+                        </li>
+                        <li><p class="name">租金(元/月)</p> 
+                        <p><input type="text" name="price" data-text='租金' id="input_id" value="{$info.price}" placeholder="请填写租金"/></p>
+                        </li>
+                        <li><p class="name">车位描述</p> <p><textarea name="desc" value='{$info.desc}' placeholder="填写车位描述信息">{$info.desc}</textarea></p></li>
+                         <li><p class="name">详细地址</p> <p><textarea name="address" value='{$info.address}' placeholder="填写详细地址">{$info.address}</textarea></p></li>
+                         <gt name='info.id' value='0'><input type="hidden" name="id" value="{$info.id}">
+                            <volist name='info.pics' id='pic'>
+                                <input type="hidden" data-status='1' value="{$pic}" name="pic[{$key}]" class="pics">
+                            </volist>
+                         </gt>
+                    </form>
+                    </ul>
+                </li>
+            </ul>
+            <ul>         
+                <li>
+                    <div class="picture forum_release_form relative mt_0">
+                        <label>上传照片</label>
+                        <a id='chooseImage' class="file_up">+</a>
+                        <gt name='info.id' value='0'>
+                            <volist name='info.pics' id='pic'> 
+                                <div class="relative forum_release_form_img fl">
+                                    <img src="{$pic}?imageView2/1/h/150/w/150/interlace/1/q/80"/>
+                                    <span class="del" data-id="{$key}">X</span>
+                                </div>
+                            </volist> 
+                        </gt>
+                    </div>
+                </li>
+            </ul>
+            <ul>         
+                <li>
+                    <p class="name">业主姓名</p>
+                    <p name="name">{$Think.session.fansInfo.name}</p>
+                </li>  
+                <li>
+                    <p class="name">业主手机</p>
+                    <p name="phone">{$Think.session.fansInfo.phone|substr_replace="****", 3, 4}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--版权-->
+<div class=" fix_form">
+    <button type="submit"  class="post_form  post bg_c_g mt_30"> 提&nbsp;&nbsp;交 </button>
+</div> 
+<div class=" fix_form">
+    <button  type="submit"  class="post bg_c_r mt_10 delBtn" style="display:none;"> 删&nbsp;&nbsp;除 </button>
+</div> 
+<p class="rental_bottom_p pb_66">为了您的信息安全,平台将隐藏您的姓名及联系方式,请知悉.</p> 
+<!--版权-->
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	var myform = 'form1';
+	type = '{$info.type}';
+	if(type == 3){
+		myform = 'form3';
+	}else if(type == 5){
+		myform = 'form2';
+	}
+    //显示图片
+    var fix_num = num = '{$info["count"]}', i = 1;
+    //console.log(num);
+    var images = {localId: [],serverId: []}, type = '{$Think.session.fansInfo.type}', imgs = ''; 
+    function showImg(pics){
+        var pic = new Array();
+        pic = pics.split(",");
+        for(var j = 0; j < pic.length; j++){
+            num++;
+            $('#'+myform).append('<input class="pics" type="hidden" name="pic['+num+']" value="'+pic[j]+'" />');
+            $('.file_up').after('<div class="relative forum_release_form_img fl"><img src="'+pic[j]+'"><span class="del" data-id="'+num+'">X</span></div>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    //选择图片
+    wx.ready(function () {
+        document.querySelector('#chooseImage').onclick = function () {
+            wx.chooseImage({
+                success: function (res) {
+                    images.localId = res.localIds;
+                    var pics = res.localIds;
+                    showImg(pics.join());
+                }
+            });
+        };
+    });
+</script>
+<script type="text/javascript">
+    //上传图片
+    function upload(pic, k){
+        wx.uploadImage({
+            localId: pic,
+            success: function (res) {
+                imgs = imgs + res.serverId + ',';
+                if(i == k){
+                    waiting();
+                    $.post('{:U("Forum/downPic")}', {pics : imgs}, function(data){
+                        complete();
+                        $('#'+myform).find('.pics').each(function(k, v){
+                    		if($(v).data('status') != 1){
+    	                    	$(v).remove();
+                    		}
+                        });
+                        for(var m = 0; m < data.length; m++){
+                        	$('#'+myform).append('<input class="pics" type="hidden" name="pic['+(m+fix_num)+']" value="'+data[m]+'" />');
+                        }
+                        other();
+                    });
+                }else{
+                    i++;
+                }
+            },
+            //fail: function (res) {
+              //alert(JSON.stringify(res));
+           // }
+        });
+    }
+    function other(){
+            waiting();
+            $.post($('#'+myform).attr('action'), $('#'+myform).serialize(), function(data){
+                complete();
+               showInfo(data.info,1,function(){
+                if(data.url != undefined){
+                    location.href = '/Wap/Rental/index';
+                }
+            });
+            });
+    }
+</script>
+<script type="text/javascript">
+    $(function(){
+        /*出租切换*/
+        $(".rate span").each(function(index){
+             $(this).click(function(){
+                addrssid = $(this).attr("id");
+                id = addrssid.replace('rated','');
+                myform = 'form'+id;
+                if($("#rate"+id).attr("checked")){
+                    $(".rate_box > ul:visible").hide();
+                    $(".rate_box > ul:eq(" + index + ")").show();   
+                }
+            });
+        });
+
+
+
+        // var num = '{$info["count"]}';
+        // $.get('/Home/Upload/getToken',function(token){
+        //     $('input[name="token"]').val(token);
+        // });
+        $('body').on('click', '.del', function(data){
+        	//alert($(this).data('id'));
+            $('input[name="pic['+$(this).data('id')+']"]').remove();
+            $(this).parent().remove();
+        });
+        $('.post_form').click(function(){
+            // 验证表单
+           var flag = true;
+            //判断input标题
+            if(flag){
+                var title=$('#'+myform).find('input[name="title"]');
+                if(title.val() == ''){
+                    flag = false; 
+                    showInfo("请输入标题！");
+                    return false;
+                }
+            }
+            if(flag){
+	            //判断select
+	            var option= $('#'+myform).find("select").val();
+	            if(option == 0){
+	                flag = false; 
+	                showInfo("请选择小区");
+	                return false;
+	            }
+            }
+            if(flag){
+                var house=$('#'+myform).find('input[name="house"]');
+                if(house.val() == ''){
+                    flag = false; 
+                    showInfo("请输入房号！");
+                    return false;
+                }
+            }
+            // 判断input ，除标题外，验证数值
+             $('#'+myform).find('input[id="input_id"]').each(function(k, v){
+                if($(v).val() == ''){
+                    flag = false; 
+                    showInfo("请输入"+$(v).data('text'));
+                    return false;
+                }else if(isNaN($(v).val())){
+                    flag = false; 
+                    showInfo("请输入正确的"+$(v).data('text')+'数');
+                    return false;
+                }
+            });
+            if(flag){
+	          	//判断textarea
+	            $('#'+myform).find('textarea').each(function(k, v){
+	            	if($(v).val() == ''){
+	                	flag = false; 
+	                	showInfo($(v).attr('placeholder'));
+	                	return false;
+	               }
+	            });
+            }
+            if(flag){
+          	//判断图片
+	            // var image = $('.forum_release_form_img img').size();
+	            // if(image < 1){
+	            //     flag = false; 
+	            //     showInfo('请上传图片!');
+	            //     return false;
+	            // }
+                if($('#'+myform).find('.pics').length > 0){
+                	$('#'+myform).find('.pics').each(function(k, v){
+                		//alert(i);
+                		if($(v).data('status') != 1){
+	                    	upload($(v).val(), $('#'+myform).find('.pics').length);
+                		}else{
+                			if(i == $('#'+myform).find('.pics').length){
+                				other();
+                			}else{
+	                			i++;
+                			}
+                		}
+                    });
+                }else{
+                    flag = false;
+                    showInfo('请上传图片!');
+                    return false;
+                }
+            }
+        });
+        var obj=$('input[name="id"]');
+        var id=obj.val();
+        if(id>0){
+             $('.title').hide();
+             $('.delBtn').show();
+             
+        }else{
+             $('.title').show();
+             $('.delBtn').hide();
+        }
+    });
+$('.delBtn').click(function(){
+    var obj=$('input[name="id"]');
+    var id=obj.val();
+    $.get('{:U("Rental/del")}',{id:id},function(data){
+        showInfo(data.info,1,function(){
+        if(data.status = 1){
+            location.href = '/Wap/Rental/index';
+       }
+       });
+    })
+})
+ // 首页跳转
+$('#index_icon').click(function(){
+   location.href = $(this).data('url');
+})
+</script>
+
+</body>
+</html>

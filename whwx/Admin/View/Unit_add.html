@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"> <h3 class="page-header">单元管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="20">
+			        </div>
+			        <small>不超过二十个字</small>
+			    </div> 
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元信息：</label>
+			        <div class="col-sm-4">
+			         	<input class="form-control" name="info" value="{$info.info}">
+			        </div>
+			    </div>    
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Unit/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+

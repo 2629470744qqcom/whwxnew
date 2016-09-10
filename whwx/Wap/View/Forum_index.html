@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div class="pb_60">
+    <div class="forum_head"> 
+        <a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+        <div class="hr_forum fl"></div>
+        <p class="fl">讨论论坛</p>
+        <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a> 
+        <eq name='Think.session.fanInfo.type' value='1'>
+	        <p class="fr mr_14"><a class="f_c_g" href="{:U('Forum/card')}">我的</a></p>
+	        <div class="hr_forum fr"></div>
+        </eq>
+    </div>
+    <div class="forum_list ">
+        <ul>
+            <a href='{:U("Forum/index")}'> <li <lt name='Think.get.pid' value='1'> class="bg_cc_g" </lt>>最新帖 </li> </a>
+            <volist name="plateList" id='plate'> <a href='{:U("Forum/index?pid=".$plate["id"])}'>
+                <li <eq name='Think.get.pid' value='$plate.id'> class="bg_cc_g" </eq>>{$plate.name} </li> </a>
+            </volist>
+        </ul>
+    </div>
+    <div class="bg_c_w_left"></div>
+    <div class="bg_c_w_right"></div>
+    <div class="fl w100" style="margin-bottom:70px">
+        <volist name='list' id='list'>
+            <div class="forum_admin">
+                <div class="forum_admin_head">
+                    <div class="forum_head_img"><a href="{:U('Forum/details?id='.$list['id'])}"><img src="{$list.pic}?imageView2/1/h/100/w/100"></a></div>
+                        <div class="forum_head_text" style="width:40%;margin-left:8px;">
+                            <a class="f_c_3" href="{:U('Forum/details?id='.$list['id'])}">
+                                <p><empty name='list.name'>业主{$list.oid}<else />{$list.name}</empty></p>
+                            </a>
+                            <p class="f_z_14 f_c_9">{$list.times|date='Y-m-d H:i', ###}</p>
+                        </div>
+                   
+                    <div class="forum_head_right">
+                        <p><a class="f_c_g" href="{:U('Forum/index?pid='.$list['pid'])}">{$list.plate|msubstr=0,4}</a></p>
+                        <p class="f_c_9 mr_10">来自</p>
+                        <p class="f_c_9 mr_10 zan" data-id="{$list.id}" style="background:url(/Public/Wap/images/zan<?php if($_COOKIE['forum_zan_' . $list['id']] > 0){echo 2;}else{echo 1;}?>.png) no-repeat;background-size:contain;padding-left:25px;">{$list.zan}</p>
+                    </div>
+                    <div>
+						<p class="f_z_14 f_c_9 fr">回帖数：{$list.posts}&nbsp;&nbsp;浏览量：{$list.views}</p>
+					</div>
+                </div>
+                <a class="f_c_3" href="{:U('Forum/details?id='.$list['id'])}">
+                    <div class="forum_admin_center "><eq name="list.top" value="1"><b style="color: red;">[置顶]</b></eq><eq name="list.hot" value="1"><b style="color: blue;">[热帖]</b></eq>{$list.title} </div>
+                </a>
+                <ul>
+                    <volist name='list.pics' id='pic' offset='0' length='3'>
+                        <a href="{:U('Forum/details?id='.$list['id'])}"><li class="pr_5"> <img src="{$pic}?imageView2/1/h/150/w/150"></li></a> 
+                    </volist>
+                </ul>
+            </div>
+        </volist>
+        {$page}
+    </div>
+    
+</div>
+<div class="forum_bottom">
+    <ul class="clearfix">
+        <li class="on"><a data-url="{:U('Forum/index')}"><span class="icon_img icon_home"></span><span>首页</span></a></li>
+        <li id='chooseImage' ><a><span class="icon_img icon_camera"></span><span>随手拍</span></a></li>
+        <li><a data-url="{:U('Forum/release?pid='.$info['pid'])}"><span class="icon_img icon_pencil"></span><span>发布</span></a></li>
+        <li><a data-url="{:U('Forum/card')}"><span class="icon_img icon_mine"></span><span>我的</span></a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="{:JQ}"></script> 
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	var images = {localId: [],serverId: []}, type = '{$Think.session.fansInfo.type}';
+	wx.ready(function () {
+		document.querySelector('#chooseImage').onclick = function () {
+			wx.chooseImage({
+				sourceType: ['camera'],
+				success: function (res) {
+					images.localId = res.localIds;
+					window.location.href='/Wap/Forum/random?pics='+res.localIds;
+				}
+			});
+		};
+	});
+
+	$('.zan').click(function(){
+		var obj = $(this), id = obj.data('id'); obj.data('id', '0');
+		if(id > 0){
+			waiting();
+			$.get('{:U("Forum/zan")}', {id: id}, function(data){
+				complete();
+				data.status == 1 && obj.css('background-image', 'url(/Public/Wap/images/zan2.png)').html(parseInt(obj.html()) + 1);
+			});
+		}
+	});
+
+	$('.forum_bottom li').click(function(){
+		if(type == -1 && $(this).index() != 0){
+			showInfo('你没有权限，请注册', 2, function(){
+				location.href = '{:U("Public/index")}';
+			});
+		}else if($(this).index() != 1){
+			location.href = $(this).find('a').data('url');
+		}
+	});
+    // 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

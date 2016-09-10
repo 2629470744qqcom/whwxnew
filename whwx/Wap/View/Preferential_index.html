@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160507" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="favorable pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        特惠团<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+        <a href="{:U('Preferential/orders')}" class="i_edit">我的订单</a> 
+    </div>
+    <div class="name"> 今日推荐 </div>
+    <div class="list"> 
+        <volist name='list' id='list' >
+        	<ul class="clearfix">
+                <a href="{:U('Preferential/favorable?id='.$list['id'])}">
+                    <volist name='list.pics' id='pic' offset='0' length='1'> 
+                    	<li class="pic">
+                            <img src="{$pic}?imageView2/1/h/200/w/200"/>
+                        </li>
+                    </volist>
+                    <li class="text">
+                    	<p class="tit">{$list.name}</p>
+                        <p class="txt">
+                            <volist name='list.label' id='labe'> 
+                                <span class="a_link1 labe">{$labe}</span> 
+                            </volist>
+                            <switch name='list.category' >
+                                <case value='0'>
+                                    <span class="red">￥{$list.present_price}</span>
+                                </case>
+                                <case value='1'>
+                                    <span class="" style="height:40px">
+                                        <span class="red lh_30">{$list.credit}</span>
+                                        <span class="shop_integral w_30"></span>
+                                    </span>
+                                </case> 
+                            </switch>
+                        </p>
+                    </li> 
+                </a>
+            </ul> 
+        </volist>
+    </div>
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

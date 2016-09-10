@@ -1,0 +1,48 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		在线报修<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="title">私人区域</div>
+    <div class="person">
+		<volist name='list' id='list1'>
+			<a href="{:U('Fix/preson_cont?id='.$list1['id'])}"><div><i></i>{$list1.name}</div></a>
+		</volist>
+		<a href="{:U('Fix/other?type=2')}"><div><i></i>其他维修</div></a>
+		<a href="{:U('Fix/quality')}"><div><i></i>房屋质量报修</div></a>
+    </div>
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<!-- <div class="copyright absolute_b0"></div> -->
+<!--分享-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+  })
+$(function(){
+//   	$('.person > div > ul').hide();
+//   	$('.person > div').click(function(){
+//     		$('.person > div').removeClass('up');
+//     		$('.person > div').children('ul').hide();
+//     		$(this).addClass('up');
+//     		$(this).children('ul').show();
+//     });
+});
+</script>
+</body>
+</html>

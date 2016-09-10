@@ -1,0 +1,80 @@
+<div class="row"> 
+	<h3 class="page-header">节点管理&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>节点</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">父节点：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="pid" name="pid">
+			        		<option value="0" >无上级节点</option>
+			        		<volist name='nodeList' id='node'>
+			        			<option value="{$node.id}"<eq name='node.id' value='$info.pid'> selected </eq> ><eq name="node.pid" value="0">&nbsp;|-&nbsp;&nbsp;<else/>&nbsp;|&nbsp;&nbsp;|-&nbsp;&nbsp;</eq>{$node.title}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">节点名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="title" value="{$info.title}" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">节点路径：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='40'>
+			        </div>
+			        <small>填写格式:模块/控制器/方法(需保证唯一性)</small>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">节点类型：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="0" id="type0" name="type" <lt name="info.type" value="1">checked</lt>>一级菜单
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="1"  id="type1" name="type" <eq name="info.type" value="1">checked</eq>>二级菜单
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="2"  id="type2" name="type" <eq name="info.type" value="2">checked</eq>>隐藏
+			            </label>
+		            </div>
+		        </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">备注：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="note" maxlength='20'>{$info.note}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Node/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

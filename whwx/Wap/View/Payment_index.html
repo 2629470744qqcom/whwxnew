@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="price pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		在线缴费<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="price_title">
+    	<ul class="clearfix">
+        	<li class="photo"><img src="{$ownerInfo.pic}?imageView2/1/h/100/w/100" /></li>
+            <li class="text">
+            	<p class="name">{$Think.session.fansInfo.name}</p>
+                <p class="address_text_line">
+	                <i class="icon_address"></i>{$Think.session.fansInfo.address}
+                </p>
+            </li>
+        </ul>
+    </div>
+    <volist name='list' id='list'>
+	    <div class="payment">
+	    	<div style="text-align: center; background: rgb(255, 255, 255) none repeat scroll 0% 0%; padding-top: 10px;">{$list.name}</div>
+		    <gt name='list.porperty' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico1"></i></li>
+			            <li><p>物业费</p><p>共计：{$list.porperty}元 （已缴{$list.porperty_pay}元）</p></li>
+		    			<gt name='list.porperty' value='$list["porperty_pay"]'>
+	            		   	<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="porperty" data-money="<?php echo $list['porperty'] - $list['porperty_pay'];?>" checked /><label></label>
+					            </span>
+				            </span>
+		    			</gt>
+			        </ul>
+			    </div>
+		    </gt>
+		    <gt name='list.water' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico2"></i></li>
+			            <li><p>二次供水费</p><p>共计：{$list.water}元 （已缴{$list.water_pay}元）</p></li>
+			    		<gt name='list.water' value='$list["water_pay"]'>
+			             	<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="water" data-money="<?php echo $list['water'] - $list['water_pay'];?>" checked /><label></label>
+					            </span>
+				            </span>
+			    		</gt>
+			        </ul>
+			    </div>
+			</gt>
+			<gt name='list.energy' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico3"></i></li>
+			            <li><p>能耗费</p><p>共计：{$list.energy}元 （已缴{$list.energy_pay}元）</p></li>
+		    			<gt name='list.energy' value='$list["energy_pay"]'>
+			            	<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="energy" data-money="<?php echo $list['energy'] - $list['energy_pay'];?>" checked/><label></label>
+					            </span>
+				            </span>
+		    			</gt>
+			        </ul>
+			    </div>
+			</gt>
+			<gt name='list.carport' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico4"></i></li>
+			            <li><p>车位费</p><p>共计：{$list.carport}元 （已缴{$list.carport_pay}元）</p></li>
+		    			<gt name='list.carport' value='$list["carport_pay"]'>
+			            	<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="carport" data-money="<?php echo $list['carport'] - $list['carport_pay'];?>" checked /><label></label>
+					            </span>
+				            </span>
+		    			</gt>
+			        </ul>
+			    </div>
+			</gt>
+			<gt name='list.car_manger' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico5"></i></li>
+			            <li><p>车位管理费</p><p>共计：{$list.car_manger}元（已缴{$list.car_manger_pay}元）</p></li>
+			    		<gt name='list.car_manger' value='$list["car_manger_pay"]'>
+							<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="car_manger" data-money="<?php echo $list['car_manger'] - $list['car_manger_pay'];?>" checked /><label></label>
+					            </span>
+				            </span>
+			    		</gt>
+			        </ul>
+			    </div>
+			</gt>
+			<gt name='list.arrear_money' value='0'>
+			    <div class="list">
+			        <ul class="pirce_list clearfix">
+			            <li><i class="ico ico6"></i></li>
+			            <li><p>历年欠费</p><p>共计：{$list.arrear_money}元（已缴{$list.arrear_money_pay}元）</p></li>
+			    		<gt name='list.arrear_money' value='$list["arrear_money_pay"]'>
+							<span class="ck" style="float:right;margin-top:20px;">
+					            <span class="ckbox">
+						            <input type="checkbox" class="free" data-id="arrear_money" data-money="<?php echo $list['arrear_money'] - $list['arrear_money_pay'];?>"  checked /><label></label>
+					            </span>
+				            </span>
+			    		</gt>
+			        </ul>
+			    </div>
+			</gt>
+		    <eq name="list.total_money" value="0">
+		    	<button type="submit" class="total_all_button bg_c_c" style="margin-bottom:20px;"> 已缴清 </button>
+		    <else />
+			    <div class="total_all">
+				    <span class="fl">总计</span>
+				    <span class="fr">元</span>
+				    <span class="fr total_all_span">{$list.total_money|default=0}</span>
+			    </div>
+		    	<button type="button" style="margin-bottom:20px;" data-id='{$list.id}' class="total_all_button bg_c_g pay" data-money='{$list.total_money}'> 去支付 （共计：{$list.total_money}元）</button>
+		    </eq>
+	    </div>
+    </volist>
+</div>
+<div class="list-budget-bg"  style="display:none;"></div>
+<ul class="information_frame relative">
+    <li class="information_case" data-id='0' style="display:none;">
+    	<h3>积分抵用</h3>
+    	<div><label>你目前的积分：<i class='point'></i></label></div>
+    	<div><label>兑换规则：<i class='site_point'></i>积分=<i class='site_money'></i>元</label></div>
+        <div><label>兑换积分：</label><input type="text" name='point' placeholder="请输入积分"></div>
+        <input type="hidden" name='id'><input type="hidden" name='cate'>
+        <button class='complete'>提交</button>
+    </li>
+</ul>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+	var paytype = new Array();
+	$('.list').click(function(){
+		var obj = $(this).find('input[type="checkbox"]'), pay = $(this).parent().find('.pay'); money = 0;
+		if(obj.length > 0){
+			obj.attr('checked', obj.attr("checked") ? false : true);
+			obj.parents('.payment').find('input[type="checkbox"]:checked').each(function(i, v){
+				money += parseFloat($(v).data('money'));
+			});
+			pay.prev().find('.total_all_span').html(money);
+			if(money > 0){
+				pay.html('去支付（共计：' + money + '元）');
+				pay.data('money', money);
+				pay.removeClass('bg_c_c').addClass('bg_c_g');
+			}else{
+				pay.html('去支付');
+				pay.data('money', 0);
+				pay.removeClass('bg_c_g').addClass('bg_c_c');
+			}
+		}
+	});
+	$('.list-budget-bg').click(function(){
+		$(this).hide();
+		$(".information_case").hide();
+	})
+	$('.pay').click(function(){
+		if($(this).data('money') > 0){
+			/* zxh 20160401 积分功能 暂时隐藏
+			$('input[name="id"]').val($(this).data('id'));
+			$('input[name="cate"]').val($(this).data('cate'));
+			$.post('{:U("Payment/point")}', {type : 1}, function(data){
+				$('.point').html(data.point > 0 ? data.point : 0);
+				$('.site_money').html(data.site_money);
+				$('.site_point').html(data.site_point);
+				$('.list-budget-bg').show();
+				$('.information_case').show();
+			});
+			*/
+			var id = $(this).data('id'), point = 0;
+			var cate = new Array();
+			$(this).parents('.payment').find('.free:checked').each(function(i, v){
+				cate.push($(v).data('id'));
+			});
+			waiting();
+			$.post('{:U("Payment/point_pay")}', {point :point, id : id, cate : cate.join()}, function(data){
+				complete();
+				if(data.status == 2){
+					location.href = '/Home/Pay/index?type=1&id='+data.result;
+				}else{
+					showInfo(data.info, 1, function(){
+						if(data.status == 1){
+							location.reload();
+						}
+					});
+				}
+			});
+		}
+	});
+
+	$('.complete').click(function(){
+		var point = $('input[name="point"]').val();
+		var id = $('input[name="id"]').val();
+		var cate = $('input[name="cate"]').val();
+		cate = cate.substring(0, cate.length-1);
+		if(/^(0|[1-9][0-9]*)$/.test(point)){
+			waiting();
+			$.post('{:U("Payment/point")}', {point: point, id : id, cate : cate}, function(data){
+				complete();
+				if(data.status == 1){
+					showInfo(data.info, 2, function(){
+						$.post('{:U("Payment/point_pay")}', {point :point, id : id, cate : cate}, function(data2){
+							if(data2.status == 2){
+								location.href = '/Home/Pay/index?type=1&id='+data2.result;
+							}else{
+								showInfo(data2.info, 1, function(){
+									if(data2.status == 1){
+										location.reload();
+									}
+								});
+							}
+						});
+					});
+				}else{
+					showInfo(data.info);
+				}
+			});
+		}else{
+			showInfo('请输入正整数');
+		}
+	});
+});
+// 首页跳转
+$('#index_icon').click(function(){
+   location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

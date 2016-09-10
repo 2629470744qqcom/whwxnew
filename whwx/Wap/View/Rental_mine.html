@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="rental pb_66"> 
+  	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        发布信息<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+    </div>
+    <div class="title">
+      	<ul class="clearfix">
+        	  <li data-id='0'><a href="{:U('Rental/lease')}">发布出租</a></li>
+            <li data-id='1'><a href="{:U('Rental/sell')}">发布出售</a></li>
+            <li data-id='2' class="on"><a  href="{:U('Rental/mine')}">我的</a></li>
+        </ul>
+    </div>
+    <volist id="list" name='list'>
+        <div class="mine">
+            <div class="cont">
+                <ul class="clearfix">
+                    <li><i class="icon"></i></li>
+                    <li class="text">
+                        <p>
+                            <span class="name" data-id='{$list.id}' data-type="{$list.type}">
+                                <switch name='list.type'>
+                                    <case value='1'>出租房屋</case>
+                                    <case value='2'>出售房屋</case> 
+                                    <case value='3'>出租车位</case> 
+                                    <case value='4'>出售车位</case>  
+                                    <case value='5'>出租单间</case>  
+                                </switch>
+                            </span>
+                            <span class="date">{$list.times|date='Y-m-d',###}</span>
+                        </p>
+                        <p>{$list.title}</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="more"><a <if condition='($list.type % 2) eq 0'> href='{:U("Rental/sell?id=".$list["id"])}' <else /> href='{:U("Rental/lease?id=".$list["id"])}' </if>>修改信息</a></div>
+        </div>
+    </volist>
+    {$page}
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+  // val obj=$("span .name");
+  // val type=obj.data('type');
+  // if(type % 2==0){
+  //    $.get()
+  // }else{
+
+  // }
+
+    // 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

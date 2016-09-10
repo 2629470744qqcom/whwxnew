@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"><h3 class="page-header">预约服务&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post" class="form-horizontal w500">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">预约类型:<span class="c-red">*</span></label>
+			        <div class="col-sm-6">
+				        <select id='pNode' class="form-control" name="name">
+					        <volist class="col-sm-6" name='typelist' id='typelist'>
+								<option value="{$list.id}" <eq name="typelist.id" value="$info['name']">selected="selected"</eq>>{$typelist.name}
+								</option>
+							</volist>
+						</select>
+			        </div>
+			        <small>不超过二十个字</small>
+			    </div>
+			    <div class="form-group clearfix">
+                    <label  class="col-sm-3 control-label">预约时间:<span class="c-red">*</span></label>
+                    <div class="col-sm-9 fill wid_80 fl">
+                    	<input type="text" name="times" id="times" value="<empty name='info.times'>{:date('Y-m-d H:i')}<else/>{$info.times|date='Y-m-d H:i', ###}</empty>" class="wid_date datepick pointer" readonly />
+                    </div>
+                </div>
+			    <div class="form-group">
+	                <label class="col-sm-3 control-label">评分:</label>
+	                <div class="col-sm-6">
+	                    <input type="text" class="form-control required number" name='score' value="{$info.score}">
+	                </div>
+		        </div>
+		        <div class="form-group">
+			        <label class="col-sm-3 control-label">评价</label>
+ 					<div class="col-sm-6">
+ 					 	<textarea rows="3" class="form-control " name="evaluate" maxlength="200">{$info.evaluate}</textarea>
+ 					</div>
+			    </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态:</label>
+					<div class="col-sm-6">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>已分配
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>未分配
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Booking/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script src="{:COM}js/daterangepicker.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		console.log('{$info["start_time"]}');
+			$(".datepick").datetimepicker({
+				format : "yyyy-mm-dd hh:ii",
+				minView : 0,
+				autoclose : true
+			});
+	})
+</script>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+ 	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">缴费详情</p>
+	 	<a id="index_icon" data-url="{:U('Service/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<div class="order_line mt_10"><p>业主信息</p><span>{$info.name}</span></div>
+ 	<div class="order_line b_b1"><p>业主手机</p><span><a href="tel:{$info.phone}">{$info.phone}</a></span></div>
+ 	<div class="order_line b_b1"><p>业主房号</p><span>{$info.addr}</span></div>
+ 	<div class="order_line mt_10"><p>缴费内容</p><span>{$info.notice}</span></div>
+ 	<div class="order_line b_b1"><p>缴费时间</p><span>{$info.times|date='Y-m-d H:i', ###}</span></div>
+ 	<div class="order_line"><p>业主信息</p><span>{$info.desc}</span></div>
+ 	<notempty name='info.address'><div class="order_line b_b1"><p>维修地址</p><span>{$info.address}</span></div></notempty>
+ 	<div class="bottom_copyright"></div>
+ 	<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	// 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

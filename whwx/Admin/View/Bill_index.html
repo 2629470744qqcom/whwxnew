@@ -1,0 +1,66 @@
+<div class="row"><h3 class="page-header">账单管理</h3></div>
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+        	<label><a class="btn btn-primary" href="{:U('Bill/add')}">添加账单</a></label>
+        	<label><a class="btn btn-default" href="{:C('site_url')}/Public/template.zip">模板下载</a></label>
+            <form action='{:U("Bill/index")}' class="form-inline text-right fr m-b-5"> 
+                <div class="form-group">
+                    <select class="form-control" id="aid" name="aid" data-bid="#bid">
+                        <option value="0" >请选择小区</option>
+                        <volist name='areaList' id='area'>
+                            <option value='{$area.id}' <eq name='Think.get.aid' value='$area["id"]'>selected</eq>>{$area.name}</option>
+                        </volist>
+                    </select>           
+                </div>
+                账单名称：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w150">
+                <button class="btn btn-primary" type="submit">搜索</button>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="60">序号</th>
+                            <th>账单名称</th>
+                            <th>小区</th>
+                            <th>创建时间</th>
+                            <th>录入时间</th>
+                            <th>下发时间</th>
+                            <th>状态</th>
+                            <th width="220">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <volist name="list" id="list">
+                            <tr>
+                                <td>{$i}</td>
+                                <td>{$list.name}</td>
+                                <td>{$list.area}</td>
+                                <td>{$list.times|date='Y-m-d H:i', ###}</td> 
+                                <td><gt name='list.entry_time' value='0'>{$list.entry_time|date='Y-m-d H:i', ###}<else />暂未录入</gt></td>
+                                <td><gt name='list.down_time' value='0'>{$list.down_time|date='Y-m-d H:i', ###}<else />暂未下发</gt></td>
+                                <td>
+    								<switch name='list.status'>
+    									<case value='0'>未录入</case>
+    									<case value='1'>已录入</case>
+    									<case value='2'>已核对</case>
+    									<case value='3'>已下发</case>
+    								</switch>
+                                </td>
+                                <td>
+                                   	<a href='{:U("Bill/record?id=".$list["id"])}' class='btn-sm btn btn-default'>账单</a>
+                                    <a href='{:U("Bill/edit?id=".$list["id"])}' class="btn-sm btn btn-default" >修改</a>
+                                   <button class="btn-sm btn btn-default delBtn" data-url='{:U("Bill/del?id=".$list["id"])}' type="button">删除</button>
+                               </td>
+                           </tr>
+                        </volist>
+                    </tbody>
+                </table>
+            </div>
+            {$page}
+        </div>
+    </div>
+</div>
+</div>
+    

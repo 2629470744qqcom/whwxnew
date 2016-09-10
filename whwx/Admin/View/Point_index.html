@@ -1,0 +1,62 @@
+<div class="row"> <h3 class="page-header">积分设置</h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form id="myform" class="form-horizontal">
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">兑换{:C('money')}元需积分：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" name="point" value="{:C('point')}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">注册送积分：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" name="reg_point" value="{:C('reg_point')}">
+			        </div>
+			        <small>0表示不送积分</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">评价送积分：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" name="score_point" value="{:C('score_point')}">
+			        </div>
+			        <small>0表示不送积分（仅限于报修、特惠团评价）</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">发帖送积分：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" placeholder='输入0表示不送积分'  name="post" value="{:C('post')}">
+			        </div>
+			        
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">发帖送积分上限：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" placeholder='输入0表示无上限' name="max_post" value="{:C('max_post')}">
+			        </div>
+			        
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">回复送积分：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" placeholder='输入0表示不送积分'  name="reply" value="{:C('reply')}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">回复送积分上限：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required digits" placeholder='输入0表示无上限' name="max_reply" value="{:C('max_reply')}">
+			        </div>
+			    </div>
+			    <input type="hidden" name="money" value="{:C('money')}" />
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Index/index')}"><button class="btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

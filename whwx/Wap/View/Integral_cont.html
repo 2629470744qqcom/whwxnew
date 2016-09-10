@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+  	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        积分详情<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+  	<div class="price_status" style='background:#fff;'>
+		    <p class="sussess">交易成功</p>
+        <p class="price_price"><eq name='info.type' value='1'>+<else />-</eq>{$info.point}积分</p>
+    </div>
+    <div class="mine_cont">
+    	  <ul>
+      		  <li><label>类型：</label><p class="pcont">{$info.name}</p></li>
+          	<li><label>时间：</label><p class="pcont">{$info.times|date='Y-m-d H:i:s', ###}</p></li>
+          	<li><label>积分：</label><p class="pcont">{$info.point}积分</p></li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+        // 首页跳转
+    $('#index_icon').click(function(){
+         location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

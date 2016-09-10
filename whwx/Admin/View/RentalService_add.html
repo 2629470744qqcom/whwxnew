@@ -1,0 +1,181 @@
+<div class="row"> <h3 class="page-header">租售管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">标题：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="title" value="{$info.title}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">图片：</label>
+			        <div class="col-sm-4">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pics'>
+				       			<volist name='info.pics' id='pic'>
+				       				<li>
+								    	<img src="{$pic}" >
+								    	<input type="hidden"  value="{$pic}" id='pics{$i}' name="pic[]">
+								    	<a class='delImgBtn'>删除</a> 
+							    	</li>
+				       			</volist>
+						    </notempty>
+					    </div> 
+			       		<button data-multi='true' type="button" data-callback='showImg' class="upload" id="upload">选择图片</button>
+			        </div>
+			    </div> 
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">价格：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required number" name='price' value="{$info.price}">
+			    	</div>
+			    	<small>单位(元)</small>
+			    </div>
+			     <div class="form-group">
+			    	<label  class="col-sm-3 control-label">面积：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required number" name='size' value="{$info.size}">
+			    	</div>
+			    	<small>单位(M<sup>2</sup>)</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control digits required" name="sort" value="{$info.sort|default=1}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div> 
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">类型：<span class="c-red">*</span></label>
+					<div class="col-sm-4">
+						<select name='type' class="form-control mr20 selectReq">
+							<option value='1' <eq name='info.type' value='1'>selected</eq> >出租房屋</option>
+                            <option value='2' <eq name='info.type' value='2'>selected</eq> >出售房屋</option>
+                            <option value='3' <eq name='info.type' value='3'>selected</eq> >出租车位</option>
+                            <option value='4' <eq name='info.type' value='4'>selected</eq> >出售车位</option>
+                            <option value='5' <eq name='info.type' value='5'>selected</eq> >出租单间</option>
+						</select>
+					</div>
+				</div> 
+				<div <if condition="($info.type eq 3) or ($info.type eq 4)" >style="display:none;"</if>>
+					<div class="form-group" id="home">
+				    	<label  class="col-sm-3 control-label">房屋户型：<span class="c-red">*</span></label>
+				    	<div class="col-sm-4">
+				    		<div class="col-sm-4">
+					    		<input type="text" class="form-control number required" style="width:90%; float:left;margin-right:3%" name='room' value="{$info.room}">
+					    		<span style='width:5%;float:left;line-height:34px;'>室</span>
+				    		</div>
+				    		<div class="col-sm-4">
+					    		<input type="text" class="form-control number required"  style="width:90%; float:left;margin-right:3%" name='hall' value="{$info.hall}">
+					    		<span style='width:5%;float:left;line-height:34px;'>厅</span>
+				    		</div>
+				    		<div class="col-sm-4">
+					    		<input type="text" class="form-control number required"  style="width:90%; float:left;margin-right:3%" name='toilet' value="{$info.toilet}">
+					    		<span style='width:5%;float:left;line-height:34px;'>卫</span>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="form-group" id="floor">
+				    	<label  class="col-sm-3 control-label">楼层：<span class="c-red">*</span></label>
+				    	<div class="col-sm-4">
+					    	<div class="col-sm-5">
+						    	<span style='width:10%;float:left;line-height:34px;'>第</span>
+						    	<input type="text" class="form-control number required" style="width:70%;float:left;" name='floor_several' value="{$info.floor_several}">
+						    	<span style='width:10%;float:left;line-height:34px;'>层</span>
+						    </div>
+					    	<div class="col-sm-5">
+						    	<span style='width:10%;float:left;line-height:34px;'>共</span>
+						    	<input type="text" class="form-control number required" style="width:70%;float:left;" name='floor_all' value="{$info.floor_all}">
+						    	<span style='width:10%;float:left;line-height:34px;'>层</span>
+					    	</div>
+				    	</div>
+				    </div>
+				    <div class="form-group" id="house">
+			            <label class="col-sm-3 control-label">房号：<span class="c-red">*</span></label>
+			            <div class="col-sm-4">
+			                <textarea rows="1" class="form-control required" name="house" maxlength="200">{$info.house}</textarea>
+			            </div>
+				    </div>
+			    </div>
+				<div class="form-group">
+		            <label class="col-sm-3 control-label">详细地址：<span class="c-red">*</span></label>
+		            <div class="col-sm-4">
+		                <textarea rows="1" class="form-control required" name="address" maxlength="200">{$info.address}</textarea>
+		            </div>
+		        </div>
+			    <div class="form-group">
+		            <label class="col-sm-3 control-label">租售描述：<span class="c-red">*</span></label>
+		            <div class="col-sm-4">
+		                <textarea rows="3" class="form-control required" name="desc" maxlength="200">{$info.desc}</textarea>
+		            </div>
+		        </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+					  
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>正常
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0" id="status2" name="status" <eq name="info.status" value="0">checked</eq>>删除
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('RentalService/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<style>
+	.mr_18{
+		margin-right: 18%;
+	}
+	.mr_30{
+		margin-right: 30%;
+	}
+</style>
+<script>
+	function showImg(data){
+		data = $.parseJSON(data);
+		var div = $('#upload').parent().find('.uploadify-div'), html = '<li>';
+		html += "<img src='"+data.url+"' />";
+		html += "<input type='hidden' name='pic[]' value='"+data.url+"' /><a class='delImgBtn'>删除</a></li>";
+		div.append(html);
+	}
+	$(function(){
+		$('body').on('click', '.delImgBtn', function(){
+			$(this).parents('li').remove();
+		});
+		$("select[name='type']").click(function(){
+			var option=$("select[name='type']").val();
+			if(option==1||option==2||option==5){
+		        $("#home").show();
+		        $("#floor").show();
+		        $("#house").show();
+			}else{
+			    $("#home").hide();
+		        $("#floor").hide();
+		        $("#house").hide();
+			}
+		});
+	});
+</script>

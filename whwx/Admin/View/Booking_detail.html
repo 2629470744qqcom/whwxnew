@@ -1,0 +1,33 @@
+{__NOLAYOUT__}
+<style> img{width:200px;margin-right:10px;}</style>
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看信息</h4>
+</div>
+<div class="modal-body" id="html">
+    <div>
+        <b>业主姓名：</b>{$info.name}&nbsp;&nbsp;&nbsp;
+        <b>联系方式：</b>{$info.phone}&nbsp;&nbsp;&nbsp;
+        <b>提交时间：</b>{$info.submit_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;
+        <b>预约类型： </b>{$info.tname}&nbsp;&nbsp;&nbsp;<br/>
+        <br><b>预约内容:  </b>{$info.desc}<br>
+        <hr>
+    </div>
+    <volist name='list' id='list'>
+        <div>
+            <b>发送人：</b>{$list.oname}&nbsp;&nbsp;&nbsp;<b>联系方式：</b>{$list.otel}&nbsp;&nbsp;&nbsp;<b>时间：</b>{$list.times|date='Y-m-d H:i:s', ###}</b>
+            <br>{$list.content}<br>
+            <hr>
+        </div>
+    </volist>
+    <lt name='info.status' value="2">
+        <div><textarea rows="3" class="form-control" id="content" placeholder="请输入回复内容"></textarea></div>
+    </lt>
+    <input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <lt name='info.status' value="2"><button class="btn btn-primary save" type="button">提交</button></lt>
+</div>
+
+

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160325" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="shop pb_66"> 
+  	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        便民服务<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="cont">
+        <!-- <p name="content">{$info.desc|default='未设置'}</p> -->
+        {$info.desc|default='未设置'}
+    </div>
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright absolute_b0 mb30"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+  	$('.list').click(function(){
+    		$('.list').removeClass('on');
+    		$('.cont').hide();
+    		$(this).addClass('on');
+    		$(this).children('ul').show();
+  	});
+});
+    // 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

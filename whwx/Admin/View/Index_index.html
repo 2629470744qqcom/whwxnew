@@ -1,0 +1,181 @@
+<link rel="stylesheet" type="text/css" href="/Public/Admin/css/morris.min.css">
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-header">星管家智慧社区<small> 管理中心</small></h1>
+    </div>
+</div>
+<div class="row">
+    <a href="{:U('Repair/index')}">
+        <div class="col-md-3">
+            <div class="panel panel-primary text-center no-boder bg-color-green">
+                <div class="panel-body">
+                    <i class="fa fa-bar-chart-o fa-5x"></i>
+                    <h3>{$count.repair}</h3>
+                </div>
+                <div class="panel-footer back-footer-green">在线报修</div>
+            </div>
+        </div>
+    </a>
+    <a href="{:U('RentalService/index')}">
+        <div class="col-md-3">
+            <div class="panel panel-primary text-center no-boder bg-color-blue">
+                <div class="panel-body"><i class="fa fa-shopping-cart fa-5x"></i><h3>{$count.rental}</h3></div>
+                <div class="panel-footer back-footer-blue">租售服务</div>
+            </div>
+        </div>
+    </a>
+    <a href="{:U('Wxmsg/index')}">
+        <div class="col-md-3">
+            <div class="panel panel-primary text-center no-boder bg-color-red">
+                <div class="panel-body"><i class="fa fa fa-comments fa-5x"></i><h3>{$count.wxmsg}</h3></div>
+                <div class="panel-footer back-footer-red">粉丝消息</div>
+            </div>
+        </div>
+    </a>
+    <a href="{:U('Owner/index')}">
+        <div class="col-md-3">
+            <div class="panel panel-primary text-center no-boder bg-color-brown">
+                <div class="panel-body"><i class="fa fa-users fa-5x"></i><h3>{$count.owner}</h3></div>
+                <div class="panel-footer back-footer-brown">小区业主</div>
+            </div>
+        </div>
+    </a>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">最近7天在线报修统计</div>
+            <div class="panel-body"><div id="morris-bar-chart"></div></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">最近7天服务评价统计</div>
+            <div class="panel-body"><div id="morris-donut-chart"></div></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">投诉建议</div>
+            <div class="panel-body">
+                <div class="list-group">
+                <volist name="complaintList" id="complaintList">
+                    <a class="list-group-item">
+                    <i class="fa fa-fw fa-comment"></i> {$complaintList.desc} [{$complaintList.times|date='Y-m-d H:i:s', ###}]</a>
+                </volist>
+                </div>
+                <div class="text-right"><a href="{:U('Complaint/index', array('status' => 0))}">查看更多 <i class="fa fa-arrow-circle-right"></i></a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">预约服务</div> 
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>业主姓名</th>
+                                <th>手机号</th>
+                                <th>预约内容</th>
+                                <th>预约时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="bookingList" id="bookingList">
+                                <tr>
+                                    <td>{$bookingList.name}</td>
+                                    <td>{$bookingList.phone}</td>
+                                    <td>{$bookingList.desc}</td>
+                                    <td>{$bookingList.day|date='Y-m-d H:i:s', ###}</td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right"><a href="{:U('Booking/index', array('status' => 1))}">查看更多 <i class="fa fa-arrow-circle-right"></i></a></div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">特惠团订单</div> 
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>产品名称</th>
+                                <th>下单时间</th>
+                                <th>数量</th>
+                                <th>总价</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="ordersList" id="ordersList">
+                                <tr>
+                                    <td>{$ordersList.name}</td>
+                                    <td>{$ordersList.single_time|date="Y-m-d H:i:s", ###}</td>
+                                    <td>{$ordersList.total}</td>
+                                    <td>{$ordersList.order_amount}</td>
+                                    <td>
+                                        <switch name='ordersList.status'>
+                                            <case value='0'>未支付</case>
+                                            <case value='1'>已取消</case>
+                                            <case value='2'>已支付</case>
+                                            <case value='3'>已发货</case>
+                                            <case value='4'>已收货</case>
+                                            <case value='5'>已完成</case>
+                                            <case value='6'>已删除</case>
+                                        </switch>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right"><a href="{:U('GroupOrders/index', array('status' => 2))}">查看更多 <i class="fa fa-arrow-circle-right"></i></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer style="text-align:center;">技术支持：<a href="http://www.weilt.net/" target="_blank">微老头</a></footer>
+<script type="text/javascript" src="/Public/Admin/js/raphael.min.js"></script>
+<script type="text/javascript" src="/Public/Admin/js/morris.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    // 当天日期
+    function show(day){
+       var mydate = new Date();
+       var str = "" + mydate.getFullYear() + "年";
+       str += (mydate.getMonth()+1) + "月";
+       str += mydate.getDate() +day+ "日";
+       return str;
+      }
+    //柱状图
+    Morris.Bar({
+        element: 'morris-bar-chart',
+        data: [<volist name='repair' id='list1'>{y: {$list1.times}, a: {$list1.creat_num}, b: {$list1.handle_num}, c: {$list1.complate_num}},</volist>],
+        xkey: 'y',
+        ykeys: ['a', 'b', 'c'],
+        labels: ['报修数', '处理数', '完成数'],
+        hideHover: 'auto',
+        resize: true
+    });
+    //饼状图
+    var num1 = {$score.num1|default=0}, num2 = {$score.num2|default=0}, num3 = {$score.num3|default=0}, num4 = {$score.num4|default=0}, num5 = {$score.num5|default=0};
+    Morris.Donut({
+        element: 'morris-donut-chart',
+        data: [
+            {label: "非常满意", value: num5},
+            {label: "满意", value: num4},
+            {label: "一般", value: num3},
+            {label: "不满意", value: num2},
+            {label: "非常不满意", value: num1},
+        ],
+        resize: true
+    });
+});
+</script>

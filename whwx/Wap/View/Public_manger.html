@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+ <html class="relative">
+ <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+ </head>
+ <body class="bg_c_e pb_66">
+    <div class="head_title_login">物业管家</div>
+    <div class="fix_form">
+        <form>
+            <div class="info_text">
+           		<ul>
+           			<li class="b_b1"><label class="mr_30">姓名</label><input name="name" type="text" placeholder="请输入真实姓名"></li>
+           			<li class="b_b1"><label class="mr_30">手机</label><input name="phone" type="text" placeholder="请输入你的手机号"></li>
+           			<li>
+                        <label class="mr_12">验证码</label>
+                        <input name="verify" type="text" placeholder="请输入验证码">
+                        <button type="button" class="verification_button">获取验证码</button>
+                    </li>
+           		</ul>
+            </div>
+            <div class="info_text" id="info_text">
+                <ul>
+                	<li class="b_b1" data-id='0'>
+                        <label class="mr_30 fl">小区</label>
+                        <div class="choice_admin">
+                            <div class="choice_case fl" data-id="0">选择你所在的小区</div>
+                            <span class="icon_img icon_angle_bottom fr"></span>
+                        </div>
+                    </li>
+                    <li class="b_b1" data-id='1'>
+                        <label class="mr_30 fl">选择身份</label>
+                        <div class="choice_admin">
+                            <div class="choice_case fl" data-id="0">选择你的管家身份</div>
+                            <span class="icon_img icon_angle_bottom fr"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="list-budget" >
+            	<ul class="list-budget-text" data-id='0' style="display:none">
+	            	<li data-id="0">选择你所在的小区</li>
+	            	<volist name="areaList" id="areaList">
+	            	    <li data-id="{$areaList.id}">{$areaList.name}</li>
+	            	</volist>
+	            </ul>
+	            <ul class="list-budget-text" data-id='1' style="display:none">
+	            	<li data-id="3">维修员</li>
+	            	<li data-id="4">客服</li>
+	            </ul>
+            </div>
+            <div class="list-budget-bg" style="display:none" ></div> 
+            <div class="mt_30"><button type="submit" class="post bg_c_g"> 提交 </button></div>
+            <div class="mt_10 return_index"><a href="{:U('Public/index')}">返回首页</a></div>
+            <input type="hidden" name="aid" value="" placeholder="请选择你所在的小区" class="hide_input">
+            <input type="hidden" name="cate" value="" placeholder="请选择你的管家身份" class="hide_input">
+            <input type="hidden" name="type" value='{$_GET["type"]}'>
+        </form>
+    </div>
+    <script type="text/javascript" src="{:JQ}"></script>
+    <script type="text/javascript" src="{:JS}common.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+    <script type="text/javascript">
+    $(function(){
+        //显示可选择项
+        $("#info_text li").click(function(){
+        	$('.list-budget ul').hide();
+        	$('.list-budget ul').eq($(this).data('id')).show();
+            $('.list-budget-bg').show();
+        });
+        //点击空白处隐藏选择项
+        $(".list-budget-bg").click(function(){
+            $(this).hide(); $('.list-budget ul').hide();
+        });
+        //选择某项并获取下级项
+        $('.list-budget-text').on('click', 'li', function(){
+            var d_id = $(this).parent().data('id');
+            $('.choice_case:eq(' + d_id + ')').html($(this).html());
+            $('.hide_input:eq(' + d_id + ')').val($(this).data('id'));
+            $('.list-budget-text li').attr('class', 'bg_c_f');
+            $(this).attr('class', 'bg_c_g');
+            $(".list-budget-bg,.list-budget ul").hide();
+        });
+        //获取手机验证码
+        var flag = true;
+        $('.verification_button').click(function(){
+            var obj = $(this), phone = $('input[name="phone"]').val();
+            if(/^1[3-8]\d{9}$/.test(phone)){
+                if(flag){
+                    waiting(); flag = false;
+                    $.post('{:U("Public/getVerifyCode")}', {phone: phone}, function(data){
+                        complete();
+                        if(data.status == 1){
+                            obj.html('60s后重新获取');
+                            waitTime = 60;
+                            var interval = setInterval(function(){
+                                if(waitTime > 1){
+                                    waitTime--; obj.html(waitTime + 's后重新获取');
+                                }else{
+                                    obj.html('获取验证码'); clearInterval(interval); flag = true;
+                                }
+                            }, 1000);
+                        }else{
+                            showInfo(data.info); flag = true;
+                        }
+                    });
+                }
+            }else{
+                showInfo('请输入正确的手机号');
+            }
+        });
+        //表单提交
+        $('form').submit(function(){
+            var flag = true;
+            $('input').each(function(i, v){
+                if($(v).val() == ''){
+                    flag = false; showInfo($(v).attr('placeholder')); return false;
+                }
+            });
+            if(flag){
+                waiting();
+                $.post('{:U("Public/regedit")}', $('form').serialize(), function(data){
+                    complete();showInfo(data.info, 1,function(){
+	                    if(data.status == 2){
+	                    	location.href = '/Wap/Index/index';
+	                    }else　if(data.status == 1){
+                            location.href = '/Wap/Public/index';
+                        }
+                    });
+                });
+            }
+            return false;
+        });
+    });
+    </script>
+ </body>
+ </html>

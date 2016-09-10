@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css?v=20160518" rel="stylesheet" />
+<style>
+	#facebox{position:fixed;bottom:50px;border-bottom:0px;}
+</style>
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div class="pb_60">
+ 	<div class="forum_head">
+	 	<a href='javascript:history.go(-1);'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">{$info.plate}</p>
+	 	<p class="fr mr_14"><a class="f_c_g" id="mine" href="#">我的</a></p>
+	 	<div class="hr_forum fr"></div>
+	 	<p class="fr f_c_g"><a class="f_c_g" id="pate" href="#">发布</a></p>
+ 	</div>
+ 	<div class="forum_details_title">
+ 		<div class="forum_admin_center f_z_18 f_c_6"> <eq name="info.top" value="1"><b style="color: red;">[置顶]</b></eq><eq name="info.hot" value="1"><b style="color: blue;">[热帖]</b></eq>{$info.title}</div>
+ 		<div class="forum_admin_head"> 
+ 			<div class="forum_head_text"><p class="f_z_14 f_c_9">{$info.times|date='Y-m-d H:i:s', ###}</p></div>
+ 			<div class="forum_head_right">
+	 			<p><a class="f_c_g" href="{:U('Forum/index?pid='.$info['pid'])}">{$info.plate|msubstr=0,4}</a></p>
+	 			<p class="f_c_9 mr_10">来自</p>
+ 			</div>
+ 			<div class="forum_head_right">
+	 			<p class="f_c_9 mr_10 zan" data-id="{$info.id}" style="background:url(/Public/Wap/images/zan<?php if($_COOKIE['forum_zan_' . $info['id']] > 0){echo 2;}else{echo 1;}?>.png) no-repeat;background-size:contain;padding-left:25px;">{$info.zan}</p>
+ 			</div>
+ 		</div>
+ 	</div>
+ 	<div class="forum_admin mb_70">
+ 		<div class="forum_admin_head">
+ 			<div class="forum_head_img"><a href="#"><img src="{$info.pic}?imageView2/1/h/100/w/100"></a></div>
+ 			<div class="forum_head_text ml_10"><p><empty name='info.name'>业主{$info.oid}<else />{$info.name}</empty></p></div>
+ 			<div class="forum_head_right"><p class="f_c_9 mr_10">楼主</p></div>
+ 		</div>
+ 		<div class="forum_admin_center b_t_dc fl">
+ 			<div class="mt_10 f_c_3">详情描述</div>
+ 			<p>{$info.desc}</p>
+ 			<volist name='info.pics' id='pic'><img src='{$pic}?imageView2/1/w/600' /></volist>
+ 		</div>
+ 		<div>
+	 		<volist name='postList' id='post'>
+		 		<div class="forum_reply">
+		 			<div class="forum_head_img"><a href="#"><img src="{$post.pic}?imageView2/1/h/100/w/100"></a></div>
+		 			<div class="forum_head_text"><p><empty name='post.name'>业主{$post.oid}<else />{$post.name}</empty></p><p class="f_z_14 f_c_9">{$post.times|date='Y-m-d H:i', ###}</p></div>
+		 			<div class="forum_head_right"><p class="f_c_9 mr_10"><?php echo $_GET['p'] > 1 ? ($_GET['p'] - 1) * 10 + $i : $i;?>楼</p></div>
+		 			<div class="forum_admin_center ">{$post.desc}</div>
+		 		</div>
+	 		</volist>
+	 		
+	 		<div class="forum_details_reply">
+	 			<span class="emotion" style="left:10px;"></span>
+	 			<button class='post'>回复</button>
+	 			<input id='saytext' contenteditable="true" name='desc' type='text' />
+	 		</div>
+	 	</div>
+	</div>
+	{$page}
+</div>
+<!-- <div class="bottom_copyright mb_60"></div>
+<a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright fl mb_60 absolute_b0"></div></a> -->
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.qqFace.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id='{$_GET["id"]}', type = '{$Think.session.fansInfo.type}', flag = true;
+		$('.post').click(function(){
+			if(type == -1){
+				showInfo('你没有权限，请注册为业主', 2, function(){
+					location.href = '{:U("Public/index")}';
+				});
+			}else{
+				var desc = $('input[name="desc"]').val();
+				if(desc){
+					if(flag){
+						desc = replace_em(desc);
+						flag = false;
+						$.post('{:U("Forum/addPost")}', {tid: id, desc : desc }, function(data){
+							flag = true;
+							if(data > 0){
+								showInfo('回复成功', 1, function(){location.reload();});
+							}else{
+								showInfo('回复失败');
+							}
+						});
+					}
+				}else{
+					showInfo('请输入回复内容');
+				}
+			}
+		});
+		if(id > 0){
+			$.get('{:U("Forum/setView")}', {id : id}, function(){});
+		}
+		$("#mine").click(function(){
+			if(type != 1){
+                $(this).attr("href",'#');
+                showInfo('你没有权限，请注册为业主', 2, function(){
+					location.href = '{:U("Public/index")}';
+				});
+			}else{
+			    $(this).attr("href","{:U('Forum/card')}");
+			}
+		});
+		$("#pate").click(function(){
+			if(type != 1){
+                $(this).attr("href",'#');
+                showInfo('你没有权限，请注册为业主', 2, function(){
+					location.href = '{:U("Public/index")}';
+				});
+			}else{
+			    $(this).attr("href","{:U('Forum/release?pid='.$info['pid'])}");
+			}
+		});
+
+		$('.zan').click(function(){
+			var obj = $(this), id = obj.data('id'); obj.data('id', '0');
+			if(id > 0){
+				waiting();
+				$.get('{:U("Forum/zan")}', {id: id}, function(data){
+					complete();
+					data.status == 1 && obj.css('background-image', 'url(/Public/Wap/images/zan2.png)').html(parseInt(obj.html()) + 1);
+				});
+			}
+		});
+	});
+</script>
+<script type="text/javascript">
+$(function(){
+	$('.emotion').qqFace({
+		id : 'facebox',//表情盒子的ID
+		assign:'saytext',//给那个控件赋值
+		path:'/Public/Wap/face/'//表情存放的路径
+	});
+});
+// 查看结果
+function replace_em(str){
+	str = str.replace(/\</g,'&lt;');
+	str = str.replace(/\>/g,'&gt;');
+	str = str.replace(/\n/g,'<br/>');
+	str = str.replace(/\[em_([0-9]*)\]/g,'<img src="/Public/Wap/face/$1.gif" class="face" border="0" />');
+	return str;
+}
+</script>
+</body>
+</html>

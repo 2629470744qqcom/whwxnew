@@ -1,0 +1,127 @@
+<div class="row"> 
+	<h3 class="page-header">客服专员&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>客服</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">客服名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">上传头像：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			    		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                	</div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required mobile" name="phone" value="{$info.phone}" maxlength='11'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">选择小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">选择楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4" id="bid">请选择小区</div>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		            <label class="col-sm-3 control-label">客服信息：</label>
+		            <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc" maxlength='500'>{$info.desc}</textarea>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Service/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" >
+	$(function(){
+		var aid2 = '{$info["aid"]}', id = '{$info["id"]}', bids = ','+'{$info["bids"]}'+',', block2, html2 = '';
+		if(aid2 > 0){
+			waiting();
+			$.get('{:U("Block/getBlockByAid")}', {aid : aid2}, function(data){
+				$.get('{:U("Service/getServiceBlockByAid")}', {aid : aid2, id:id}, function(data2){
+					complete();
+					block2 = data2;
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							if(block2.indexOf(','+data[i]['id']+',') >= 0){
+								html2 += '<label class="checkbox-inline"><input type="checkbox" disabled="true" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}else if(bids.indexOf(','+data[i]['id']+',') >= 0){
+								html2 += '<label class="checkbox-inline"><input type="checkbox" checked value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}else{
+								html2 += '<label class="checkbox-inline"><input type="checkbox" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}
+						}
+					}else{
+						html2 = '该小区还没有楼栋';
+					}
+					$('#bid').html(html2);
+				});
+			});
+		}
+		$('#aid').change(function(){
+			var aid = $(this).val(), html = '', block = '';
+			if(aid > 0){
+				waiting();
+				$.get('{:U("Service/getServiceBlockByAid")}', {aid : aid}, function(data){
+					block = data;
+				});
+				$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							if(block.indexOf(','+data[i]['id']+',') >= 0){
+								html += '<label class="checkbox-inline"><input type="checkbox" disabled="true" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}else{
+								html += '<label class="checkbox-inline"><input type="checkbox" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}
+						}
+					}else{
+						html = '该小区还没有楼栋';
+					}
+					$('#bid').html(html);
+				});
+			}else{
+				$('#bid').html('');
+			}
+		});
+	});
+</script>

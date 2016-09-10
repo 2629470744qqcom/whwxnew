@@ -1,0 +1,50 @@
+<div class="row"><h3 class="page-header">部门管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a class="btn btn-primary" href="{:U('Group/add')}">添加部门</a></label>
+                <form action='{:U("Group/index")}' class="form-inline text-right m-b-5 fr">
+          部门名称：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w150">
+              状态：<select name='status' class="form-control mr20 w150">
+                        <option value='-1'>全部</option>
+                        <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >启用</option>
+                        <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >禁用</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>部门名称</th>
+                                <th width="75">状态</th>
+                                <th width="180">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}</td>
+                                    <td class="center">
+                                     	<button class='btn <eq name="list.status" value="1">btn-primary<else />btn-default</eq> btn-sm setStatus' type="button" data-url='{:U("Group/setStatus?id=".$list["id"])}' data-status="{$list.status}"><eq name="list.status" value='1'>启用<else />禁用</eq></button>
+                                    </td>
+                                    <td>
+                                     	<a class="btn-sm btn btn-default" href='{:U("Group/rule?id=".$list["id"])}'>权限</a>
+                                        <a class="btn-sm btn btn-default" href='{:U("Group/edit?id=".$list["id"])}'>修改</a>
+                                        <gt name="list.id" value="1">
+                                            <button data-url='{:U("Group/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+                                        </gt>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>

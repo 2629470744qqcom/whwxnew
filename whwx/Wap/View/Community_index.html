@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+ 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+ 	<link href="{:CSS}common.css" rel="stylesheet" />
+    <link href="{:CSS}style.css?v=20160317" rel="stylesheet" />
+ 	<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e pb_66">
+ 	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">社区活动</p>
+        <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<volist name='list' id='list'>
+        <div class="community_index">
+            <a href="{:U('Community/details?id='.$list['id'])}">
+                <div><img class="active_img" src="{$list.pic}?imageView2/0/w/618/h/325"></div>
+                <div class="community_text">
+                    <ul class="clearfix">
+                        <li class="community_title">
+                            <p class="f_z15 f_c_3">{$list.title}</p>
+                            <p class="f_z_13 f_c_6">时间:{$list.times}</p>
+                            <p class="f_z_13 f_c_6">地点:{$list.address}</p>
+                        </li>
+                        <li class="community_btn">
+                            <switch name='list.state'>
+                                <case value='1'><a href="{:U('Community/details?id='.$list['id'])}" class="orange">已参赛</a></case>
+                                <case value='2'><a href="{:U('Community/details?id='.$list['id'])}" class="green">未开始</a></case>
+                                <case value='3'><a href="{:U('Community/details?id='.$list['id'])}" class="gery">已结束</a></case>
+                                <case value='4'><a href="{:U('Community/details?id='.$list['id'])}" class="green">进行中</a></case>
+                            </switch>
+                        </li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+ 	</volist>
+    {$page}
+   <!--  <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright fl mb30 absolute_b0"></div></a> -->
+    <script type="text/javascript" src="{:JQ}"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+    <script>
+        // 首页跳转
+        $('#index_icon').click(function(){
+            location.href = $(this).data('url');
+        })
+        $(".active_img").css("height",$(this).width()*0.5);
+    </script>
+</body>
+</html>

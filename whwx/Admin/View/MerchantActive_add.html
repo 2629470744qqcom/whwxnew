@@ -1,0 +1,86 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row"> 
+	<h3 class="page-header">优惠活动&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>活动</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">活动标题：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="title" value="{$info.title}" maxlength='50'>
+			        </div>
+			        <small>不超过五十个字</small>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">活动图片：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                	</div>
+			    </div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">活动时间：</label>
+			        <div class="col-sm-4">
+			        	<input type="text" id="start_time" name="start_time" value="<empty name='info.start_time'>{:date('Y-m-d H:i')}<else/>{$info.start_time|date='Y-m-d H:i', ###}</empty>" class="wid_24  pointer datepicker form-control" style='width:40%;float:left;' readonly />
+			        	<span style='float:left;'>&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+			        	<input type="text" id="end_time" name="end_time" value="<empty name='info.end_time'>{:date('Y-m-d H:i', time() + 3600 * 24 * 3)}<else/>{$info.end_time|date='Y-m-d H:i', ###}</empty>" class="wid_24  pointer datepicker form-control" style='width:40%;' readonly />
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="aid" name="aid">
+			        		<option value="0" >全部小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">活动信息：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('MerchantActive/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script>
+	$(document).ready(function() {
+		$('input.datepicker').datetimepicker({format : "yyyy-mm-dd hh:ii", minView : 0, autoclose : true});
+	});
+</script>

@@ -1,0 +1,91 @@
+{__NOLAYOUT__}
+<style> img{width:200px;margin-right:10px;}</style>
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看信息</h4>
+</div>
+<div class="modal-body" id="html">
+<div>
+    <b>订单号：</b>{$info.id|sprintf='%08s',###}&nbsp;&nbsp;&nbsp;
+    <b>下单时间：</b>{$info.single_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;
+    <b>订单状态：</b> 
+    <switch name='info.status'>
+        <case value='0'>未支付</case>
+        <case value='1'>已取消</case>
+        <case value='2'>已支付</case>
+        <case value='3'>已发货</case>
+        <case value='4'>已收货</case>
+        <case value='5'>已完成</case>
+        <case value='6'>已删除</case>
+    </switch>
+</div>
+<hr>
+<div>
+    <b>业主姓名：</b>{$info.name}&nbsp;&nbsp;&nbsp;
+    <b>手机号：</b>{$info.phone}&nbsp;&nbsp;&nbsp;
+    <b>地址：</b>{$info.addr}<span>（请已物流地址为准）</span>
+</div>
+<hr>
+<div>
+    <b>产品名称：</b>{$info.title}&nbsp;&nbsp;&nbsp;
+    <b>单价：</b></b>{$info.prix}&nbsp;&nbsp;&nbsp;
+    <b>总价：</b>{$info.order_amount}&nbsp;&nbsp;&nbsp;
+    <b>数量：</b>{$info.total}
+</div>
+<hr>
+<div>
+    <b>支付方式：</b>
+    <switch name='info.pay_type'>
+        <case value='0'>未支付</case>
+        <case value='1'>微信付款</case>
+        <case value='2'>货到付款</case>
+        <case value='3'>积分付款</case>
+    </switch>&nbsp;&nbsp;&nbsp;
+    <b>支付时间：</b>{$info.pay_time|date='Y-m-d H:i:s', ###} &nbsp;&nbsp;&nbsp;
+    <eq name="info.pay_type" value="3"><b>支付积分：</b><else/><b>支付金额：</b></eq>{$info.pay_amount}          
+</div>
+<hr>
+    <egt name="info.status" value="3">
+        <div>
+            <b>支付单号：</b><if condition='($info.pay_type eq 3) or($info.pay_type eq 0)'>无<else/>{$info.pay_order|default='无'}</if>&nbsp;&nbsp;&nbsp;<b>物流公司：</b>{$info.ems.ems_name}<b>&nbsp;&nbsp;&nbsp;物流单号：</b>{$info.ems.ems_num}&nbsp;&nbsp;&nbsp;
+            <b>物流地址：</b>{$info.ems.address}
+            <hr>
+        </div>
+    </egt>
+    <egt name="info.status" value="5">
+        <div>
+            <b>业主评分：</b>{$info.comment.score}分&nbsp;&nbsp;&nbsp;<b>评价时间：</b>{$info.comment.times|date='Y-m-d H:i:s', ###}
+            <br><b>评论内容：</b>{$info.comment.desc}<br><hr>
+        </div>
+    </egt>
+    <volist name='list' id='list'>
+        <div>
+            <b>发送人：{$list.oname}&nbsp;&nbsp;&nbsp;联系方式：{$list.otel}&nbsp;&nbsp;&nbsp;时间：{$list.times|date='Y-m-d H:i:s', ###}</b>
+            <br>{$list.content}<br>
+            <hr>
+        </div>
+    </volist>
+    <lt name='info.status' value="5">
+        <neq name='info.status' value="1">
+            <div><textarea rows="3" class="form-control" id="content" data-pid='{$info.pid}' placeholder="请输入备注信息，仅管理员可见"></textarea></div>
+        </neq>
+    </lt>
+    <input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <lt name='info.status' value="5"><neq name='info.status' value="1"><button class="btn btn-primary submit save" type="button">提交</button></neq></lt>
+</div>
+<script>
+    $(function(){
+      $(".save").click(function(){
+            var obj=$('textarea');
+            var content =obj.val();
+            var id=$("input[name='id']").val();
+            $.post('{:U("GroupOrders/detail")}',{content:content,id:id},function(data){
+                   showInfo(data.info);
+                    $('#myModallook').modal('hide');
+            });
+      });
+    }); 
+</script>

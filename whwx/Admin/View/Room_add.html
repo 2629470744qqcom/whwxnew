@@ -1,0 +1,201 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"><h3 class="page-header">房号管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房间名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="30">
+			        </div>
+			        <small>不超过三十个字</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="addr" value="{$info.addr}" maxlength="30">
+			        </div>
+			        <small>不超过三十个字</small>
+			    </div> 
+                <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="bid" name="bid">
+			        		<option value="0" >请选择楼栋号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="uid" name="uid">
+			        		<option value="0" >请选择单元号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">业主姓名：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="owner" value="{$info.owner}" maxlength="200">
+			        </div>
+			        <small>多个人用空格隔开</small>
+			    </div> 
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">业主联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="phone" value="{$info.phone}" maxlength="200">
+			        </div>
+			        <small>多个号码用空格隔开</small>
+			    </div> 
+                <div class="form-group">
+			        <label class="col-sm-3 control-label">面积：</label>
+			        <div class="col-sm-4">
+			         	<input class="form-control" name="size" value="{$info.size}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Room/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" >
+	$(function(){
+		var aid1 = '{$info["aid"]}', bid1 = '{$info["bid"]}', uid1 = '{$info["uid"]}', rid1 = '{$info["rid"]}', id = '{$info["id"]}';
+		if(aid1 > 0){
+			waiting();
+			$.get('{:U("Block/getBlockByAid")}', {aid : aid1}, function(data){
+				var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(bid1 == data[i]['id']){
+							html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}else{
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}
+				}else{
+					html = '<option value="0" >该小区还没有楼栋</option>';
+				}
+				$('#bid').html(html);
+			});
+			$.get('{:U("Unit/getUnitByBid")}', {bid : bid1}, function(data){
+				var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(uid1 == data[i]['id']){
+							html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}else{
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}
+				}else{
+					html = '<option value="0" >该楼栋还没有单元</option>';
+				}
+				$('#uid').html(html);
+			});
+			$.get('{:U("Room/getRoomByUid")}', {uid : uid1, bid : bid1}, function(data){
+				complete();var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(id == data[i]['oid']){
+							html += '<label class="radio-inline"><input type="radio" checked value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}else if(data[i]['oid'] > 0){
+							html += '<label class="radio-inline"><input type="radio" disabled="true" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}else{
+							html += '<label class="radio-inline"><input type="radio" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}
+					}
+				}else{
+					html = '空';
+				}
+				$('.rooms').html(html);
+			});
+		}
+		$('#aid').change(function(){
+			var aid = $(this).val(), html='<option value="0" >请选择楼栋号</option>';
+			if(aid > 0){
+				waiting();
+				$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>'; }
+					}else{
+						html = '<option value="0" >该小区还没有楼栋</option>';
+					}
+					$('#bid').html(html);
+				});
+			}
+		});
+		$('#bid').change(function(){
+			var bid = $(this).val(), html='';
+			if(bid > 0){
+				waiting();
+				$.get('{:U("Unit/getUnitByBid")}', {bid : bid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该楼栋还没有单元</option>';
+					}
+					$('#uid').html(html);
+				});
+			}
+		});
+		/*
+		$('#uid').change(function(){
+			var uid = $(this).val(), html='', bid = $('#bid').val();
+			if(uid > 0){
+				waiting();
+				$.get('{:U("Room/getRoomByUid")}', {uid : uid, bid : bid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							if(data[i]['oid'] > 0){
+								html += '<label class="radio-inline"><input type="radio" disabled="true" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+							}else{
+								html += '<label class="radio-inline"><input type="radio" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+							}
+						}
+					}else{
+						html = '空';
+					}
+					$('.rooms').html(html);
+				});
+			}
+		});
+		*/
+	});
+</script>
+

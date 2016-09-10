@@ -1,0 +1,51 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看详细内容</h4>
+</div>
+<div class="modal-body" id="html">
+	<div>
+		<b>姓名：{$info.owner}&nbsp;&nbsp;联系方式：{$info.phone}&nbsp;&nbsp;房间号：{$info.addr}&nbsp;&nbsp;小区：{$info.name}&nbsp;&nbsp;提交时间：{$info.times|date='Y-m-d H:i:s', ###}</b>
+		<br>{$info.desc}<br>
+		<notempty name='info.pics'>
+	 		<volist name="info.pics" id='pic'>
+	 			<a href="{$pic}" target="_blank"><img src='{$pic}?imageView2/2/h/160'/></a>
+	 		</volist>
+		</notempty>
+	    <hr>
+    </div>
+    <volist name='list' id='list'>
+		<div>
+			<b>
+				姓名：{$list.oname}&nbsp;&nbsp;
+				联系方式：{$list.otel}&nbsp;&nbsp;
+				反馈时间：{$list.times|date='Y-m-d H:i:s', ###}
+			</b>
+			<br>{$list.content}<br>
+		    <hr>
+	    </div>
+	</volist>
+	<notempty name='info.feedback'>
+		<div><b>反馈内容：{$info.feedback}</b><div>
+		<notempty name='info.feedback_pic'>
+	 		<volist name="info.feedback_pic" id='feedback_pic'>
+	 			<a href="{$feedback_pic}" target="_blank"><img src='{$feedback_pic}?imageView2/2/h/160'/></a>
+	 		</volist>
+		</notempty>
+	</notempty>
+	 <hr>
+	<notempty name='info.comment'>
+		<div>
+			<b>评分：{$info.comment.score}&nbsp;&nbsp;&nbsp;评价时间：{$info.comment.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$info.comment.desc}<br>
+		</div>
+	</notempty>
+	<neq name='info.status' value='2'>
+		<div><textarea rows="3" class="form-control" id="content" placeholder="请输入回复内容（仅管理员可见）"></textarea></div>
+	</neq>
+	<input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+    <neq name='info.status' value="2"><button class="btn btn-primary submit" type="button">提交</button></neq>
+</div>

@@ -1,0 +1,69 @@
+{__NOLAYOUT__}
+<style>.f-s-22{font-size : 22px;}</style>
+<div class="modal-body">
+	<div>
+		<div class="form-group"><label class='col-sm-3 control-label'>房号：</label><div class='col-sm-4 f-s-22'>{$info.addr|default='0'}</div></div>
+		<div class="form-group"><label class='col-sm-3 control-label'>面积：</label><div class='col-sm-4 f-s-22'>{$info.size|default='0'}平方米</div></div>
+		<div class="form-group"><label class='col-sm-3 control-label'>业主姓名：</label><div class='col-sm-4 f-s-22'>{$info.name|default="未绑定"}</div></div>
+		<div class="form-group"><label class='col-sm-3 control-label'>业主手机：</label><div class='col-sm-4 f-s-22'>{$info.phone|default="未绑定"}</div></div>
+		<div class="form-group">
+			<lt name="info.porperty_pay" value="$info['porperty']">
+				<input type="text" size="5" class="input_real_pay" value="<?php echo $info['porperty'] - $info['porperty_pay'];?>" />
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['porperty'] - $info['porperty_pay'];?>" checked id='porperty_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>物业费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.porperty|default='0'}元；已收{$info.porperty_pay|default='0'}元</div>
+		</div>
+		<div class="form-group">
+			<lt name="info.energy_pay" value="$info['energy']">
+				<input type="text" size="5" class="input_real_pay" value="<?php echo $info['energy'] - $info['energy_pay'];?>"/>
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['energy'] - $info['energy_pay'];?>}" checked id='energy_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>能耗费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.energy|default='0'}元；已收{$info.energy_pay|default='0'}元</div>
+		</div>
+		<div class="form-group">
+			<lt name="info.water_pay" value="$info['water']">
+				<input type="text"  size="5" class="input_real_pay" value="<?php echo $info['water'] - $info['water_pay'];?>"/>
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['water'] - $info['water_pay'];?>" checked id='water_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>二次供水费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.water|default='0'}元；已收{$info.water_pay|default='0'}元</div>
+		</div>
+		<div class="form-group">
+			<lt name="info.carport_pay" value="$info['carport']">
+				<input type="text" size="5" class="input_real_pay" value="<?php echo $info['carport'] - $info['carport_pay'];?>"/>
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['carport'] - $info['carport_pay'];?>" checked id='carport_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>车位费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.carport|default='0'}元；已收{$info.carport_pay|default='0'}元</div>
+		</div>
+		<div class="form-group">
+			<lt name="info.car_manger_pay" value="$info['car_manger']">
+				<input type="text"  size="5" class="input_real_pay" value="<?php echo $info['car_manger'] - $info['car_manger_pay'];?>"/>
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['car_manger'] - $info['car_manger_pay'];?>" checked id='car_manger_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>车位管理费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.car_manger|default='0'}元；已收{$info.car_manger_pay|default='0'}元</div>
+		</div>
+		<div class="form-group">
+			<lt name="info.arrear_money_pay" value="$info['arrear_money']">
+				<input type="text" size="5" class="input_real_pay" value="<?php echo $info['arrear_money'] - $info['arrear_money_pay'];?>"/>
+				<input type="checkbox" class="paymoney" data-money="<?php echo $info['arrear_money'] - $info['arrear_money_pay'];?>" checked id='arrear_money_pay'>
+			</lt>
+			<label class='col-sm-3 control-label'>历年欠费：</label>
+			<div class='col-sm-4 f-s-22'>应收：{$info.arrear_money|default='0'}元；已收{$info.arrear_money_pay|default='0'}元</div>
+			<notempty name='info.arrear_money_note'>（{$info.arrear_money_note}）</notempty>
+		</div>
+		<div class="form-group"><label class='col-sm-3 control-label'>应缴费用：</label><div class='col-sm-4 f-s-22 money' style='color:red;'>{$info.total_money}元</div></div>
+		<div class="form-group">
+        	<div class="col-sm-offset-3 col-sm-5">
+        		<gt name="info.total_money" value="0">
+					<button class="btn btn-primary pay" data-money="{$info.total_money}" data-pid='{$info.id}' type="button">缴费</button>
+				<else/>
+					<button class="btn btn-default pay" type="button" disabled>所有费用已缴清</button>
+				</gt>
+			</div>
+	   </div>
+	</div>
+</div>

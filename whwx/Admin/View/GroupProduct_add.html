@@ -1,0 +1,151 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"> <h3 class="page-header">产品管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="50">
+			        </div>
+			        <small>不超过五十个字</small>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">库存：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required digits" name='num' value="{$info.num}">
+			    	</div>
+			    </div>
+			   <div class="form-group">
+			        <label class="col-sm-3 control-label">图片：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pics'>
+				       			<volist name='info.pics' id='pic'>
+				       				<li>
+								    	<img src="{$pic}" >
+								    	<input type="hidden"  value="{$pic}" id='pics{$i}' name="pic[]">
+								    	<a class='delImgBtn'>删除</a> 
+							    	</li>
+				       			</volist>
+						    </notempty>
+					    </div> 
+			       		<button data-multi='true' type="button" data-callback='showImg' class="upload" id="upload">选择图片</button>
+			        </div>
+			    </div> 
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">购买方式：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline" >
+			                <input type="radio" value="0" id="category1" name="category" <neq name="info.category" value="1">checked</neq>>人民币
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="1"  id="category2" name="category" <eq name="info.category" value="1">checked</eq>>积分兑换
+			            </label>
+		            </div>
+		        </div>
+			    <div class="form-group" id="price1">
+			    	<label  class="col-sm-3 control-label">现价：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required  number" name='present_price' value="{$info.present_price}">
+			    	</div>
+			    	<small>单位(元)</small>
+			    </div>
+			    <div class="form-group" id="price2">
+			    	<label  class="col-sm-3 control-label">原价：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required  number" name='original_price' value="{$info.original_price}">
+			    	</div>
+			    	<small>单位(元)</small>
+			    </div>
+			     <div class="form-group" style="display:none;" id="credit">
+			    	<label  class="col-sm-3 control-label">积分：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required  number" name='credit' value="{$info.credit}">
+			    	</div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">标签：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input type="text" class="form-control required" name="label" value="{$info.label}" placeholder="推荐 特惠">
+			        </div>
+			        <small>每个标签,请用空格隔开,<br>请不要多于3个标签,每个标签不要多于4个字</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control digits required" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+		            <label class="col-sm-3 control-label">说明：</label>
+		            <div class="col-sm-4">
+		                <textarea rows="3" class="form-control keditor" data-simple="true" name="content"  maxlength="200">{$info.content}</textarea>
+		            </div>
+		        </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>上架
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>下架
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('GroupProduct/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	function showImg(data){
+		data = $.parseJSON(data);
+		var div = $('#upload').parent().find('.uploadify-div'), html = '<li>';
+		html += "<img src='"+data.url+"' />";
+		html += "<input type='hidden' name='pic[]' value='"+data.url+"' /><a class='delImgBtn'>删除</a></li>";
+		div.append(html);
+	}
+	$(function(){
+		$('body').on('click', '.delImgBtn', function(){
+			$(this).parents('li').remove();
+		});
+	});
+	$(function(){
+		$("#category1").click(function(){
+            $("#price1").show();
+            $("#price2").show();
+            $("#credit").hide();
+		});
+		$("#category2").click(function(){
+			$("#credit").show();
+            $("#price1").hide();
+            $("#price2").hide();
+		});
+		$("#category1").each(function(){
+		    if($("#category1").attr("checked")=="checked"){
+		        $("#price1").show();
+		        $("#price2").show();
+		        $("#credit").hide();
+		    }
+	   });
+	   $("#category2").each(function(){
+		   if($("#category2").attr("checked")=="checked"){
+		       $("#credit").show();
+		       $("#price1").hide();
+		       $("#price2").hide();
+		   }
+	   });
+		
+    });
+</script>
+

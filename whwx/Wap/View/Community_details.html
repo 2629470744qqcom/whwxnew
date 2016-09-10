@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+	<link href="{:CSS}common.css" rel="stylesheet" />
+    <link href="{:CSS}style.css" rel="stylesheet" />
+	<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e pb_66">
+	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">活动详情</p>
+	 	<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+	<div class="community_admin mt_10 relative">
+		<ul>
+		    <li>
+		    	<switch name='info.state'>
+		 	    	<case value='1'><div class="community_right_triangle_g"></div></case>
+		 	    	<case value='2'><div class="community_right_triangle_e"></div></case>
+		 	    	<case value='3'><div class="community_right_triangle_e"></div></case>
+		 	    	<case value='4'><div class="community_right_triangle_y"></div></case>
+		 	    </switch>
+	 	        <div class="community_right_triangle_title">
+		 	        <p class="community_right_triangle_text">
+			 	        <switch name='info.state'>
+				 	        <case value='1'>已报名</case>
+				 	        <case value='2'>未开始</case>
+				 	        <case value='3'>已结束</case>
+				 	        <case value='4'>进行中</case>
+			 	        </switch>
+		 	        </p>
+	 	        </div>
+		    </li>
+		</ul>
+		<div class="community_details_img">
+			<img src="{$info.pic}?imageView2/1/h/150/w/150">
+		</div>
+		<div class="community_admin_title">
+			<p class="f_z15 f_c_3">{$info.title}</p>
+			<p class="f_z_13 f_c_6">时间:{$info.times}</p>
+			<p class="f_z_13 f_c_6">地点:{$info.address}</p>
+		</div>
+	</div>
+	<div class="community_admin mt_10 mb_30">
+		<div class="f_z_16 mb_10">活动介绍</div>
+		<p class=" f_c_6 f_z_14">{$info.desc}</p>
+	</div>
+	<ul>
+		<li>
+		    <div class=" fix_form">
+		    	<switch name='info.state'>
+		 	    	<case value='1'><button type="button" class="post bg_c_y"> 取消参与 </button></case>
+		 	    	<case value='2'><button type="button" class="post bg_c_c"> 未开始 </button></case>
+		 	    	<case value='3'><button type="button" class="post bg_c_c"> 已结束 </button></case>
+		 	    	<case value='4'><button type="button" class="post bg_c_g"> 参与活动 </button></case>
+		 	    </switch>
+		    </div>
+		    <p class="community_details_btext"><span class="f_c_g">{$info.sign_num}</span>人已报名</p>
+		</li>
+	</ul> 
+
+	<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+	<script type="text/javascript" src="{:JQ}"></script>
+	<script type="text/javascript" src="{:JS}common.min.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+	<script type="text/javascript">
+		$(function(){
+			var id = '{$_GET["id"]}', flag = true;
+			$('body').on('click', '.bg_c_g', function(){
+				var obj = $(this);
+				if(flag){flag = false;
+					$.post('{:U("Community/sign")}', {id : id}, function(data){
+						flag = true;
+						showInfo(data.info,1, function(){
+							if(data.status == 1){
+								obj.addClass('bg_c_y').removeClass('bg_c_g').html('取消参与');
+								$('.f_c_g').html(parseInt($('.f_c_g').html())+1);
+								$('.community_right_triangle_text').html('已报名');
+							}
+						});
+					});
+				}
+			});
+			$('body').on('click', '.bg_c_y', function(){
+				var obj = $(this);
+				if(flag){flag = false;waiting();
+					$.post('{:U("Community/signCancel")}', {id : id}, function(data){
+						flag = true;complete();
+						showInfo(data.info, 1, function(){
+							if(data.status == 1){
+								obj.addClass('bg_c_g').removeClass('bg_c_y').html('参与活动');
+								$('.f_c_g').html(parseInt($('.f_c_g').html())-1);
+								$('.community_right_triangle_text').html('进行中');
+							}
+						});
+					});
+				}
+			});
+		});
+		// 首页跳转
+	    $('#index_icon').click(function(){
+	        location.href = $(this).data('url');
+	    })
+	</script>
+</body>
+</html>

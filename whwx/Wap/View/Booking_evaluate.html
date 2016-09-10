@@ -1,0 +1,109 @@
+<!doctype c>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css?v=20160308" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		我的预约
+		<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="mine_cont">
+    	<ul>
+        	<li><label>预约项目：</label><p class="pcont">{$info.catename}</p></li>
+        	<li><label>选择商家：</label><p class="pcont">{$info.company}</p></li>
+        	<li><label>预约日期：</label><p class="pcont">{$info.day|date='Y-m-d H:i:s', ###}</p></li>
+<!--         	<li><label>时间：</label><p>{$info.hour}</p></li> -->
+        	<li><label>业主姓名：</label><p class="pcont">{$info.name}</p></li>
+        	<li><label>业主手机：</label><p class="pcont">{$info.phone}</p></li>
+        </ul>
+    </div>
+    <eq name='info.status' value='2'>
+    	<div class="evaluate mb_66" style="margin-bottom:66px;">
+            <div class="cont">
+                <ul>
+                    <li class="line"><label>评价</label><span>{$info.comment.desc}</span></li>
+                    <li><label>评分</label>
+                        <div id="starBox">
+                            <ul class="star" id="">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                            </ul>
+                            <div class="current-rating" style='width:<?php echo 24*$info["comment"]["score"]; ?>px;'></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+	    </div>
+    <else />
+	    <div class="evaluate mb_66" style="margin-bottom:66px;">
+	        <div class="cont">
+	            <ul>
+	                <li class="line"><label>评价</label><textarea name="desc" placeholder='写上你对这次预约服务的评价'></textarea></li>
+	                <li><label>评分</label>
+	                    <div id="starBox">
+	                        <ul class="star" id="star">
+	                            <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+	                            <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+	                            <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+	                            <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+	                            <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+	                        </ul>
+	                        <div class="current-rating" id="showb" data-id='5'></div>
+	                    </div>
+	                </li>
+	            </ul>
+	        </div>
+	        <div><button type="button" class="post comment"> 评价 </button></div>
+		</div>
+    </eq>
+</div> 
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.star.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id = '{$_GET["id"]}';
+		$('.comment').click(function(){
+			var desc = $('textarea[name="desc"]').val();
+			var score = $('#showb').data('id');
+
+			var flag=true;
+			if(desc==''){
+				showInfo('请输入内容!');
+				 flag=false;
+			}
+			if(flag){
+				 waiting();
+				 flag=false;
+			$.post('{:U("Booking/comment")}', {id: id, desc: desc, score:score}, function(data){
+				    flag=true;
+                    complete();
+				showInfo(data.info, 1, function(){
+					if(data.status == 1){
+                                window.location.reload();
+					}
+				});
+				
+			});
+			}
+		});
+	})
+	$('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

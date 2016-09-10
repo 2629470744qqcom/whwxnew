@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css?v=20160310" rel="stylesheet" />
+<link href="{:CSS}css.css" rel="stylesheet" />
+<link href="/Public/Admin/css/font-awesome.css" rel="stylesheet" />
+<link href="{:COM}css/bootstrap-datetimepicker-diy.css" rel="stylesheet" />
+<style type="text/css">
+.datetimepicker{z-index: 110; background: rgba(0,0,0,0.5); width: 100%; height: 100%; top: 0!important; left: 0!important; position: absolute; display: none;}
+.datetimepicker .day,.datetimepicker .new{color: #ff6600; background: beige;}
+.datetimepicker-days,.datetimepicker-months,.datetimepicker-years{background: #fff; width: 100%; height: 320px; margin-top: 30%; border-radius: 5px;}
+.table-condensed{width: 100%; height: 320px;}
+.table-condensed thead tr:first-child{height: 38px;}
+
+.detail{ width:100%; background-color:#fff; margin-top:6px; position:relative;}
+.detail ul{ border-bottom:1px solid #dcdcdc; padding:10px; position: relative;}
+.detail ul:last-child{ border-bottom:0;}
+.detail .upper p{ float:left; width:50%; color:#999; font-size:14px;}
+.detail .upper p.price{ text-align:right;}
+.detail .midden li{ float:left;}
+.detail .midden .pic{ width:30%; margin-right:2%; height:69px;}
+.detail .midden .pic img{ display:block; height:69px; border-radius:4px;}
+.detail .midden .text{ width:68%; line-height:23px;}
+.detail .midden .name{ width:100%; height:46px; overflow:hidden; font-size:16px;}
+.detail .midden .num{ text-align:right;}
+.detail .below a{ display:block; width:25%; float:right; height:30px; line-height:30px; border-radius:4px; margin-left:2%;}
+.line_status{text-align: center;width: 26%!important;float: right!important;color: #fff;border-radius: 3px;}
+.line_orders{display: block; height: 23px; width: 76px !important; background: red; position: absolute; bottom: 10px; right: 8px; padding: 0 5px; z-index: 10;}
+</style>
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e  fl">
+	<div class="head_title fl">
+		<span class="icon_img icon_location_green fl mt_9 ml_20"></span>
+		<span class="f_w_40">{$Think.session.fansInfo.name}</span>
+	</div>
+    <ul class="nav_menu_3" style="float:none;height:44px; line-height:44px;font-size:16px;">
+    	<li style="width:33.33%;">
+            <a href='{:U("TourMerchant/index")}'>
+            	<div class="nav_menu_left" style="margin:0 20%;">
+    	        	<div <neq name='Think.get.type' value='1'> class="b_b3"</neq>>
+    	        		<span <neq name='Think.get.type' value='1'>class="f_c_g"</neq> >最新订单</span>
+    	        	</div>
+        		</div>
+            </a>
+    		<span class="vertical_line_dc"></span>
+    	</li>
+    	<li style="width:33.33%;">
+            <div class="nav_menu_left" style="margin:0 20%;">
+                <div>
+                    <span>筛选订单</span>
+                    <input type="text" class="datepicker" style="position: absolute;width: 33%;left: 33.3%;height: 44px;opacity: 0;">
+                </div>
+            </div>
+            <span class="vertical_line_dc"></span>
+        </li>
+        <li style="width:33.33%;">
+            <a href='{:U("TourMerchant/index?type=1")}'>
+                <div class="nav_menu_left" style="margin:0 20%;">
+                    <div <eq name='Think.get.type' value='1'> class="b_b3"</eq> >
+                        <span <eq name='Think.get.type' value='1'>class="f_c_g"</eq> >我的线路</span>
+                    </div>
+                </div>
+            </a>
+            <span class="vertical_line_dc"></span>
+        </li>
+    </ul>
+    <volist name='list' id='list'>
+        <eq name="Think.get.type" value="1">
+            <div class="detail">
+                <ul class="clearfix midden">
+                    <a href="{:U('TourMerchant/lineInfo', array('id' => $list['id']))}">
+                        <li class="pic"> <img src="{$list.pics}?imageView2/0/w/200" /> </li>
+                        <li class="text">
+                            <p class="name">{$list.name}</p>
+                            <p> 
+                                <span class="red f16">￥{$list.sale}</span>
+                                <eq name='list.status' value='1'>
+                                    <span class="line_status" style="background:#ccc;margin-right:80px;">已上架</span>
+                                <else/>
+                                    <span class="line_status" style="background:#5bc0de;margin-right:80px;">已下架</span>
+                                </eq> 
+                            </p>
+                        </li>
+                    </a>
+                    <li>
+                        <a href="{:U('TourMerchant/index?id=' . $list['id'])}"><span class="line_status line_orders">查看订单</span></a>
+                    </li>
+                </ul>
+            </div>
+        <else/>
+            <div class="detail">
+                <a href="{:U('TourMerchant/ordersInfo', array('id' => $list['id']))}">
+                    <ul class="clearfix upper">
+                        <p>{$list.dates}</p>
+                        <p class="price">合计:<span class="red">￥{$list.money}</span></p>
+                    </ul>
+                    <ul class="clearfix midden">
+                        <li class="pic"> <img src="{$list.pics}?imageView2/0/w/200" /> </li>
+                        <li class="text">
+                            <p class="name">{$list.pname}</p> <p> <span class="red f16">￥{$list.pprice} × {$list.pnum}</span>
+                            <switch name="list.status">
+                                <case value='1'><span class="line_status" style="background:gray;">未支付</span></case>
+                                <case value='2'><span class="line_status" style="background:green;">待发团</span></case>
+                                <case value='3'><span class="line_status" style="background:gray;">未评价</span></case>
+                                <case value='4'><span class="line_status" style="background:gray;">已完成</span></case>
+                                <case value='5'><span class="line_status" style="background:gray;">已取消</span></case>
+                                <case value='6'><span class="line_status" style="background:gray;">已删除</span></case>
+                            </switch>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+        </eq>
+    </volist>
+	{$page}
+<div class="bottom_copyright"></div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src='{:COM}js/datetimepicker-diy.js'></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$('.datepicker').datetimepicker({format: 'yyyy-mm-dd', weekStart: 1, minView: 2, fontAwesome: 1, autoclose: true, datesDisabled: {$dates|default='[]'}}).on('hide', function(e){
+    location.href = '{:U("TourMerchant/index", array("id" => $_GET['id']))}?dates=' + $('.datepicker').val();
+});
+</script>
+</body>
+</html>

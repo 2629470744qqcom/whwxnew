@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"> <h3 class="page-header">楼栋管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">		
+                    <label class="col-sm-3 control-label">小区名称：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control selectReq" name="aid">
+                            <volist name='areaList' id='areaList'>
+                          	    <option value="{$areaList.id}" <eq name='areaList.id' value='$info.aid'>selected</eq> >{$areaList.title}</option>
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="20">
+			        </div>
+			        <small>不超过二十个字</small>
+			    </div> 
+			    <div class="form-group">
+                    <label class="col-sm-3 control-label">包含单元：</label>
+                    <div class="col-sm-4">
+					    <span class="ckbox">
+					    	<input type='checkbox'  id='unitsAll' name='units[0]' value='0' >
+                            <label for="unitsAll">所有单元</label>
+					    </span>
+                        <volist name='unitList' id='unitList'>
+	                        <span class="ckbox">
+	                            <input type='checkbox' class='checkunits'  id='units{$unitList.id}' name='units[]' value='{$unitList.id}'>
+	                            <label for="units{$unitList.id}">{$unitList.name}</label>
+	                        </span>
+                        </volist> 
+                    </div>
+                </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Block/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+$(document).ready(function(){
+	$("#unitsAll").click(function(){
+		// 
+		if($("#unitsAll").is(':checked') == true){
+		    $('input[name="units[]"]').attr('checked', true);
+		}else{
+			$('input[name="units[]"]').attr('checked', false);
+		}
+	});
+	
+})
+</script>
+<gt name="info.id" value="0">
+	<script type="text/javascript">
+		$('{$info.units}').attr('checked', true);
+	</script>
+</gt>
+

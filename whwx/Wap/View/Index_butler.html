@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>{:C('site_name')}</title>
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160326" />
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		星管家<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="butler">
+    	<notempty name='owner.service'>
+            <p style="display: block;width: 80px;margin: 0px auto;height: 80px;border: 1px solid #fff;border-radius: 100%;overflow:hidden;">
+	    	<img src="{$owner.service.pic}?imageView2/1/h/100/w/100"/ style="width:100%;height:100%;border:0px;border-radius:0px;">
+	    	</p>	        
+	    	<p>星管家{$owner.service.name}</p>
+        <else />
+        	<p>暂无</p>
+        </notempty>
+    </div>
+    <notempty name='owner.service'>
+	    <div class="mine_cont butler_line">
+	    	<ul>
+	        	<li>
+	        		<label>星管家：</label><p class="pcont">{$owner.service.name}</p>
+	        	</li>
+	        	<notempty name='owner.service.phone'>
+		        	<li>
+			        	<label>管家电话：</label>
+			        	<a href='tel:{$owner.service.phone}'>
+			        		<span class="green"><p class="pcont">{$owner.service.phone}</p></span>
+			        	</a>
+		        	</li>
+	        	</notempty>
+	        	<notempty name='owner.aphone'>
+		        	<li>
+			        	<label>服务热线：</label>
+			        	<a href='tel:{$owner.aphone}'>
+			        		<span class="green"><p class="pcont">{$owner.aphone}</p></span>
+			        	</a>
+		        	</li>
+	        	</notempty>
+	        	<li>
+		        	<label>监督热线：</label>
+		        	<a href='tel:{:C("site_tel")}'>
+		        		<span class="green"><p class="pcont">{:C('site_tel')}</p></span>
+		        	</a>
+	        	</li>
+	        </ul>
+	    </div>
+	    <div class="mine_cont">
+	    	<ul>
+	        	<li style="padding:10px;">详情描述</li>
+	        	<li class="ttx">{$owner.service.desc}</li>
+	        </ul>
+	    </div>
+	<else />
+		<p style='text-align:center;'>暂无</p>
+    </notempty>
+</div>
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+<script>
+	// 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<div class="row"><h3 class="page-header">部门管理&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>部门</small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">部门名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">负责小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+				        <volist name='areaList' id='area'>
+				        	<label class="radio-inline">
+				                <input type="checkbox" value="{$area.id}" id="aid{$area.id}" name="aid[]" <?php if(in_array($area['id'], $info['aids'])){echo checked;} ?> >{$area.name}
+				            </label>
+			            </volist>
+			        </div>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+		            <label class="radio-inline">
+		                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+		            </label>
+		            <label class="radio-inline">
+		                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+		            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">备注：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="remark" maxlength='20'>{$info.remark}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Group/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

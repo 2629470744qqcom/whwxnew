@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body> 
+<div class="fix pb_66 fl w100"> 
+	<div class="fix_top">
+        <div class="top clearfix">
+            <a href="javascript:history.go(-1);" class="return"></a>
+            亲友/租客详情<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+        </div>
+        <div class="price_title">
+            <ul class="clearfix">
+                <li class="photo"><eq name="info.pic" value=''><img src="{:IMG}public_heads.png"><else/><img src="{$info.pic}?imageView2/1/h/100/w/100" /></eq></li>
+                <li class="text">
+                    <p class="name">{$info.name}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pt_150">
+        <div class="form">
+            <div class="cont">
+                <ul class="w100">
+                    <li><label>姓名</label>{$info.name}</li>
+                    <li><label>手机号</label>{$info.phone}</li>
+                    <li><label>申请时间</label>{$info.times|date='Y-m-d H:i:s', ###}</li>
+                    <li class='status_info'><label>状态</label>
+                   		  <switch name='info.status'>
+                     			  <case value='0'>待审核</case>
+                     			  <case value='1'>正常</case>
+                     			  <case value='2'><span class='red'>审核不通过/已删除</span></case>
+                   		  </switch>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="btn">
+            <eq name='info.status' value='0'>
+            	  <a class="post check" data-id='1' style="float: left;margin-left: 2%;">通过审核</a>
+            </eq>
+            <neq name='info.status' value='2'>
+                <a class="orange check" data-id='2' style="float: left;margin-left: 2%;">删除该用户</a>
+            </neq>
+        </div>
+    </div>
+</div> 
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+  	$(function(){
+    		var id = '{$_GET["id"]}';
+    		$('.check').click(function(){
+      			status = $(this).data('id'), obj = $(this);
+      			waiting();
+      			$.post('{:U("Owner/check")}', {status : status, id : id}, function(data){
+      				complete();
+        	 			showInfo(data.info);
+        	 			if(data.status == 1){
+          					obj.remove();
+          					if(status == 1){
+          						  $('.status_info').html('<label>状态</label>正常');
+          					}else{
+          						  $('.status_info').html('<label>状态</label><span class="red">审核不通过/已删除</span>');
+          					}
+        	 			}
+      			});
+    		});
+  	})
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

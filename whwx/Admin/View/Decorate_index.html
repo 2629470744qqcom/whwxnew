@@ -1,0 +1,145 @@
+<div class="row"><h3 class="page-header">装修申请</h3></div>
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+        <label><a class="btn btn-primary" href="{:U('Decorate/addDecorate')}">线下缴费</a></label>
+            <form action='{:U("Decorate/index")}' class="form-inline text-right fr m-b-5"> 
+                <div class="form-group">
+                    <select class="form-control" id="aid" name="aid" data-bid="#bid">
+                        <option value="0" >请选择小区</option>
+                        <volist name='areaList' id='area'>
+                            <option value='{$area.id}' <eq name='Think.get.aid' value='$area["id"]'>selected</eq>>{$area.name}</option>
+                        </volist>
+                    </select>           
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="pay_type">
+                        <option value="-1">支付方式</option>
+                        <option value="2" <eq name="Think.get.pay_type" value="2">selected</eq>>线下支付</option>
+                        <option value="1" <eq name="Think.get.pay_type" value="1">selected</eq>>微信支付</option>
+                        <option value="0" <eq name="Think.get.pay_type" value="0">selected</eq>>未支付</option>
+                    </select>           
+                </div>
+                业主：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w100" >
+                手机：<input type="text" name='phone' value='{$Think.get.phone}' class="form-control mr20 w100" >
+                房号：<input type="text" name='addr' value='{$Think.get.addr}' class="form-control mr20 w100" >
+                <button class="btn btn-primary" type="submit">搜索</button>
+            </form> 
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="60">序号</th>
+                            <th>业主</th>
+                            <th>手机</th>
+                            <th>房号</th>
+                            <th>小区</th>
+                            <th>订单金额</th>
+                            <th>实际缴费</th>
+                            <th>申请时间</th>
+                            <th>缴费时间</th>
+                            <th>支付方式</th>
+                            <th>状态</th>
+                            <th width="80">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <volist name="list" id="list">
+                            <tr>
+                                <td>{$i}</td>
+                                <td>{$list.owner}</td>
+                                <td>{$list.phone}</td>
+                                <td>{$list.addr}</td>
+                                <td>{$list.area}</td>
+                                <td>{$list.money}</td>
+                                <td>{$list.real_money|default='未支付'}</td>
+                                <td>{$list.times|date='Y-m-d H:i', ###}</td> 
+                                <td><notempty name='list.pay_time'>{$list.pay_time|date='Y-m-d H:i', ###}<else />未支付</notempty></td>
+                                <td>
+                                    <switch name="list.pay_type">
+                                        <case value="2">线下支付</case>
+                                        <case value="1">微信支付</case>
+                                        <default/>未支付
+                                    </switch>
+                                </td> 
+                                <td>
+                                    <switch name='list.status'>
+                                        <case value='0'><button class='btn btn-default btn-sm' type="button" >未审核</button></case>
+                                        <case value='1'><button class='btn btn-primary btn-sm' type="button" >通过</button></case>
+                                        <case value='2'><button class='btn btn-primary btn-sm' type="button" >不通过</button></case>
+                                    </switch>
+                                </td>
+                                <td>
+                                    <button class='btn btn-sm btn-default look' data-id="{$list.id}" data-status="{$list.status}" data-pic='{$list.id_pic}' data-company='{$list.company_pic}' data-design='{$list.design_pic}'>查看</button>
+                                </td>
+                            </tr>
+                        </volist>
+                    </tbody>
+                </table>
+            </div>
+            {$page}
+        </div>
+    </div>
+</div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">图片详情</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="check_btn" style="display: none;" type="button">审核</button>
+                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+        //查看资质
+        var id = 0;
+		$('.look').click(function(){
+			$('#check_btn').hide();
+            id = $(this).data('id');
+            var id_pic = $(this).data('pic');
+			var company_pic = $(this).data('company');
+			var design_pic = $(this).data('design');
+            if(id_pic == '' && company_pic == '' && design_pic == ''){
+                var html = '<h1>无相关内容</h1>';
+            }else{
+    			var html = '';
+    			html += '身份证的认证 <a href="'+id_pic+'" target="_blank"><img src="'+id_pic+'?imageView2/1/w/350/h/200" /></a><br/>';
+    			$('.id_pic').html();
+    			if(company_pic){
+    				html += '装修公司认证 <a href="'+company_pic+'" target="_blank"><img src="'+company_pic+'?imageView2/1/w/350/h/200" /></a><br/>';
+    			}
+    			if(design_pic){
+    				html += '设计图纸认证 <a href="'+design_pic+'" target="_blank"><img src="'+design_pic+'?imageView2/1/w/350/h/200" /></a>';
+    			}
+                if($(this).data('status') == 0){
+                    $('#check_btn').show();
+                    html += '<br><br><div class="form-group"><label class="col-sm-3 control-label">审核结果：</label><div class="col-sm-9"><label class="radio-inline"><input name="check" type="radio" value="1" checked>通过</label><label class="radio-inline"><input name="check" type="radio" value="2">不通过</label></div></div>';
+                    html += '<textarea rows="3" class="form-control" placeholder="原因说明"></textarea>';
+                }
+            }
+			$('#myModal .modal-body').html(html);
+			$('#myModal').modal('show');
+		});
+        //审核
+        $('#check_btn').click(function(){
+            var status = $('#myModal').find('input:checked').val(), reason = $('#myModal textarea').val(); waiting();
+            $.post('{:U("Decorate/check")}', {id: id, status: status, reason: reason}, function(data){
+                showInfo(data.info);
+                if(data.status == 1){
+                    setTimeout('window.location.reload()', 1600);
+                }
+            });
+
+        });
+	})
+</script>

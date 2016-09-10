@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>私人定制</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css?v=20160714" />
+<link href="/Public/Admin/css/font-awesome.css" rel="stylesheet" />
+<link href="{:COM}css/bootstrap-datetimepicker-diy.css" rel="stylesheet" />
+<style type="text/css">
+.datetimepicker{z-index: 110; background: rgba(0,0,0,0.5); width: 100%; height: 100%; top: 0!important; left: 0!important; position: absolute; display: none;}
+.datetimepicker .day,.datetimepicker .new{color: #ff6600; background: beige;}
+.datetimepicker-days,.datetimepicker-months,.datetimepicker-years{background: #fff; width: 100%; height: 320px; margin-top: 30%; border-radius: 5px;}
+.table-condensed{width: 100%; height: 320px;}
+.table-condensed thead tr:first-child{height: 38px;}
+</style>
+</head>
+<body>
+<div> 
+    <!-- TOP -->
+    <div class="top clearfix"> <a href="javascript:history.go(-1)" class="return"></a> 个人定制 </div>
+    <div class="title clearfix"> <a> <i></i> <p>出游基本信息</p> </a></div>
+    <form id="myform">
+        <div class="form">
+            <ul>
+                <li>
+                    <label>出发城市</label>
+                    <select name="origin">
+                        <volist name="info.origin" id='origin'>
+                            <option value="{$origin}">{$origin}</option>
+                        </volist>
+                    </select> 
+                </li>
+                <li> <label>目的地</label> <input type="text" name="target" placeholder="请填写目的地"/> </li>
+                <li> <label>出游日期</label> <input type="text" name="date" readonly placeholder="请选择出游日期" class="datepicker" /> </li>
+                <li> <label>出游天数</label> <input type="text" name="day" class="spinnerExample"/> 天左右</li>
+                <li> <label>出游人数</label> <input type="text" name="people" class="spinnerExample"/> 人</li>
+                <li> <label>人均预算</label> <input type="text" name="money" class="spinnerExample2"/> 元左右</li>
+                <li> <label>其他需求</label> <textarea name="desc" placeholder="还有什么需要补充的么"></textarea> </li>
+            </ul>
+        </div>
+        <div class="title clearfix"> <a> <i></i> <p>联系人信息</p> </a></div>
+        <div class="form">
+            <ul>
+                <li> <label>姓名</label> <input type="text" name="name" value="{$Think.session.fansInfo.name}" placeholder="请填写您的姓名"/> </li>
+                <li> <label>手机号</label> <input type="text" name="phone" value="{$Think.session.fansInfo.phone}" placeholder="请填写正确的手机号"/> </li>
+            </ul>
+        </div>
+    </form>
+    <div class="form_btn">
+        <ul class="clearfix">
+            <!-- <li><a class="btn_orange">电话咨询</a></li> -->
+            <li style="margin-left:25%;"><button type="button" class="btn_green">提交定制</button></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="/Public/Wap/js/jquery.spinner.js"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src='{:COM}js/datetimepicker-diy.js'></script>
+<script type="text/javascript">
+$('.datepicker').datetimepicker({format: 'yyyy-mm-dd', weekStart: 1, minView: 2, fontAwesome: 1, autoclose: true, startDate: '{:date("Y-m-d")}', datesDisabled: {$dates|default='[]'}});
+
+$(function(){
+    //提交表单
+    $('.btn_green').click(function(){
+        if($('input[name="target"]').val() == ''){
+            showInfo('请填写目的地');
+        }else if($('.datepicker').val() == ''){
+            showInfo('请选择出游日期');
+        }else if($('input[name="name"]').val() == ''){
+            showInfo('请填写您的姓名');
+        }else if(!/^1[3-8]\d{9}$/.test($('input[name="phone"]').val())){
+            showInfo('请填写正确的手机号');
+        }else{
+            waiting();
+            $.post('', $('#myform').serialize(), function(data){
+                complete();
+                showInfo(data.info, 1, function(){
+                    if(data.status == 1){
+                        location.href = '{:U("Tour/index")}';
+                    }
+                });
+            });
+        }
+    });
+});
+$('.spinnerExample').spinner({value:2});
+$('.spinnerExample2').spinner({value:100, min:100, step: 100});
+</script>
+</body>
+</html>

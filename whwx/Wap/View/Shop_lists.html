@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="shop pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1)" class="return"></a>
+周边商家<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="name"><i class="icon_home"></i>{$typeInfo.name}</div>
+    <div class="list">
+    	<volist name='list' id='list'>
+	        <ul class="clearfix">
+	            <li class="pic"><img src="{$list.pic}?imageView2/0/h/206/w/245" /></li>
+	            <li class="text">
+	            	<p>{$list.name}</p>
+	            	<a href="{:U('Shop/cont?id='.$list['id'])}">
+	                <span>查看商家</span>
+	                </a>
+	            </li>
+	        </ul>
+    	</volist>
+    </div>
+    {$page}
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a>
+ --><script type="text/javascript" src="{:JQ}"></script>
+<script>
+	// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>芜湖伟星物业管理平台</title>
+<link href="{:CSS}bootstrap.min.css" rel="stylesheet" />
+<link href="{:CSS}font-awesome.css" rel="stylesheet" />
+<link href="{:CSS}admin.min.css" rel="stylesheet" />
+<link href="{:COM}css/common.min.css" rel="stylesheet" />
+<script src="{:JQ}"></script>
+<script src="{:COM}js/common.min.js"></script>
+<script src="{:JS}bootstrap.min.js"></script>
+<script src="{:JS}admin.min.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar navbar-default top-navbar" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{:U('Admin/Index/index')}">星管家智慧社区管理平台</a>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+        	<li class="dropdown">
+                <a aria-expanded="false" href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    <i class="fa fa-bell fa-fw"></i>
+                    <notempty name='warnList'>
+                    <div style="margin-left:4px;float:right;height:6px;width:6px;background-color:red;border-radius:3px;"></div>
+                    </notempty>
+                     	预警消息 <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <volist name='warnList' id='warnList'>
+                        <li>
+                        	<switch name='warnList.type'>
+                        		<case value='1'><a href="{:U('Repair/index?type=1')}"><i class="fa fa-comment fa-fw"></i> {$warnList.name}</a></case>
+                        		<case value='2'><a href="{:U('Booking/index?type=2')}"><i class="fa fa-comment fa-fw"></i> {$warnList.name}</a></case>
+                        		<case value='3'><a href="{:U('Complaint/index?type=3')}"><i class="fa fa-comment fa-fw"></i> {$warnList.name}</a></case>
+                        	</switch>
+                        </li>
+                    </volist>
+                    <!-- <div class="text-right" style="margin-right:10px"><a href="{:U('Warn/index')}">查看更多 <i class="fa fa-arrow-circle-right"></i></a></div> -->
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                    <i class="fa fa-user fa-fw"></i> {$Think.session.aname} <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="{:U('Public/editPwd')}"><i class="fa fa-gear fa-fw"></i> 修改密码</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{:U('Public/logout')}"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+            	<li><a href="{:U('Index/index')}">后台首页</a></li>
+                <volist name="menuList" id="menuList">
+                    <li>
+                        <a href="#">{$menuList.title}<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <volist name="menuList.sub" id="sub">
+                                <li class="menu1_{$sub.name|str_replace='/', '_', ###} menu2_<?php echo substr($sub['name'], 0, strcspn($sub['name'], '/'))?>"> <a href="{:U($sub['name'])}">{$sub.title}</a> </li>
+                            </volist>
+                        </ul>
+                    </li>
+                </volist>
+
+            </ul>
+            <footer class="footer_bottom">技术支持:&nbsp;&nbsp;<a href="http://www.weilt.net/" target="_blank">微老头</a></footer>
+        </div>
+    </nav>
+    <div id="page-wrapper">
+		<div id="page-inner">
+	        {__CONTENT__}
+		</div>
+	</div>
+</div>
+<style>
+    footer.footer_bottom{
+       color:#fff;text-align:center;width:200px;font-size:14px;margin-top:20px;
+    }
+</style>
+<script type="text/javascript">
+    var obj = $('.menu1_{:CONTROLLER_NAME}_{:ACTION_NAME}');
+    if(obj.length > 0){
+    	obj.addClass('active').parents('li').addClass('active');
+    }else{
+    	$('.menu2_{:CONTROLLER_NAME}').addClass('active').parents('li').addClass('active');
+    }
+</script>
+</body>
+</html>

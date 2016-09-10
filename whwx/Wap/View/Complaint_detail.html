@@ -1,0 +1,160 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160308" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		我的投诉/建议
+		<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+	<switch name='info.status'>
+ 		<case value='0'><div class="status fixing">订单状态：未处理</div></case>
+ 		<case value='1'><div class="status fixed">订单状态：已处理</div></case>
+ 		<case value='2'><div class="status fixed">订单状态：已完成</div></case>
+ 	</switch>
+    <div class="mine_cont">
+    	<ul>
+        	<li><label>内容：</label><p class="pcont">{$info.desc}</p></li>
+        	<li><label>时间：</label><p class="pcont">{$info.times|date='Y-m-d H:i:s', ###}</p></li>
+        	<notempty name='info.pics'>
+	        	<li style="width:100%;float:left;background: #fff;">
+		        	<volist name='info.pics' id='pic'><a href='{$pic}'><img style="margin-top:10px;" src='{$pic}?imageView2/0/w/600'></a></volist>
+	        	</li>
+	        </notempty>
+        </ul>
+    </div>
+    <gt name='info.status' value='0'>
+    	<div class="mine_cont">
+            <div class="cont">
+                <ul>
+                    <li><label>反馈时间</label><p class="pcont">{$info.deal_time|date='Y-m-d H:i:s', ###}</p></li>
+                    <li><label>反馈结果</label><p class="pcont">{$info.feedback}</p></li>
+                    <notempty name='info.feedback_pic'>
+			        	<li style="width:100%;float:left;background: #fff;">
+				        	<volist name='info.feedback_pic' id='feedback_pic'><a href='{$feedback_pic}'><img style="margin-top:10px;" src='{$feedback_pic}?imageView2/0/w/600'></a></volist>
+			        	</li>
+			        </notempty>
+                </ul>
+            </div>
+	    </div>
+    </gt>
+    <eq name='info.status' value='1'>
+    	<div class="evaluate">
+            <div class="cont">
+                <ul>
+                    <li class="line">
+	                    <label>评价</label>
+	                    <textarea name="desc" placeholder='写上你对这次服务的评价'></textarea>
+                    </li>
+                    <li><label>评分</label>
+                        <div id="starBox">
+                            <ul class="star" id="star">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                            </ul>
+                            <div class="current-rating" id="showb" data-id='5'></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div><button type="button" class="post assess"> 评价 </button></div>
+	    </div>
+    </eq>
+    <eq name='info.status' value='2'>
+    	<div class="evaluate">
+            <div class="cont">
+                <ul>
+                    <li class="line"><label>评价</label><span>{$info.comment.desc}</span></li>
+                    <li><label>评分</label>
+                        <div id="starBox">
+                            <ul class="star" id="">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                            </ul>
+                            <div class="current-rating" style='width:<?php echo 24*$info["comment"]["score"]; ?>px;'></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+	    </div>
+    </eq>
+</div> 
+<!--版权-->
+	<!-- <div class="bottom_copyright mb_60"></div>
+<a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 fl absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.star.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id = '{$_GET["id"]}', flag = true;
+		$('.pay').click(function(){$('.pay_list').toggle();});
+		$('.pay_list span').click(function(){
+			var html = $(this).html();
+			$('.pay_list').hide();
+			$('.pay').html(html);
+			$('.pay').data('id', $(this).data('id'));
+		})
+		$('.sure').click(function(){
+			if($('.pay').data('id') == 2){
+				waiting();
+				$.post('{:U("Fix/pay")}', {id :id, pay_type : $('.pay').data('id')}, function(data){
+					complete();
+					showInfo(data.info, 1, function(){
+						if(data.status == 1){
+							location.reload();
+						}
+					});
+				});
+			}else{
+				waiting();
+				$.post('{:U("Fix/getPid")}', {id :id}, function(data){
+					complete();
+					if(data > 0){
+						location.href = '/Home/Pay/index?type=1&id='+data;
+					}else{
+						showInfo('请求失败，请稍后再试');
+					}
+				});
+			}
+		});
+		$('.assess').click(function(){
+			var desc = $('textarea[name="desc"]').val();
+			var score = $('#showb').data('id');
+			if(desc==''){
+                 showInfo('请输入内容!');
+                 flag=false;
+			}
+			if(flag){flag = true;waiting();
+				$.post('{:U("Complaint/comment")}', {id: id, desc: desc, score:score}, function(data){
+					complete();
+					showInfo(data.info, 1, function(){
+						if(data.status == 1){
+							location.reload();
+						}
+					});
+				});
+			}
+		});
+	});
+	$('#index_icon').click(function(){
+	    location.href = $(this).data('url');
+	  })
+</script>
+</body>
+</html>

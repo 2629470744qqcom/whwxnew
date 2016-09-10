@@ -1,0 +1,57 @@
+<div class="row"> <h3 class="page-header">分类管理<small><gt name='info.id' value='0'>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form id="myform" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">分类名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength="10">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			       <label class="col-sm-3 control-label">分类图片：</label>
+			       <div class="col-sm-4">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}" width="75" height="75"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+			       		<button type="button" class="upload" id="upload">选择图片</button>
+		       			<small>建议尺寸100*100px</small>
+			       </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">链接地址：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control url" name="link" value="{$info.link}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Plate/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+		        <input type='hidden' name='id' value='{$info.id}'>
+			</form>
+		</div>
+	</div>
+</div>

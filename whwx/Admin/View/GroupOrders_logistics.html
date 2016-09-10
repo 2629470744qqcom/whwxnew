@@ -1,0 +1,24 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看物流</h4>
+</div>
+<div class="modal-body" id="htmllogistics">
+    <div>
+      <b>收货人：{$info.name}&nbsp;&nbsp;&nbsp;
+      联系方式：{$info.phone}&nbsp;&nbsp;&nbsp;
+      收货地址：{$info.address}&nbsp;&nbsp;&nbsp;<br/>
+      快递单号：{$info.ems_num}
+      <br>快递公司: {$info.ems_name}<br></b>
+      <hr>
+    </div>
+    <div class="list">
+          <p class="tit"><b>物流信息</b></p>
+          <volist name='list.data' id='data'>
+              <p class="list_cont_text"><span class="name">{$data.time}</span><span>{$data.context}</span></p>
+          </volist>
+    </div>
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+</div>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160308" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		在线报修
+		<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="title">房屋质量报修</div>
+    <div class="form">
+    	<form id='form' method="post">
+            <div class="cont">
+                <ul class="w100">
+                    <li class="line">
+	                    <label>维修内容</label>
+	                    <textarea name="desc" placeholder='描述报修内容' ></textarea>
+                    </li>
+                    <li>
+	                    <label>损坏地点</label>
+	                    <input type="text" name="address" placeholder='描述报修地点' /></eq>
+                    </li>
+                </ul>
+            </div>
+            <input name='type' type='hidden' value='3' />
+        </form>
+    </div>
+    <div class="picture forum_release_form relative mt_0">
+    	<label>上传照片</label>
+        <a id='chooseImage' class="file_up">+</a>
+    </div>
+    <div class="mt_30 fix_form"><button type="button"  class="post bg_c_g"> 提&nbsp;&nbsp;交 </button></div>  
+</div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	//显示图片
+	var num = 0;var images = {localId: [],serverId: []}, type = '{$Think.session.fansInfo.type}', imgs = '';
+	function showImg(pics){
+		var pic = new Array();
+		pic = pics.split(",");
+		for(var j = 0; j < pic.length; j++){
+			num++;
+			$('input[name="type"]').after('<input class="pics" type="hidden" name="pic['+num+']" value="'+pic[j]+'" />');
+			$('.file_up').after('<div class="relative forum_release_form_img fl"><img src="'+pic[j]+'"><span class="del" data-id="'+num+'">X</span></div>');
+		}
+	}
+</script>
+<script type="text/javascript">
+	//选择图片
+	wx.ready(function () {
+		document.querySelector('#chooseImage').onclick = function () {
+			wx.chooseImage({
+				success: function (res) {
+					images.localId = res.localIds;
+					var pics = res.localIds;
+					showImg(pics.join());
+				}
+			});
+		};
+	});
+</script>
+<script type="text/javascript">
+	//上传图片
+	var i = 1;
+	function upload(pic, k){
+		wx.uploadImage({
+		    localId: pic,
+		    success: function (res) {
+		    	imgs = imgs + res.serverId + ',';
+		    	if(i == k){
+		    		waiting();
+		    		$.post('{:U("Forum/downPic")}', {pics : imgs}, function(data){
+		    			complete();
+		    			$('input[name="type"]').nextAll().remove();
+		    			for(var m = 0; m < data.length; m++){
+		    				$('input[name="type"]').after('<input class="pics" type="hidden" name="pic['+m+']" value="'+data[m]+'" />');
+		    			}
+			    		other();
+		    		});
+		    	}else{
+					i++;
+		    	}
+		    },
+		    fail: function (res) {
+		      alert(JSON.stringify(res));
+		    }
+		});
+	}
+</script>
+<script type="text/javascript">
+	$('body').on('click', '.del', function(data){
+		$('input[name="pic['+$(this).data('id')+']"]').remove();
+		$(this).parent().remove();
+	});
+	$('.post').click(function(){
+		var flag = true;
+		if($('textarea[name="desc"]').val() == ''){
+			flag = false;
+			showInfo($('textarea[name="desc"]').attr('placeholder'));
+			return false;
+		}
+		if($('input[name="address"]').val() == ''){
+			flag = false;
+			showInfo($('input[name="address"]').attr('placeholder'));
+			return false;
+		}
+		if(flag){
+			flag = false;
+			if($('.pics').length > 0){
+				$('.pics').each(function(k, v){
+					upload($(v).val(), $('.pics').length);
+				});
+			}else{
+				other();
+			}
+		}
+	});
+	function other(){
+		waiting();
+		$.post($('#form').attr('action'), $('#form').serialize(), function(data){
+			complete();flag = false;
+			showInfo(data.info, 1, function(){if(data.url != undefined){location.href = data.url;}});
+		});
+	}
+	// 首页跳转
+	$('#index_icon').click(function(){
+	    location.href = $(this).data('url');
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="shop pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1)" class="return"></a>
+周边商家<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+   <!--  <div class="title"><i class="icon_address"></i>{$areaInfo.name}商圈</div> -->
+    <div id="banner_box" class="box_swipe">
+        <ul>
+        	<volist name='slideList' id='slide'>
+	            <li><a <notempty name='slide.url'> href="{$slide.url}" <else /> href="{:U('About/detail?type=2&id='.$slide['id'])}" </notempty>><img src="{$slide.pic}?imageView2/1/h/352/w/618" style="width:100%;"></a></li>
+        	</volist>
+        </ul>
+        <ol>
+        	<volist name='slideList' id='slide'>
+	            <li <eq name='i' value='1'> class="on" </eq> ></li>
+        	</volist>
+        </ol>
+    </div>
+    <div class="quick">
+        <ul class="clearfix">
+           	<volist name='typeList' id='type'>
+	            <li>
+	            	<a href="{:U('Shop/lists?id='.$type['id'])}">
+	                    <p class="icon"><img src="{$type.pic}?imageView2/1/h/80/w/80" style="border-radius: 50%;height:100%;"></p>
+	                    <p>{$type.name}</p>
+	                </a>
+	            </li>
+           	</volist>
+        </ul>
+    </div>
+    <div class="ad">
+    	<ul>
+    		<volist name='activeList' id='active'>
+	        	<li><a href="{:U('Shop/detail?id='.$active['id'])}"><img class="active_img" src="{$active.pic}?imageView2/1/h/352/w/618" /></a></li>
+    		</volist>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a>
+ --><script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}swipe.js"></script>
+<script>
+	$(function(){
+		new Swipe(document.getElementById('banner_box'), {
+			speed:500,
+			auto:3000,
+			callback: function(){
+				var lis = $(this.element).next("ol").children();
+				lis.removeClass("on").eq(this.index).addClass("on");
+			}
+		});
+	});
+    // 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+    $("#banner_box ul").find('img').css("height",$(this).width()*0.57);
+    $(".active_img").css("height",$(this).width()*0.5);
+</script> 
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+<style type="text/css">
+.actBtn{width: 36%;margin-left: 32%;height: 36px;margin-top: 16px;color: #fff;border-radius: 5px;font-size: 18px;margin-bottom:16px;}
+</style>
+</head>
+<body>
+<div class="m_height"> 
+    <!--幻灯片开始-->
+    <div id="banner_box" class="box_swipe" >
+        <ul>
+            <volist name="info.pics" id="pic">
+                <li><img src="{$pic}?imageView2/0/w/600" /></li>
+            </volist>
+        </ul>
+        <ol>
+            <volist name="info.pics" id="pic2">
+                <li class="on"></li>
+            </volist>
+        </ol>
+    </div>
+    <!--幻灯片结束-->
+    <!--搜索-->
+    <div class="cont_tit">
+    	<ul>
+        	<li>{$info.name}</li>
+            <li> <span class="red">￥{$info.sale}</span> <span class="grey">票面价：￥{$info.price}</span></li>
+        </ul>
+    </div>
+    <!-- 详情 -->
+    <div class="content">
+    	<ul class="clearfix">
+        	<li>{$info.content}</li>
+        </ul>
+    </div>
+</div>
+<eq name="info.status" value="1">
+    <button type="button" class="actBtn" data-status='0' style="background: red;">下架</button>
+<else/>
+    <button type="button" class="actBtn" data-status='1' style="background: green;">上架</button>
+</eq>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="/Public/Wap/js/swipe.js" ></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script>
+$(function(){
+	/*幻灯片*/
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+});
+var id = {$info.id};
+$('.actBtn').click(function(){
+    var obj = $(this), status = $(this).data('status');
+    $.post('', {id: id, status: status}, function(data){
+        showInfo(data.info)
+        if(data.status == 1){
+            obj.css('background', (status == 1 ? 'red' : 'green')).html(status == 1 ? '下架' : '上架').data('status', status == 1 ? 0 : 1);
+        }
+    });
+});
+</script>
+</body>
+</html>

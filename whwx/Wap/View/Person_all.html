@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160308" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="people pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        账户详情<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="cont">
+    	<ul>
+        	<li class="pic">
+                <a  href="{:U('Person/head')}">
+                    <p>头像</p>
+                    <p><img src="{$info.pic}?imageView2/1/h/100/w/100" /></p>
+                </a>
+            </li>
+            <li>
+                <p>姓名</p>
+                <p>{$info.name}</p>
+            </li>
+            <li>
+                <p>家庭地址</p>
+                <p>{$Think.session.fansInfo.address}</p>
+            </li>
+        </ul>
+    	<ul>
+    		<li><a href="{:U('Person/nickname')}"><p>昵称</p><p>{$info.nickname}</p></a></li>
+        	<li><a href="{:U('Person/tel')}"><p>绑定手机</p><p>{$info.phone|substr_replace='****', 3, 4}</p></a></li>
+            <li><a href="{:U('Person/address')}"><p>收货地址</p><p>{$info.address}</p></a></li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+//首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

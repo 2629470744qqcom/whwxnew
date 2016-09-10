@@ -1,0 +1,168 @@
+<div class="row"> <h3 class="page-header">客服专员</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a class="btn btn-primary" href="{:U('Service/add')}">添加客服</a></label>
+                <form action='{:U("Service/index")}' class="form-inline text-right m-b-5 fr">
+          客服名称：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w150">
+          手机号码：<input type="text" name='phone' value='{$Think.get.phone}' class="form-control mr20 w150">
+          选择小区：<select name='aid' class="form-control mr20 w150">
+                        <option value='-1'>请选择小区</option>
+                        <volist name='areaList' id='area'>
+	                        <option value='{$area.id}' <eq name='Think.get.aid' value='$area.id'>selected</eq> >{$area.name}</option>
+                        </volist>
+                    </select>
+              状态：<select name='status' class="form-control mr20 w150">
+                        <option value='-2'>全部</option>
+                        <option value='-1' <eq name='Think.get.status' value='-1'>selected</eq> >已删除</option>
+                        <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >禁用</option>
+                        <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >启用</option>
+                        <option value='2' <eq name='Think.get.status' value='2'>selected</eq> >未审核</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>客服名称</th>
+                                <th>联系方式</th>
+                                <th>负责小区</th>
+                                <th width="75">状态</th>
+                                <th width="120">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}<elt name='list.fid' value='0'>&nbsp;&nbsp;【WXBD#4#{$list.phone}#{$list.id}】</elt></td>
+                                    <td>{$list.phone}</td>
+                                    <td>{$list.area}</td>
+                                    <td class="center">
+                                    	<switch name='list.status'>
+                                    		<case value='-1'>
+                                                <button class='btn btn-danger btn-sm' type="button">已删除</button>
+                                            </case>	
+                                    		<case value='0'>
+                                                <button class='btn btn-default btn-sm setStatus' type="button" data-url='{:U("Service/setStatus?id=".$list["id"])}' data-status="{$list.status}">禁用</button>
+                                            </case>
+                                    		<case value='1'>
+                                                <button class='btn btn-primary btn-sm setStatus' type="button" data-url='{:U("Service/setStatus?id=".$list["id"])}' data-status="{$list.status}">启用</button>
+                                            </case>
+                                    		<case value='2'>
+                                                <button class='btn btn-primary btn-sm vette' data-id='{$list.id}'  data-url='{:U("Service/setStatus?id=".$list["id"])}'  data-aid='{$list.aid}' type="button">未审核</button>
+                                            </case>
+                                    	</switch>
+                                    </td>
+                                    <td>
+                                        <egt name='list.status' value='0'>
+                                            <a class="btn-sm btn btn-default" href='{:U("Service/edit?id=".$list["id"])}'>修改</a>
+                                            <button data-url='{:U("Service/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+                                        </egt>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	        <form action="{:U('Service/vette')}" id="myform" class="form-horizontal">
+	            <div class="modal-header">
+	                <button data-dismiss="modal" class="close" type="button">×</button>
+	                <h4 class="modal-title">客服审核</h4>
+	            </div>
+	            <div class="modal-body">
+				    <div class="form-group">
+						<label class="col-sm-3 control-label">审核状态：</label>
+						<div class="col-sm-9">
+				            <label class="radio-inline">
+				                <input type="radio" value="1" id="status1" onchange="change()" name="status">审核通过
+				            </label>
+				            <label class="radio-inline">
+				                <input type="radio" value="0"  id="status2" onchange="change()" name="status">审核不通过
+				            </label>
+			            </div>
+		        	</div>
+		        	<div class="form-group bid" style='display:none;'>
+				        <label class="col-sm-3 control-label">选择楼栋号：</label>
+				        <div class="col-sm-9" id="bid"></div>
+				    </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+	                <input type="hidden" name="id" />
+	                <button class="btn btn-primary save" type="button">保存</button>
+	            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var obj;
+		$('.vette').click(function(){
+			var aid = $(this).data('aid'), id = $(this).data('id'), block2, html2 = '';waiting();obj = $(this);
+			$('#myModal input[name="id"]').val(id);
+			$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+				$.get('{:U("Service/getServiceBlockByAid")}', {aid : aid, id:id}, function(data2){
+					complete();
+					block2 = data2;
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							if(block2.indexOf(','+data[i]['id']+',') >= 0){
+								html2 += '<label class="checkbox-inline"><input type="checkbox" disabled="true" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}else{
+								html2 += '<label class="checkbox-inline"><input type="checkbox" value="'+data[i]['id']+'" name="bid[]" >'+data[i]['name']+'</label>';
+							}
+						}
+					}else{
+						html2 = '该小区还没有楼栋';
+					}
+					$('#bid').html(html2);
+				});
+			});
+			$('#myModal').modal('show');
+			$('.bid').hide();
+		});
+		$('.save').click(function(){
+			var val = $('input:radio[name="status"]:checked').val();
+		    if(val == null){
+		    	showInfo('请选择审核状态');
+		    }else{
+		    	waiting();
+		    	$.post("{:U('Service/vette')}", $('#myModal #myform').serialize(),function(data){
+		    		complete();
+		    		showInfo(data.info);
+		    		if(data.status == 1){
+		    			obj.data('status', val);
+		    			if(val == 1){
+			    			obj.parents('tr').children('td:eq(4)').find('button').html('启用').removeClass('vette').addClass('setStatus');
+		    			}else{
+		    				obj.parents('tr').children('td:eq(4)').find('button').html('禁用').removeClass('btn-primary').addClass('btn-default').addClass('setStatus').removeClass('vette');
+		    			}
+		    			obj.unbind();  
+		    			$('#myModal').modal('hide');
+		    		}
+		    	});
+		    }
+		});
+	});
+	function change(){
+		var status = $('input[name="status"]:checked ').val();
+		if(status == 1){
+			$('.bid').show();
+		}else{
+			$('.bid').hide();
+		}
+	}
+</script>

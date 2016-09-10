@@ -1,0 +1,150 @@
+<div class="row"> 
+<h3 class="page-header">商家列表&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>商家</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">商家名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">商家图片：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                	</div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">商家分类：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="type_id" name="type_id">
+			        		<option value="0" >请选择分类</option>
+			        		<volist name='typeList' id='type'>
+			        			<option value="{$type.id}"<eq name='type.id' value='$info.type_id'> selected </eq> >{$type.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			     <div class="form-group">
+			        <label class="col-sm-3 control-label">所在小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="tel" value="{$info.tel}" maxlength='30'>
+			        </div>
+			    </div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">地理位置</label>
+					<div class="col-sm-4">
+						<input type="text" name="address" id='address' style='width:89%;' value='{$info.address|default="安徽省芜湖市中山北路77号"}' placeholder="请填入你的地址" class="form-control col-sm-8 required"> 
+						<input type="hidden" name="mapx" id='mapx' value="{$info.mapx|default=118.375}" /> 
+						<input type="hidden" name="mapy" id='mapy' value="{$info.mapy|default=31.3434}" />
+						<button type="button" class="btn btn-default" id='bdmapSearch'>搜索</button>
+						<div id="map"></div>
+					</div>
+				</div>
+		       	<div class="form-group">
+		            <label class="col-sm-3 control-label">商家信息：</label>
+		            <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+		            </div>
+		        </div>
+			     <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+		            <label class="radio-inline">
+		                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+		            </label>
+		            <label class="radio-inline">
+		                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+		            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Merchant/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script src="{:MAP}"></script>
+<script type="text/javascript">
+	$(function(){
+		var mapx = $('#mapx').val(), mapy = $('#mapy').val();
+		console.log(mapx);console.log(mapy);
+		var map = new BMap.Map('map');
+		var point = new BMap.Point(mapx, mapy);
+		map.centerAndZoom(point, 16);
+		map.addControl(new BMap.NavigationControl());
+		map.enableScrollWheelZoom();
+		
+		setTimeout(function(){
+	        map.setCenter(point);
+	      }, 200);
+		
+		var marker = new BMap.Marker(point);
+		map.addOverlay(marker);
+		marker.enableDragging();
+		marker.addEventListener("dragend", function(){setInfo(marker)});
+		marker.addEventListener("click", function(){setInfo(marker)});
+
+		map.addEventListener("click", function(e){
+			marker.setPosition(e.point);
+			setInfo(marker);
+		});
+		
+		$('#bdmapSearch').click(function(){
+			var address = $('#address').val();
+			var myGeo = new BMap.Geocoder();
+			myGeo.getPoint(address, function(point) {
+				if (point) {
+					map.centerAndZoom(point, 16);
+					marker.setPosition(point);
+					setInfo(marker);
+				}else{
+					alert('没有找到您输入的地方！');
+				}
+			}, "芜湖市");
+		});
+		//百度地图设置位置
+	    function setInfo(marker){
+	    	var p = marker.getPosition();
+	    	$('#mapx').val(p.lng);
+	    	$('#mapy').val(p.lat);
+	    	var myGeo = new BMap.Geocoder();
+	    	myGeo.getLocation(p, function(result) {
+	    		if (result) {
+	    			$('#address').val(result.address);
+	    		}
+	    	});
+	    }
+	})
+</script>

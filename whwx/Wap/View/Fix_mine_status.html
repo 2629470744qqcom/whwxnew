@@ -1,0 +1,183 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160308" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66 fl " style="width:100%"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		我的报修
+		<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+	<switch name='info.status'>
+		<case value='0'><div class="status fixing">维修状态: 管理员删除</div></case>
+		<case value='1'><div class="status fixing">维修状态: 处理中···</div></case>
+		<case value='2'><div class="status fixing">维修状态: 处理中···</div></case>
+		<case value='3'><div class="status fixing">维修状态: 处理中···</div></case>
+		<case value='4'><div class="status fixing">维修状态: 处理中···</div></case>
+		<case value='5'><div class="status fixing">维修状态: 维修中···</div></case>
+		<case value='6'><div class="status fixing">维修状态: 维修中···</div></case>
+		<case value='7'><div class="status fixed">维修状态: 维修完成</div></case>
+		<case value='8'><div class="status fixed"><eq name='info.type' value='3'>维修状态：维修已完成<else />维修状态: 付款完成</eq></div></case>
+		<case value='9'><div class="status fixed">维修状态: 评价完成</div></case>
+		<case value='10'><div class="status fixing">维修状态: 报修关闭</div></case>
+	</switch>
+    <div class="mine_cont">
+    	<ul>
+    		<gt name='info.cate_id' value='0'>
+	        	<li><label>维修人员：</label><p class="pcont">{$info.cateInfo.name}</p></li>
+	        	<li><label>联系方式：</label><a href='tel:{$info.cateInfo.phone}'><p class="green pcont">{$info.cateInfo.phone}</p></a></li>
+        	</gt>
+        	<li><label>维修区域：</label><p class="pcont">{$info.name}</p></li>
+        	<notempty name='info.address'><li><label>维修地点：</label><p class="pcont">{$info.address}</p></li></notempty>
+        	<li><label>维修内容：</label><p class="pcont">{$info.desc}</p></li>
+        	<notempty name='info.pics'>
+	        	<li>
+		        	<label>图片：</label>
+		        	<volist name='info.pics' id='pic'><a href='{$pic}'><img style="margin-top:10px;" src='{$pic}?imageView2/0/w/600'></a></volist>
+	        	</li>
+        	</notempty>
+        	<notempty name='info.repairman_pic'>
+	        	<li>
+		        	<label>维修结果：</label>
+		        	<volist name='info.repairman_pic' id='repairman_pic'><a href='{$repairman_pic}'><img style="margin-top:10px;" src='{$repairman_pic}?imageView2/0/w/600'></a></volist>
+	        	</li>
+        	</notempty>
+        	<notempty name='info.feedback'><li><label>处理结果：</label><p class="pcont">{$info.feedback}</p></li></notempty>
+        </ul>
+    </div>
+    <eq name='info.status' value='8'>
+    	<div class="evaluate">
+            <div class="cont">
+                <ul>
+                    <li class="line">
+	                    <label>维修评价</label>
+	                    <textarea name="desc" placeholder='写上你对这次维修服务的评价'></textarea>
+                    </li>
+                    <li><label>评分</label>
+                        <div id="starBox">
+                            <ul class="star" id="star">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                            </ul>
+                            <div class="current-rating" id="showb" data-id='5'></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div><button type="button" class="post assess"> 评价 </button></div>
+	    </div>
+    </eq>
+    <eq name='info.status' value='9'>
+    	<div class="evaluate">
+            <div class="cont">
+                <ul>
+                    <li class="line"><label>维修评价</label><span>{$info.comment.desc}</span></li>
+                    <li><label>评分</label>
+                        <div id="starBox">
+                            <ul class="star" id="">
+                                <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                            </ul>
+                            <div class="current-rating" style='width:<?php echo 24*$info["comment"]["score"]; ?>px;'></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+	    </div>
+    </eq>
+    <eq name='info.status' value='7'>
+	    <div class="pay_price">支付金额：<span class="red">{$info.price|default=0}元</span></div>
+	    <div class="bottom">
+	    	<ul class="clearfix">
+	        	<li class="clearfix">支付方式：
+		        	<p class="pay" data-id='1'>微信付款</p>
+		        	<p class="pay_list" style="display:none;">
+			        	<span data-id='1'>微信付款</span>
+			        	<span data-id='2'>线下付款</span>
+		        	</p>
+	        	</li>
+	            <li class="btn sure"><a>确定</a></li>
+	        </ul>
+	    </div>
+    </eq>
+</div> 
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.star.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id = '{$_GET["id"]}', flag = true;
+		$('.pay').click(function(){$('.pay_list').toggle();});
+		$('.pay_list span').click(function(){
+			var html = $(this).html();
+			$('.pay_list').hide();
+			$('.pay').html(html);
+			$('.pay').data('id', $(this).data('id'));
+		})
+		$('.sure').click(function(){
+			if($('.pay').data('id') == 2){
+				if(flag){
+					flag = false;waiting();
+					$.post('{:U("Fix/pay")}', {id :id, pay_type : $('.pay').data('id')}, function(data){
+						flag = true;complete();
+						showInfo(data.info, 1, function(){
+							if(data.status == 1){
+								location.reload();
+							}
+						});
+					});
+				}
+			}else{
+				if(flag){flag = true;waiting();
+					$.post('{:U("Fix/getPid")}', {id :id}, function(data){
+						flag = false;complete();
+						if(data > 0){
+							location.href = '/Home/Pay/index?type=1&id='+data;
+						}else{
+							showInfo('请求失败，请稍后再试');
+						}
+					});
+				}
+			}
+		});
+		$('.assess').click(function(){
+			var desc = $('textarea[name="desc"]').val();
+			var score = $('#showb').data('id');
+			if(desc==''){
+				showInfo('请输入内容!');
+				flag = false;
+			}
+			if(flag){flag = true;
+				waiting();
+				$.post('{:U("Fix/evaluate")}', {id: id, desc: desc, score:score}, function(data){
+					complete();
+					showInfo(data.info, 1, function(){
+						if(data.status == 1){
+							location.reload();
+						}
+					});
+				});
+			}
+		});
+	});
+	$('#index_icon').click(function(){
+	    location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh" class="relative"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div> 
+  	<div class="top clearfix pb_66">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        在线缴费<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="pay_status">
+      	<div class="status">
+        		<eq name='Think.get.type' value='1'>
+  	            <p class="icon_status"><i class="pay_correct"></i></p>
+  	            <p class="text">支付成功</p>
+        		<else />
+  	            <p class="icon_status"><i class="pay_error"></i></p>
+  	            <p class="text">支付失败</p>
+        		</eq>
+        </div>
+       <!--  <div class="btn clearfix">
+            <a class="evaluat" href="{:U('Fix/evaluate')}">去评价</a>
+            <a class="index" href="{:U('Fix/index')}">返回首页</a>
+        </div> -->
+    </div>
+</div> 
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

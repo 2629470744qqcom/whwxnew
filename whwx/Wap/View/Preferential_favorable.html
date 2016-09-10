@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="orders"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+  特惠团<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+        <a href="{:U('Preferential/orders')}" class="i_edit">我的订单</a> 
+    </div>
+    <div id="banner_box" class="box_swipe">
+        <ul>
+            <volist name='info.pics' id='pic'> 
+                <li>
+                    <a href="javascript:void(0);">
+                        <img src="{$pic}?imageView2/1/h/420/w/735" style="width:100%;">
+                    </a>
+                </li>
+            </volist>
+        </ul>
+        <ol>
+            <volist name='info.pics' id='pic'>
+                <li class="on"></li>
+            </volist>
+        </ol>
+    </div>
+    <div class="salers_name">
+    	<div class="tit">
+            <p class="name">{$info.name}</p>
+            <switch name='info.category' >
+                <case value='0'><p class="red">￥{$info.present_price}<em class="prev">￥{$info.original_price}</em></p></case>
+                <case value='1'><span class="shop_integral w_30 fl"></span><p class="red">{$info.credit}</p></case>
+            </switch>
+        </div>
+        <div class="upDown">
+            <ul class="clearfix">
+            	<li>购买数量</li>
+                <li>
+                	<form name="form1">
+                        <a class="addtext addUp"></a>
+                        <a><input id="num" data-num="{$info.num}" name="num" value="1" readonly class="addinput"></a>
+                        <a class="addtext addDown"></a>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="orders_cont">
+        <ul class="mb_60">
+            <li class="tit">商品介绍</li>
+            <li>{$info.content}</li>
+            <a class="buy_button">立即购买</a>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}swipe.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+$(function(){
+	/*幻灯片*/
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+});
+/*数字增加和减少*/
+var flag = true;
+$('.addUp').click(function(){
+    var obj = $('#num'); num = parseInt(obj.data('num')), val = parseInt(obj.val());
+    //val = val >= num ? num : val + 1;
+    if(val>=num){
+        val=num;
+        showInfo("库存不足!");
+        // flag=false;
+    }else{
+       
+        val=val+1;
+    }
+     // num = num-val;
+    obj.val(val);
+    
+});
+$('.addDown').click(function(){
+    var obj = $('#num'); val = parseInt(obj.val());
+    val = val < 2 ? 1 : val - 1;
+    obj.val(val);
+});
+var id='{$_GET["id"]}';
+$(".buy_button").click(function(){
+    var total= '{$info.num}';
+    if($('#num').val() > 0){
+        waiting();
+        $.get('{:U("Preferential/addOrder")}', {num : $('#num').val(), id:id }, function(data){
+            complete();
+            if(data.status == 1){
+                location.href = '{:U("Preferential/orders_details")}?id='+data.id;
+            }else{
+                showInfo(data.info);
+            }
+        });
+    }else{
+        showInfo("购买数量有误!");
+    }
+});
+$("#banner_box ul").find('img').css("height",$(this).width()*0.57);
+
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

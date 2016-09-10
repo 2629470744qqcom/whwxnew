@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+ 	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">报修订单</p>
+	 	<a id="index_icon" data-url="{:U('Repairman/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<gt name='orderInfo.status' value='4'>
+ 		<div class="order_status bg_c_r">订单状态：已被抢</div>
+ 	<else/>
+	 	<div class="order_status bg_c_r">订单状态：等待抢单中...</div>
+ 	</gt>
+ 	<div class="order_line mt_10"><p>维修区域</p><span>{$orderInfo.name}</span></div>
+ 	<div class="order_line b_b1"><p>维修内容</p><span>{$orderInfo.desc}</span></div>
+ 	<div class="order_line mt_10"><p>业主信息</p><span>{$orderInfo.owner}</span></div>
+ 	<div class="order_line"><p>联系电话</p><a href='tel:{$orderInfo.phone}'><span class="green">{$orderInfo.phone}</span></a></div>
+ 	<notempty name='orderInfo.address'><div class="order_line b_b1"><p>维修地址</p><span>{$orderInfo.address}</span></div></notempty>
+ 	<notempty name='orderInfo.pics'>
+	   	<div class='order_line'><p>业主图片</p><volist name='orderInfo.pics' id='pic'><a href='{$pic}'><img style="margin-top:10px;" src='{$pic}?imageView2/0/w/600'></a></volist></div>
+  	</notempty>
+ 	<gt name='orderInfo.status' value='4'>
+ 		<div class="fix_form"><button type="button"  class="post bg_c_c mt_20 fl"> 已被抢 </button></div>
+ 	<else/>
+ 		<div class="fix_form"><button type="button"  class="post bg_c_g mt_20 fl"> 抢单 </button></div>
+ 	</gt>
+ 	<div class="bottom_copyright"></div>
+ 	<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id = '{$_GET["id"]}';
+		$('.bg_c_g').click(function(){
+			waiting();
+			$.post('{:U("Repairman/rob")}', {id: id}, function(data){
+				complete();
+				showInfo(data.info, 1, function(){
+					if(data.status =1){
+						location.href='{:U("Repairman/my_order")}?id='+id;
+					}
+				});
+			});
+		});
+	});
+	// 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

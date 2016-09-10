@@ -1,0 +1,3 @@
+Disallow: /Public/
+Disallow: /ThinkPHP/
+Disallow: /whwx/

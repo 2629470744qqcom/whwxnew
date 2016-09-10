@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+</head>
+<body>
+<div class="pb60"> 
+    <!-- TOP -->
+    <div class="top clearfix">
+        <a href="javascript:history.go(-1)" class="return"></a> 订单详情
+        <a href="{:U('Wap/Index/index')}"><span class="icon_home_index fr" style="margin:0;"></span></a>
+    </div>
+    <!-- 全部列表 -->
+    <div class="by_cont">
+        <ul class="clearfix">
+            <li class="pic"> <img src="{$info.pics}?imageView2/0/w/200" /> </li>
+            <li class="text"> <p class="name">{$info.pname}</p> <p class="red">￥{$info.pprice}</p> </li>
+        </ul>
+    </div>
+    <div class="form">
+        <ul>
+            <li> <label>姓名</label> {$info.user.0.name} </li>
+            <li> <label>手机号</label> {$info.phone} </li>
+            <li> <label>身份证号</label> {$info.user.0.idcard} </li>
+            <li> <label>出游日期</label> {$info.dates} </li>
+        </ul>
+        <volist name="info.user" id="user" offset='1'>
+            <ul>
+                <li> <label>姓名</label> {$user.name} </li>
+                <li> <label>身份证号</label> {$user.idcard} </li>
+            </ul>
+        </volist>
+        <ul>
+            <li> <label>订单号</label> {$info.id} </li>
+            <li> <label>下单时间</label> {$info.times|date="Y-m-d H:i:s", ###} </li>
+            <if condition="$info['status'] egt 2 and $info['status'] neq 5">
+                <li> <label>支付方式</label> <eq name="info.pay_type" value="weipay">微信支付<else/>线下支付</eq> </li>
+                <li> <label>支付时间</label> {$info.pay_time|date="Y-m-d H:i:s", ###} </li>
+                <li> <label>支付金额</label> {$info.money} 元 </li>
+            </if>
+        </ul>
+        <neq name='info.status' value='5'>
+        <ul>
+            <egt name="info.status" value="3">
+                <li> <label>发团时间</label> {$info.use_time|date="Y-m-d H:i:s", ###} </li>
+            </egt>
+            <egt name="info.status" value="3">
+                <empty name="info.comment">
+                    <ul>
+                        <li class="line"><label>服务评价</label><textarea id="comment" placeholder='写上你对这次服务的评价'></textarea></li>
+                        <li><label>服务评分</label>
+                            <div id="starBox">
+                                <ul class="star" id="star">
+                                    <li><a href="javascript:void(0)" title="1" class="one-star">1</a></li>
+                                    <li><a href="javascript:void(0)" title="2" class="two-stars">2</a></li>
+                                    <li><a href="javascript:void(0)" title="3" class="three-stars">3</a></li>
+                                    <li><a href="javascript:void(0)" title="4" class="four-stars">4</a></li>
+                                    <li><a href="javascript:void(0)" title="5" class="five-stars">5</a></li>
+                                </ul>
+                                <div class="current-rating" id="showb" data-id='5'></div>
+                            </div>
+                        </li>
+                        <li><button type="button" id="submitBtn" style="background: #009a44;color: #fff;padding: 5px 22px;border-radius: 5px;margin: 6px 33%;">提交评论</button></li>
+                    </ul>
+                <else/>
+                    <li> <label>评价分数</label> {$info.comment_score} 分</li>
+                    <li> <label>评价时间</label> {$info.comment_time|date="Y-m-d H:i:s", ###} </li>
+                    <li> <label>评价内容</label> {$info.comment} </li>
+                </empty>
+            </egt>
+        </ul>
+        </neq>
+    </div>
+</div>
+<div class="by_bottom">
+	<ul class="clearfix">
+        <eq name="info.status" value="1">
+        	<li class="btn"><a class="btn_green cancelBtn" style="background: #999;" data-id='{$Think.get.orders_id}'>取消订单</a></li>
+        	<li class="btn"><a class="btn_green" id="pay">立即支付</a></li>
+        </eq>
+        <eq name="info.status" value="2"><li class="btn"><a class="btn_green" style="background:red;">等待发团</a></li></eq>
+        <eq name="info.status" value="4"><li class="btn"><a class="btn_green" style="background: #999;">已完成</a></li></eq>
+        <eq name="info.status" value="5"><li class="btn"><a class="btn_green" style="background: #999;">已取消</a></li></eq>
+        <eq name="info.status" value="6"><li class="btn"><a class="btn_green" style="background: #999;">已完成</a></li></eq>
+        <li class="price f16">合计：<span class="red" id='total_money'>￥{$info.money}</span></li>
+    </ul>
+</div>
+<!--弹出层-->
+<div class="mask" style="display:none;">
+    <div class="pay">
+        <ul>
+            <li data-type='weipay'> 微信支付 </li>
+            <!-- <li data-type='offline'> 线下支付 </li> -->
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="{:JS}jquery.star.js"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript">
+$('#pay').click(function(){
+    $('.mask').show();
+});
+$('.mask li').click(function(){
+    location.href = "{:U('Tour/pay') . '?orders_id=' . $info['id']}&type=" + $(this).data('type');
+});
+$('.mask').click(function(){
+    $(this).hide();
+});
+$('.cancelBtn').click(function(){
+    var obj = $(this);
+    showInfo('确定要取消订单？', 2, function(){
+        waiting();
+        $.get('{:U("Tour/ajax")}', {type: 1, id: obj.data('id')}, function(data){
+            complete();
+            if(data.status == 1){
+                obj.html('已取消').unbind('click').parent().next().remove();
+            }
+        });
+    });
+});
+
+$('#submitBtn').click(function(){
+    var score = $('#showb').data('id'), comment = $('#comment').val();
+    if(comment){
+        waiting();
+        $.post('{:U("Tour/ajax", array('id' => $_GET['orders_id'], 'type' => 2))}', {comment: comment, comment_score: score}, function(data){
+            complete();
+            if(data.status == 1){
+                location.href = '{:U("Tour/ordersInfo", array('orders_id' => $_GET['orders_id']))}'
+            }
+        });
+    }else{
+        showInfo('请输入评论内容');
+    }
+});
+</script>
+</body>
+</html>

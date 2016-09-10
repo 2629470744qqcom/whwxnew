@@ -1,0 +1,217 @@
+<div class="row"> <h3 class="page-header">线下缴费&nbsp;&nbsp;</h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">账单：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="bill_id" name="bill_id">
+			        		<option value="0" >请选择账单</option>
+			        		<volist name='billList' id='bill'>
+			        			<option id="bill{$bill.id}" data-aid="{$bill.aid}" value="{$bill.id}"<eq name='bill.id' value='$bill.bill_id'> selected </eq> >{$bill.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="bid" name="bid">
+			        		<option value="0" >请选择楼栋号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="uid" name="uid">
+			        		<option value="0" >请选择单元号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房间号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="rid" name="rid">
+			        		<option value="0" >请选择房间号</option>
+						</select>           
+			        </div>
+			    </div>
+		    </div>
+		    <div class="form-horizontal info">
+			</div>
+		</div>
+	</div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<form id="myform" class="form-horizontal" action='{:U("Payment/pay")}'>
+	            <div class="modal-header">
+	                <button data-dismiss="modal" class="close" type="button">×</button>
+	                <h4 class="modal-title">线下缴费</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<div class="form-group">
+				        <label class="col-sm-4" style='text-align:right;'>应缴费用：</label>
+				        <label class="col-sm-5" id='money'></label>
+				    </div>
+				    <div class="form-group">
+				        <label class="col-sm-4 control-label">实际缴费：</label>
+				        <div class="col-sm-5">
+				        	<input class="form-control required" name="real_money" id="real_money">
+				        </div>
+				    </div>
+				    <div class="form-group">
+			        	<label class="col-sm-4 control-label">备注：</label>
+			        	<div class="col-sm-5">
+			           		<textarea rows="3" class="form-control" name="remark" maxlength='200'></textarea>
+			        	</div>
+			        </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+	                <input class="form-control" type='hidden' name="pid">
+	                <input class="form-control" type='hidden' name="aid">
+	                <input class="form-control" type='hidden' name="type">
+	                <button class="btn btn-primary " type="submit">缴费</button>
+	            </div>
+	        </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" >
+	$(function(){
+		var bill_id, aid, bid, uid, rid, html='';
+		var paytype = new Array();
+		$('#bill_id').change(function(){
+			bill_id = $(this).val(), html='';
+			aid = $('#bill'+bill_id).data('aid');
+			if(aid > 0){
+				$('input[name="aid"]').val(aid);
+				waiting();
+				$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0">请选择楼栋</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该小区还没有楼栋</option>';
+					}
+					$('#bid').html(html);
+				});
+			}
+		});
+		$('#bid').change(function(){
+			bid = $(this).val(), html='';
+			if(bid > 0){
+				waiting();
+				$.get('{:U("Unit/getUnitByBid")}', {bid : bid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0" >请选择单元</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该楼栋还没有单元</option>';
+					}
+					$('#uid').html(html);
+				});
+			}
+		});
+		$('#uid').change(function(){
+			uid = $(this).val(), html='';
+			if(uid > 0){
+				waiting();
+				$.get('{:U("Room/getRoomByUid")}', {uid : uid, bid : bid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0" >请选择房号</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{ 
+						html = '<option value="0" >该单元还没有房间</option>';
+					}
+					$('#rid').html(html);
+				});
+			}
+		});
+		$('#rid').change(function(){
+			rid = $(this).val(), html='';
+			paytype = new Array();
+			$.post('{:U("Bill/getBill")}', {aid:aid,bid:bid,bill_id,bill_id,uid:uid,rid:rid}, function(data){
+				if(data.status){
+					showInfo(data.info);
+				}else{
+					$('.info').html(data);
+				}
+			});
+		});
+		//缴费按钮事件
+		$('body').on('click', '.pay', function(){
+			if($(this).data('money') > 0){
+				paytype = new Array();
+				var html = '';
+				$('.paymoney:checked').each(function(i, v){
+					paytype.push($(v).attr('id'));
+					html += '<input type="hidden" name="' + $(v).attr('id') + '" value="' + $(v).prev().val() + '" />';
+				});
+				$('.modal-footer').append(html);
+				$('input[name="pid"]').val($(this).data('pid'));
+				$('input[name="type"]').val(paytype.join());
+				$('#money').html($(this).data('money')+'元');
+				$('#real_money').val($(this).data('money')).attr('readonly', true);
+				$('#myModal').modal('show');
+			}
+		});
+		//勾选不同缴费项时计算最新价格
+		$('body').on('click', '.paymoney', function(){
+			var obj = $(this), money = parseFloat($('.pay').data('money'));
+			money = money > 0 ? money : 0;
+			if(!obj.attr("checked")){
+				obj.prev().attr('disabled', true);
+				obj.prev().val(parseFloat(obj.data('money')));
+				obj.removeAttr("checked");
+	        }else{
+	        	obj.prev().attr('disabled', false);
+	        	obj.attr("checked",'true');
+	        }
+			countMoney();
+		});
+		//Input失去焦点事件
+		$('body').on('blur', '.input_real_pay', function(){
+			var obj = $(this), my_money = parseFloat(obj.val()), money = parseFloat(obj.next().data('money'));
+			if(isNaN(obj.val()) || obj.val() == '' || obj.val() <= 0){
+				showInfo('输入内容有误');
+				obj.val(money);
+			}
+			if(my_money > money){
+				showInfo('缴费金额不应大于剩余应缴金额');
+				obj.val(money);
+			}
+			countMoney();
+		});
+		//计算实缴费用
+		var countMoney = function(){
+			var total_money = 0;
+			$('input[type="checkbox"]:checked').each(function(i, v){
+				total_money += parseFloat($(v).prev().val());
+				$('.money').html(total_money);
+			});
+			if(total_money > 0){
+				$('.pay').attr('disabled', false);
+				$('.pay').data('money', total_money);
+				$('.money').html(total_money + '元');
+			}else{
+				$('.pay').attr('disabled', true);
+				$('.pay').data('money', 0);
+				$('.money').html('0元');
+			}
+		}
+	});
+</script>

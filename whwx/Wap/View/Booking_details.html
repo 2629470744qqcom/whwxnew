@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}date.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="appointment pb_66"> 
+	<div class="top clearfix">
+	    <a href="javascript:history.go(-1);" class="return"></a>
+	    预约详情 
+	    <a id="index_icon" data-url="{:U('Index/index')}">
+	    	<span class="icon_home_index fr"></span>
+	    </a>
+	    <a href="{:U('Booking/mine')}" class="i_edit">我的</a>
+	</div>
+    <div class="form_list">
+    	<ul>
+        	<li><img id="merchant_img" src="{$info.pic}?imageView2/1/h/352/w/618"/></li>
+            <li>{$info.name}</li>
+            <li><span class="name">服务项目</span><span>{$info.catename}</span></li>
+            <li><span class="name">服务区域</span><span>{$info.service|default='全芜湖'}</span></li>
+            <li class="yuan">￥{$info.price|default='面议'}</li>
+        </ul>
+    </div>
+    <div class="a_cont">
+    	<ul>
+        	<li class="tit">详情描述</li>
+            <li>{$info.desc}</li>
+        </ul>
+    </div>
+    <div class="form">
+    	<form id='myform'>
+			<div class="cont">
+			    <ul  class="w100">
+			        <li><label>选择时间</label><input type="text" name='day' id='beginTime' placeholder="请选择预约服务日期" /></li>
+<!-- 			    <li><label>时间</label><input type="text" name='hour' id='endTime' placeholder="请选择预约服务时间" /></li> -->
+			        <li><label>联系人</label><input type="text" name='name' value='{$Think.session.fansInfo.name}' /></li>
+			        <li><label>手机号</label><input type="text" name='phone' value='{$Think.session.fansInfo.phone}' /></li>
+			    </ul>
+			</div>
+			<input name='sid' type="hidden" value='{$_GET["id"]}' />
+			<input name='cate_id' type="hidden" value='{$info["cate_id"]}' />
+			<input name='catename' type="hidden" value='{$info["catename"]}' />
+			<div style="margin-bottom:66px;"><button type="button" class="post">提交</button> </div>
+		</form>
+    </div>
+</div>
+<div id="datePlugin"></div>
+<!--版权-->
+<script type="text/javascript" src='{:JQ}'></script>
+<script type="text/javascript" src='{:JS}common.min.js'></script>
+<script type="text/javascript" src="{:JS}date.js" ></script>
+<script type="text/javascript" src="{:JS}iscroll.js" ></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+// 		$('#beginTime').date();
+		$('#beginTime').date({theme : "datetime", curdate : true});
+		$('.post').click(function(){
+			var flag = true;
+			if(!$('input[name="day"]').val()){
+				showInfo('请填写正确的日期和时间'); flag = false;
+				return false;
+			}
+			if(!$('input[name="name"]').val() || !$('input[name="phone"]').val()){
+				showInfo('请填写姓名和手机号'); flag = false;
+				return false;
+			}
+			if(/^1[3-8]\d{9}$/.test($('input[name="phone"]').val())){
+				if(flag){
+					flag = false;
+					$.post('{:U("Booking/add")}', $('#myform').serialize(), function(data){
+						flag = true; showInfo(data.info, 1, function(){
+							if(data.status == 1){
+								//$('input[name="day"]').val(''); $('input[name="hour"]').val('');
+								location.href = '{:U("Booking/mine")}?id='+data.id;
+							}
+						});
+					});
+				}
+			}else{
+				showInfo('请填写正确的手机号');
+			}
+		});
+	});
+	// 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+  $("#merchant_img").css("height",$(this).width()*0.57);
+</script>
+</body>
+</html>

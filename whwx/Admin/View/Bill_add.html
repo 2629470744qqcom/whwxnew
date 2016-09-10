@@ -1,0 +1,93 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row">
+	<h3 class="page-header">账单管理&nbsp;&nbsp;
+		<small><gt name='info.id' value='0'>修改<else/>添加</gt>账单</small>
+	</h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='30'>
+			        </div>
+			    </div>
+<!-- 			    <div class="form-group"> -->
+<!-- 			        <label class="col-sm-3 control-label">年份：<span class="c-red">*</span></label> -->
+<!-- 			        <div class="col-sm-4"> -->
+<!-- 			        	<input class="form-control required" name="year" value="{$info.year}" maxlength='4'> -->
+<!-- 			        </div> -->
+<!-- 			    </div> -->
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">账单时间：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input type="text" id="start_time" name="start_time" value="<empty name='info.start_time'>{:date('Y-m-d')}<else/>{$info.start_time|date='Y-m-d', ###}</empty>" class="wid_24  pointer datepicker form-control" style='width:40%;float:left;' readonly />
+			        	<span style='float:left;'>&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+			        	<input type="text" id="end_time" name="end_time" value="<empty name='info.end_time'>{:date('Y-m-d', time())}<else/>{$info.end_time|date='Y-m-d', ###}</empty>" class="wid_24  pointer datepicker form-control" style='width:40%;' readonly />
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="aid" name="aid">
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">上传文件：</label>
+			    	<div class="col-sm-6 imgreq">
+			    		<div class="uploadify-div">
+			    			<notempty name='info.excelname'>
+				    			<li>
+						    		<a href="{$info.excelfile}">{$info.excelname}</a>
+						    		<input type="hidden" value="{$info.excelname}" name="excelname">
+				    			</li>
+				    			<input type="hidden" value="{$info.excelfile}" name="excelfile">
+			    			</notempty>
+			    		</div>
+						<button type="button" id='upload' data-type='file' data-name="file">选择文件</button>
+<!-- 			    	<small>只能上传csv文件</small> -->
+			    	</div>
+				</div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">说明：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="remark" maxlength="200">{$info.remark}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Bill/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script>
+	$(function(){
+		$('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+		$.ajax({url:'/Public/Common/js/jquery.uploadify.min.js', dataType:'script', cache:true}).done(function(){
+   			var obj = $(this), buttonText = obj.html(), id = obj.attr('id'), name = 'file', fileTypeExts = '*.csv';
+   			$('#upload').uploadify({
+   				'uploader' : '/Home/Upload/upload', 'swf':'/Public/Common/css/uploadify.swf', 'fileObjName':'file', 'buttonText':buttonText, 'fileSizeLimit':'2MB',
+   				'queueSizeLimit':10, 'removeTimeout':1, 'fileTypeExts':fileTypeExts,
+   				'onUploadSuccess' : function(file, data, response){
+ 					data = $.parseJSON(data);
+ 					var div = $('.uploadify-div'), html = '<li>';
+ 					html += "<a href='"+data.url+"'>"+file.name+"</a>"
+ 					html += "<input type='hidden' name='excelname' value='"+file.name+"' /></li><input type='hidden' name='excelfile' value='"+data.url+"' /></li>";
+ 					div.html(html);
+   				}
+   			});
+    	});
+	});
+</script>

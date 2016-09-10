@@ -1,0 +1,148 @@
+<style type="text/css">.control-label{padding-top:0 !important;}</style>
+<div class="row"><h3 class="page-header">装修申请&nbsp;&nbsp;</h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='areaList'>
+			        			<option value="{$areaList.id}">{$areaList.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="bid" name="bid">
+			        		<option value="0" >请选择楼栋号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="uid" name="uid">
+			        		<option value="0" >请选择单元号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房间号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="rid" name="rid">
+			        		<option value="0" >请选择房间号</option>
+						</select>           
+			        </div>
+			    </div>
+		    </div>
+		    <input type='hidden' name='get.Think.id' id="id" value='{$info.id}'>
+		    <div class="form-horizontal info" style="display:none;">
+				<div class="form-group"><label class='col-sm-3 control-label'>房号：</label><div class='col-sm-4 dec_room'>请选择房间</div></div>
+				<div class="form-group"><label class='col-sm-3 control-label'>面积：</label><div class='col-sm-4 dec_size'>请选择房间</div></div>
+				<div class="form-group"><label class='col-sm-3 control-label'>业主姓名：</label><div class='col-sm-4 dec_name'>请选择房间</div></div>
+				<div class="form-group"><label class='col-sm-3 control-label'>业主手机：</label><div class='col-sm-4 dec_phone'>请选择房间</div></div>
+				<div class="form-group"><label class='col-sm-3 control-label'>应缴费用：</label><div class='col-sm-4 dec_money'>0</div></div>
+				<div class="form-group">
+					<div class="col-sm-offset-3 col-sm-5">
+						<button class="btn btn-primary pay" type="button">缴费</button></a>
+						<button class="btn btn-default nopay" style="display: none;" type="button">已缴费</button></a>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+</div>
+<script type="text/javascript" >
+	$('.pay').click(function(){
+		waiting();
+		$.post('', {rid: $('.pay').data('rid'), money: $('.dec_money').html()}, function(data){
+			showInfo(data.info);
+			if(data.status == 1){
+				setTimeout("location.href = '{:U("Decorate/index")}'", 1600);
+			}
+		});
+	});
+	$(function(){
+		var aid, bid, uid, rid, html='';
+		$('#aid').change(function(){
+			aid = $(this).val(), html='';
+			if(aid > 0){
+				waiting();
+				$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0">请选择楼栋</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该小区还没有楼栋</option>';
+					}
+					$('#bid').html(html);
+				});
+			}
+		});
+		$('#bid').change(function(){
+			bid = $(this).val(), html='';
+			if(bid > 0){
+				waiting();
+				$.get('{:U("Unit/getUnitByBid")}', {bid : bid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0" >请选择单元</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该楼栋还没有单元</option>';
+					}
+					$('#uid').html(html);
+				});
+			}
+		});
+		$('#uid').change(function(){
+			uid = $(this).val(), html='';
+			if(uid > 0){
+				waiting();
+				$.get('{:U("Room/getRoomByUid")}', {uid : uid, bid : bid}, function(data){
+					complete();
+					if(data){
+						html = '<option value="0" >请选择房号</option>';
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{ 
+						html = '<option value="0" >该单元还没有房间</option>';
+					}
+					$('#rid').html(html);
+				});
+			}
+		});
+		$('#rid').change(function(){
+			rid = $(this).val(), html='';
+			$.post('{:U("Decorate/getOwner")}', {rid:rid}, function(data){
+				if(data.status == -1){
+					showInfo(data.info);
+				}else{
+					$('.dec_room').html(data.addr);
+					$('.dec_size').html(data.size);
+					$('.dec_name').html(data.name);
+					$('.dec_phone').html(data.phone);
+					$('.dec_money').html(data.money);
+					$('.info').show();
+					console.log(data);
+					if(data.status == 2){
+						$('.pay').hide(); $('.nopay').show();
+					}else{
+						$('.nopay').hide(); $('.pay').show().data('rid', data.id);
+					}
+				}
+			});
+		});
+	});
+</script>

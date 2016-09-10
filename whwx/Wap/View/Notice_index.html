@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body >
+<div class="notice pb_66"> 
+	<div class="top clearfix"><a href="javascript:history.go(-1);" class="return"></a>通知公告 <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a><i class="i_edit">编辑</i></div>
+    <div class="main all">
+    	<volist name='list' id='list'>
+	    	<div class="list clearfix list{$list.id}">
+	            <div class="cont">
+	                <ul class="clearfix">
+	                    <li>
+	                    	<switch name='list.type'>
+	                    		<case value='1'> <i class="icon icon2"></case>
+		        				<case value='2'> <i class="icon icon4 "></case>
+		        				<case value='3'> <i class="icon icon1"></case>
+		        				<case value='4'> <i class="icon icon3"></case>
+		        				<case value='5'> <i class="icon icon4"></case>
+		        				<case value='6'> <i class="icon icon4"></case>
+	                    	</switch>
+	                    		<eq name='list.status' value='1'><div class="red_circle" ></div></eq>
+	                    	</i>
+	                   	</li>
+	                    <li class="text">
+	                        <p><span class="name">{$list.title}</span><span class="date">{$list.times|date='Y-m-d', ###}</span></p>
+	                        <p class="txt">{$list.desc}</p>
+	                    </li>
+	                </ul>
+	                <ul class="more">
+	                	<switch name='list.type'>
+	        				<case value='1'><a href="{:U('Notice/notice?id='.$list['typeid'])}">查看详情</a></case>
+	        				<case value='2'><a href="{:U('Fix/mine_status?typeid='.$list['id'].'&id='.$list['typeid'])}">查看详情</a></case>
+	        				<case value='3'><a href="{:U('Owner/cont?typeid='.$list['id'].'&id='.$list['typeid'])}">查看详情</a></case>
+	        				<case value='4'><a href="{:U('Preferential/orders_details?typeid='.$list['id'].'&id='.$list['typeid'])}">查看详情</a></case>
+	        				<case value='5'><a href="{:U('Complaint/detail?id='.$list['typeid'])}">查看详情</a></case>
+	        				<case value='6'><a href="{:U('Booking/evaluate?id='.$list['typeid'])}">查看详情</a></case>
+	        			</switch>
+	                </ul>
+	            </div>
+	            <span class="ck">
+		            <span class="ckbox">
+			            <input type="checkbox" name="del" id="ckbox{$list.id}" value='{$list.id}'  />
+			            <label for="ckbox{$list.id}"></label>
+		            </span>
+	            </span>
+	        </div>
+        </volist>
+    </div>
+    {$page}
+    <div class="btn">
+    	<ul>
+        	<li class="del">删除</li>
+            <li class="ckAll">全选</li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+<script>
+$(function(){
+	//编辑&完成
+	$('.top i').click(function(){
+		var html = $(this).html();
+		if(html=='编辑'){
+			$(this).html('完成');
+			$('.main ').removeClass('all');
+			$('.main ').addClass('edit');
+			$('ck').show();
+			$('.btn').show();
+		}else if(html=='完成'){
+			$(this).html('编辑');
+			$('.main ').removeClass('edit');
+			$('.main ').addClass('all');
+			$('ck').hide();
+			$('.btn').hide();
+		}
+	});
+	//全选
+	$('.ckAll').click(function(){
+		if($(this).hasClass('on')){
+			$(this).removeClass('on');
+			$('.ckbox').find('input').attr('checked',false);
+		}else{
+			$(this).addClass('on')
+			$('.ckbox').find('input').attr('checked',true);
+		}
+	});
+	$('.del').click(function(){
+		// 判断是否有选中项
+		if($('.ckbox').find('input').is(":checked")){
+		var str = 0;
+	    $("input[name='del']:checkbox").each(function(){ 
+            if($(this).attr("checked")){
+                str += ',' + $(this).val();
+            }
+         });
+	    waiting();
+		$.post('{:U("Notice/del")}', {ids : str}, function(data){
+			complete();
+			showInfo(data.info, 1, function(){
+				if(data.status == 1){
+					var strs = new Array();
+					strs = str.split(",");
+					for(var i = 0; i < strs.length; i++){ 
+						$('.list'+strs[i]).remove();
+					}
+				}
+			});
+		});
+	}else{
+		showInfo("你还没有选中!");
+	}
+	});
+	$('#index_icon').click(function(){
+		location.href = $(this).data('url');
+	});
+	//点击删除未读红点
+	$('.more').click(function(){
+		$(this).prev().find('.red_circle').remove();
+	});
+});
+</script> 
+</body>
+</html>

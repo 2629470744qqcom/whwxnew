@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+</head>
+<body>
+<div class="m_height pb70">
+	<div class="top clearfix" style="margin:0;">
+        <a href="javascript:history.go(-1)" class="return"></a>线路详情
+        <a href="{:U('Wap/Index/index')}"><span class="icon_home_index fr" style="margin:0;"></span></a>
+    </div>
+    <!--幻灯片开始-->
+    <div id="banner_box" class="box_swipe" >
+        <ul>
+            <volist name="info.pics" id="pic">
+                <li><img src="{$pic}?imageView2/0/w/600" /></li>
+            </volist>
+        </ul>
+        <ol style="background:none;">
+            <volist name="info.pics" id="pic2">
+                <li class="on"></li>
+            </volist>
+        </ol>
+    </div>
+    <!--幻灯片结束-->
+    <!--搜索-->
+    <div class="cont_tit">
+    	<ul>
+        	<li>{$info.name}</li>
+            <li> <span class="red">￥{$info.sale}</span> <span class="grey">票面价：￥{$info.price}</span></li>
+            <li>
+                <eq name="info.self" value="1"><i class="info_tags line_xgj">星管家</i></eq>
+                <notempty name="info.tag"><i class="info_tags info_tag">{$info.tag}</i></notempty>
+                <eq name="info.jing" value="1"><i class="info_tags line_jing">精</i></eq>
+                <eq name="info.re" value="1"><i class="info_tags line_re">热</i></eq>
+                <eq name="info.hui" value="1"><i class="info_tags line_hui">惠</i></eq>
+            </li>
+        </ul>
+    </div>
+    <div class="tab">
+        <a href="{:U('Tour/info?type=0&id=' . $_GET['id'])}"><div class="tab_item <neq name='Think.get.type' value='1'>on</neq>">行程</div></a>
+        <a href="{:U('Tour/info?type=1&id=' . $_GET['id'])}"><div class="tab_item <eq name='Think.get.type' value='1'>on</eq>">评价</div></a>
+    </div>
+    <!-- 详情 -->
+    <eq name='Think.get.type' value='1'>
+        <volist name='commentList' id='commentList'>
+            <div class="comment">
+                <img src="{$commentList.pic|default='/Public/Wap/images/public_heads.png'}?imageView2/1/w/100/h/100">
+                <span class="comment_nickname"><empty name='commentList.nickname'>业主{$commentList.oid}<else/>{$commentList.nickname}</empty></span>
+                <span class="comment_time">{$commentList.comment_time|date='Y-m-d H:i', ###}</span>
+                <span class="comment_score">{$commentList.comment_score}分</span>
+                <p>{$commentList.comment}</p>
+            </div>
+        </volist>
+    <else/>
+        <div class="content">
+        	<ul class="clearfix">
+            	<li>{$info.content}</li>
+            </ul>
+        </div>
+    </eq>
+</div>
+<!-- 底部快捷菜单 -->
+ <div class="cont_bottom">
+    <ul class="clearfix">
+        <li class="tel"><a href="tel:{$phone}"> <p class="icon man"></p> <p class="name">旅游顾问</p> </a></li>
+        <li class="tel"><a href="tel:{$info.phone}"> <p class="icon phone"></p> <p class="name">联系客服</p> </a></li>
+        <li class="btn"><a href="{:U('Tour/buy', array('id' => $info['id']))}" class="btn_green"> 立即抢购</a></li>
+    </ul>
+ </div>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="/Public/Wap/js/swipe.js" ></script>
+<script>
+$(function(){
+	/*幻灯片*/
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+});
+</script>
+</body>
+</html>

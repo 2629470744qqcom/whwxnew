@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        更换头像<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="form">
+        <div class="cont">
+            <ul class="relative">
+            	<iframe name="frame" id='frame' style="display:none"></iframe>
+            	<form id='fileForm' action="http://upload.qiniu.com/" method="post" target="frame" enctype="multipart/form-data" class="" >
+			 	    <input type='file' name='file' accept="image/*" class='uploadImg upload_input_img'   />
+			 	    <input type='hidden' name='token' />
+			 	    <img src='{$pic}?imageView2/1/h/100/w/100'/>
+				</form>
+            </ul>
+        </div>
+        <div>
+            <button type="button" style="display:none;" class="post">确认修改 </button>
+            <input type="hidden" name='pic' value='{$pic}' />
+        </div>
+    </div>
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		$.get('/Home/Upload/getToken',function(token){
+			$('input[name="token"]').val(token);
+		});
+		//上传文件
+		$('.uploadImg').change(function(){
+			waiting();
+			$('#fileForm').submit();
+		});
+		//获取上传文件返回值
+		$('iframe').load(function(){
+			var info = $(window.frames["frame"].document).find("body").text();
+			info = $.parseJSON(info);
+			$('input[name="pic"]').val(info.url);
+			$('img').attr('src', info.url);
+			$('.post').show();
+			complete();
+		});
+		$('.post').click(function(){
+            var flag = true, pic = $('input[name="pic"]').val();
+            if(pic == ''){
+                flag = false; showInfo('请上传图片'); return false;
+            }
+            if(flag){
+                waiting();
+                $.post('', {pic : pic}, function(data){
+                    complete();showInfo(data.info, 1,function(){
+                    	if(data.status == 1){
+                        	location.href = '{:U("Person/all")}';
+                        }
+                    });
+                });
+            }
+            return false;
+        });
+	});
+// 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

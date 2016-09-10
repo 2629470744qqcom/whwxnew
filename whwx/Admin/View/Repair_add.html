@@ -1,0 +1,81 @@
+<div class="row"> <h3 class="page-header">报修管理<small>添加报修</small>&nbsp;&nbsp;</h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="form-horizontal">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="area_id" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option id="area{$area.id}" value="{$area.id}" >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">姓名：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required tel" name="phone" value="" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">地址：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="address" value="" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+		           <label class="col-sm-3 control-label">维修内容：<span class="c-red">*</span></label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control required" name="desc" maxlength='200'></textarea>
+		           </div>
+		        </div>
+		        <div class="form-group">
+			        <label class="col-sm-3 control-label">图片：</label>
+			        <div class="col-sm-4">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pics'>
+				       			<volist name='info.pics' id='pic'>
+				       				<li>
+								    	<img src="{$pic}" >
+								    	<input type="hidden"  value="{$pic}" id='pics{$i}' name="pic[]">
+								    	<a class='delImgBtn'>删除</a> 
+							    	</li>
+				       			</volist>
+						    </notempty>
+					    </div> 
+			       		<button data-multi='true' type="button" data-callback='showImg' class="upload" id="upload">选择图片</button>
+			        </div>
+			    </div>
+			    <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Repair/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+		       	</form>
+		    </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" >
+	function showImg(data){
+		data = $.parseJSON(data);
+		var div = $('#upload').parent().find('.uploadify-div'), html = '<li>';
+		html += "<img src='"+data.url+"' />";
+		html += "<input type='hidden' name='pic[]' value='"+data.url+"' /><a class='delImgBtn'>删除</a></li>";
+		div.append(html);
+	}
+	$('body').on('click', '.delImgBtn', function(){
+		$(this).parents('li').remove();
+	});
+</script>

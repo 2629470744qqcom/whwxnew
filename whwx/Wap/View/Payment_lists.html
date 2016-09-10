@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="price pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		缴费记录<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+	<notempty name='data.this'>
+		<div class="month">本月</div>
+	    <div class="price_list">
+	    	<volist name='data.this' id='list'>
+		    	<ul class="clearfix">
+		        	<a href="{:U('Payment/cont?id='.$list['id'])}">
+		                <li class="icon"><i></i></li>
+		                <li class="name">
+		                    <p class="tit">-<notempty name='info.real_money'>{$list.real_money}<else />{$list.money}</notempty></p>
+		                    <p class="text">{$list.remark}</p>
+		                </li>
+		                <li class="date">{$list.creat_time|date='m-d', ###}</li>
+		            </a>
+		        </ul>
+	        </volist>
+	    </div>
+	</notempty>
+	<notempty name='data.last'>
+		<div class="month">上月</div>
+	    <div class="price_list">
+	    	<volist name='data.last' id='list'>
+		    	<ul class="clearfix">
+		        	<a href="{:U('Payment/cont?id='.$list['id'])}">
+		                <li class="icon"><i></i></li>
+		                <li class="name">
+		                    <p class="tit">-<notempty name='info.real_money'>{$list.real_money}<else />{$list.money}</notempty></p>
+		                    <p class="text">{$list.remark}</p>
+		                </li>
+		                <li class="date">{$list.creat_time|date='m-d', ###}</li>
+		            </a>
+		        </ul>
+	        </volist>
+	    </div>
+	</notempty>
+	<notempty name='data.other'>
+		<div class="month">之前</div>
+	    <div class="price_list">
+		    <volist name='data.other' id='list'>
+		    	<ul class="clearfix">
+		        	<a href="{:U('Payment/cont?id='.$list['id'])}">
+		                <li class="icon"><i></i></li>
+		                <li class="name">
+		                    <p class="tit">-<notempty name='info.real_money'>{$info.real_money}<else />{$info.money}</notempty></p>
+		                    <p class="text">{$list.remark}</p>
+		                </li>
+		                <li class="date">{$list.creat_time|date='m-d', ###}</li>
+		            </a>
+		        </ul>
+			</volist>
+	    </div>
+	</notempty>
+</div>
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+});
+</script>
+</body>
+</html>

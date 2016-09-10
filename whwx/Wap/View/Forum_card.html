@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div class="pb_60">
+ 	<div class="forum_head">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">我的帖子</p>
+	 	<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a> 
+ 	</div>
+ 	<div class="forum_card_list"> 
+ 		<ul class="nav_2"> 
+ 			<a href='{:U("Forum/card")}'><li data-id='0'><p <neq name='Think.get.type' value='1'>class="green_c_b"<else />class="ng_c_b"</neq> >我的帖子</p></li></a>
+ 			<a href='{:U("Forum/card?type=1")}'><li data-id='1'><div class="hr_forum_card fl "></div><p <eq name='Think.get.type' value='1'>class="green_c_b"<else />class="ng_c_b"</eq> >我的回复</p></li></a>
+ 		</ul> 
+ 	</div>
+ 	<div class="forum_card_choose">
+	 	<ul <eq name='Think.get.type' value='1'> style='display:none;' </eq> class="fl w100 mb_70" data-id='0'>
+	 		<volist name='threadList' id='thread'>
+	 			<eq name='thread.status' value='1'>
+				 	<li class="forum_admin_head mt_10"> 
+						<a href='{:U("Forum/details?id=".$thread["id"])}'>
+							<div class="forum_head_text">
+								<p>{$thread.title}</p><p class="f_z_14 f_c_9">{$thread.times|date='Y-m-d H:i', ###}</p>
+							</div>
+						</a>
+						<div class="forum_head_right">
+							<p>
+								<a class="f_c_g" href="{:U('Forum/index?pid='.$thread['pid'])}">{$thread.plate}</a>
+							</p>
+							<p class="f_c_9 mr_10">来自</p>
+						</div>
+						<div class="forum_admin_center f_c_3 "> {$thread.desc}</div>
+					</li>
+				<else />
+					<li class="forum_admin_head mt_10"> 
+						<div class="forum_head_text">
+							<p>{$thread.title}</p><p class="f_z_14 f_c_9">{$thread.times|date='Y-m-d H:i', ###}</p>
+						</div>
+						<div class="forum_head_right">
+							<p>
+								<a class="red">已被管理员删除</a>
+							</p>
+						</div>
+						<div class="forum_admin_center f_c_3 "> {$thread.desc}</div>
+					</li>
+				</eq>
+			</volist>
+		</ul>
+		<ul class="fl w100 mb_70" <neq name='Think.get.type' value='1'> style='display:none;' </neq>  data-id='1'>
+			<volist name='postList' id='post'>
+				<if condition='($post.status eq 1) and ($post.forumstatus eq 1)'>
+				 	<li class="forum_admin_head mt_10"> 
+					 	<a href='{:U("Forum/details?id=".$post["id"])}'>
+							<div class="forum_head_text"><p>{$post.title}</p></div>
+							<div class="forum_head_right"><p class="f_c_9 mr_10">{$post.times|date='Y-m-d H:i', ###}</p></div>
+							<div class="forum_admin_center f_c_3 mt_10" style="padding-left:0px;"><span class="f_c_9">回复:</span><span>{$post.desc}</span></div>
+						</a>
+				    </li>
+				<else />
+					<li class="forum_admin_head mt_10">
+						<div class="forum_head_text"><p>{$post.title}</p></div>
+						<div class="forum_head_right"><p class="red mr_10">已被管理员删除</p></div>
+					</li>
+			    </if>
+			</volist>
+		</ul>
+	</div>
+	{$page}
+	<!-- <div class="bottom_copyright mb_70"></div> -->
+	<!-- <div class="copyright fl mb_66 absolute_b0"></div> -->
+	
+</div>
+<div class="forum_bottom">
+    <ul class="clearfix">
+        <li><a data-url="{:U('Forum/index')}"><span class="icon_img icon_home"></span><span>首页</span></a></li>
+        <li id='chooseImage' ><a><span class="icon_img icon_camera"></span><span>随手拍</span></a></li>
+        <li><a data-url="{:U('Forum/release?pid='.$info['pid'])}"><span class="icon_img icon_pencil"></span><span>发布</span></a></li>
+        <li  class="on"><a data-url="{:U('Forum/card')}"><span class="icon_img icon_mine"></span><span>我的</span></a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	var images = {localId: [],serverId: []}, type = '{$Think.session.fansInfo.type}';
+	wx.ready(function () {
+		document.querySelector('#chooseImage').onclick = function () {
+			wx.chooseImage({
+				sourceType: ['camera'],
+				success: function (res) {
+					images.localId = res.localIds;
+					window.location.href='/Wap/Forum/random?pics='+res.localIds;
+				}
+			});
+		};
+	});
+	$(function(){ 
+// 	    $(".nav_2").children("li").click(function(d_id){
+// 	       var d_id = $(this).data('id');
+// 	       $('.forum_card_choose').children('ul').hide();
+// 	       $('.forum_card_choose').children('ul').eq(d_id).show();
+// 	       $('.nav_2 li').children("p").attr('class','ng_c_b'); //旧的样式
+// 	       $(this).children("p").attr('class','green_c_b');
+// 	    });
+		$('.forum_bottom li').click(function(){
+			if(type == -1 && $(this).index() != 0){
+				showInfo('你没有权限，请注册', 2, function(){
+					location.href = '{:U("Public/index")}';
+				});
+			}else if($(this).index() != 1){
+				location.href = $(this).find('a').data('url');
+			}
+		});
+	});
+	// 首页跳转
+	$('#index_icon').click(function(){
+	    location.href = $(this).data('url');
+	});
+</script>	
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="orders pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a> 
+        我的订单 <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="status"><p class="p_green"> 订单状态：<span>快递派送中···</span></p></div>
+    <div class="form_list mt10">
+    	<ul>
+        	<li class="plr_10"><span class="name">收货人</span><span>{$info.name}</span></li>
+            <li><span class="name">联系方式</span><span>{$info.phone}</span></li>
+            <li><span class="name">收货地址</span><span><if condition='($info.address eq "")'>{$Think.session.fansInfo.address}<else/>{$info.address}</if></span></li>
+            <notempty name='info.ems_num'>
+	            <li><eq name="info.ems_name" value="商家配送" ><span class="name">商家手机</span><else/><span class="name">快递单号</span></eq><span>{$info.ems_num}</span></li>
+	            <li><span class="name">快递公司</span><span>{$info.ems_name}</span></li>
+            </notempty>
+        </ul>
+    </div>
+    <div class="list">
+        <ul>
+            <li class="list_cont">
+            	<p class="tit">物流信息</p>
+            	<volist name='list.data' id='data'>
+	                <p class="list_cont_text"><span class="name">{$data.time}</span><span>{$data.context}</span></p>
+            	</volist>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+    // 首页跳转
+$('#index_icon').click(function(){
+   location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<div class="row"> <h3 class="page-header">星房推荐&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="20">
+			        </div>
+			        <small>不超过二十个字</small>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">上传图片：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                	</div>
+                	<small>建议尺寸：360*200</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="aid" name="aid">
+			        		<option value="0" >全部小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required tel" name="tel" value="{$info.tel}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+		           <label class="col-sm-3 control-label">详细说明：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+		           </div>
+		        </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control digits required" name="sort" value="{$info.sort|default=1}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div> 
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Recommend/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+

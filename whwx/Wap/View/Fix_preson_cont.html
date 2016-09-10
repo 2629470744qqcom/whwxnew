@@ -1,0 +1,155 @@
+<!doctype html>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css?v=20160310" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        室内报修<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="form">
+    	<form id='form' method="post">
+            <div class="cont">
+                <ul class="w100">
+                    <li>
+                        <label>维修项目</label>
+                        <!-- <input type="text" name="name" value="{$info.name}" disabled='disabled' readonly /> -->
+                        <p name="name">{$info.name}</p>
+                    </li>
+                    <li>
+                        <label>材料费(元)</label>
+                        <!-- <input type="text" name="material" value="{$info.material}" disabled='disabled' readonly /> -->
+                        <p name="material">{$info.material}</p>
+                    </li>
+                    <li>
+                        <label>人工机械费</label>
+                        <!-- <input type="text" name="price" value="{$info.price}元" disabled='disabled' readonly /> -->
+                        <p name="price">{$info.price}元</p>
+                    </li>
+                    <notempty name='info.desc'>
+                        <li>
+                            <label>服务说明</label>
+                            <!-- <textarea name="" disabled='disabled' readonly>{$info.desc}</textarea> -->
+                            <p>{$info.desc}</p>
+                        </li>
+                    </notempty>
+                   <!--  <li class="line">
+                        <label>详细描述</label>
+                        <textarea name="desc"></textarea>
+                    </li> -->
+                </ul>
+            </div>
+            <div class="picture forum_release_form relative mt_0 line" style="margin:10px auto;border: 1px solid #dcdcdc;">
+                <div style="width: 100%;margin-bottom:15px;">
+                	<label>详细描述</label>
+                    <textarea name="desc" style="width: 68%;"></textarea>
+                </div>
+		    	<label>上传照片</label>
+		        <a id='chooseImage' class="file_up">+</a>
+    		</div>
+            <input name='fixe_id' type="hidden" value='{$Think.get.id}' />
+            <div style="margin-bottom: 66px;"><button type="button" class="post"> 提交 </button></div>
+        </form>
+    </div>
+</div>
+<!--版权-->
+
+<script type="text/javascript" src='{:JQ}'></script>
+<script type="text/javascript" src='{:JS}common.min.js'></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+	//显示图片
+	var num = 0;var images = {localId: [],serverId: []}, imgs = '';
+	function showImg(pics){
+		var pic = new Array();
+		pic = pics.split(",");
+		for(var j = 0; j < pic.length; j++){
+			num++;
+			$('input[name="fixe_id"]').after('<input class="pics" type="hidden" name="pic['+num+']" value="'+pic[j]+'" />');
+			$('.file_up').after('<div style="width:60px; margin:0" class="relative forum_release_form_img fl"><img src="'+pic[j]+'"><span class="del" data-id="'+num+'">X</span></div>');
+		}
+	}
+	//选择图片
+	wx.ready(function () {
+		document.querySelector('#chooseImage').onclick = function () {
+			wx.chooseImage({
+				success: function (res) {
+					images.localId = res.localIds;
+					var pics = res.localIds;
+					showImg(pics.join());
+				}
+			});
+		};
+	});
+	//上传图片
+	var i = 1;
+	function upload(pic, k){
+		wx.uploadImage({
+		    localId: pic,
+		    success: function (res) {
+		    	imgs = imgs + res.serverId + ',';
+		    	if(i == k){
+		    		waiting();
+		    		$.post('{:U("Forum/downPic")}', {pics : imgs}, function(data){
+		    			complete();
+		    			$('input[name="fixe_id"]').nextAll('input').remove();
+		    			for(var m = 0; m < data.length; m++){
+		    				$('input[name="fixe_id"]').before('<input class="pics" type="hidden" name="pic['+m+']" value="'+data[m]+'" />');
+		    			}
+			    		other();
+		    		});
+		    	}else{
+					i++;
+		    	}
+		    },
+		    fail: function (res) {
+		      alert(JSON.stringify(res));
+		    }
+		});
+	}
+</script>
+<script type="text/javascript">
+	$(function(){
+		var flag = true;
+		$('.post').click(function(){
+			if(!$('textarea[name="desc"]').val()){
+				showInfo('请填写详细描述');
+			}else{
+				if(flag){
+					flag = false;
+					if($('.pics').length > 0){
+						$('.pics').each(function(k, v){
+							upload($(v).val(), $('.pics').length);
+						});
+					}else{
+						other();
+					}
+				}
+			}
+		});
+	});
+	function other(){
+		waiting();
+		$.post('{:U("Fix/preson_cont")}', $('#form').serialize(), function(data){
+			complete();flag = true;
+			showInfo(data.info, 1, function(){if(data.url != undefined){location.href = data.url;}});
+		});
+	}
+	$('body').on('click', '.del', function(data){
+		$('input[name="pic['+$(this).data('id')+']"]').remove();
+		$(this).parent().remove();
+	});
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>
+</body>
+</html>

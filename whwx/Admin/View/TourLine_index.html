@@ -1,0 +1,71 @@
+<div class="row"> <h3 class="page-header">线路管理</h3></div>
+<div class="row">
+    <div class="col-md-12"> 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <label><a class="btn btn-primary" href="{:U('TourLine/add')}">添加</a></label>
+                <form action='{:U("TourLine/index")}' class="form-inline text-right fr">
+                    <input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w150" placeholder="名称">
+                    <select name='mid' class="form-control mr20 w150">
+                        <option value='0'>旅行社</option>
+                        <volist name="mlist" id="mlist">
+                            <option value='{$mlist.id}' <eq name='Think.get.mid' value='$mlist["id"]'>selected</eq> >{$mlist.name} </option>
+                        </volist>
+                    </select>
+                    <select name='cid' class="form-control mr20 w150">
+                        <option value='0'>所属分类</option>
+                        <volist name="clist" id="clist">
+                            <option value='{$clist.id}' <eq name='Think.get.mid' value='$clist["id"]'>selected</eq> >{$clist.name} </option>
+                        </volist>
+                    </select>
+                    <select name='status' class="form-control mr20 w100" >
+                        <option value='-1'>状态</option>
+                        <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >上架 </option>
+                        <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >下架 </option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>名称</th>
+                                <th>旅行社</th>
+                                <th>分类</th>
+                                <th>现价</th>
+                                <th>原价</th>
+                                <th width="70">排序</th>
+                                <th width="75">状态</th>
+                                <th width="120">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}</td>
+                                    <td>{$list.mname}</td>
+                                    <td>{$list.cname}</td>
+                                    <td>{$list.sale}</td>
+                                    <td>{$list.price}</td>
+                                    <td>
+                                        <input class="setSort" type="text" size="2" data-url="{:U('TourLine/setSort?id='.$list['id'])}" value="{$list.sort}">
+                                    </td>
+                                    <td>
+                                        <button class=" btn <eq name="list.status" value="1">btn-primary<else/>btn-default</eq> btn-sm setStatus" type="button" data-url='{:U("TourLine/setStatus?id=".$list["id"])}' data-status="{$list.status}"><eq name="list.status" value="1">启用<else/>禁用</eq></button>
+                                    </td>
+                                    <td>
+                                        <a class=" btn btn-sm btn-default" href="{:U('TourLine/edit?id='.$list['id'])}">修改</a>
+                                        <button data-url='{:U("TourLine/del?id=".$list["id"])}' class=" btn btn-sm btn-default delBtn" type="button">删除</button>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>

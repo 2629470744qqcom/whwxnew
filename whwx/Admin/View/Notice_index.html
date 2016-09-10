@@ -1,0 +1,114 @@
+<div class="row"><h3 class="page-header">通知公告</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a class="btn btn-primary" href="{:U('Notice/add')}">添加通知</a></label>
+                <form action='{:U("Notice/index")}' class="form-inline text-right m-b-5 fr">
+        	  标题：<input type="text" name='title' value='{$Think.get.title}' class="form-control mr20 w150">
+          选择小区：<select name='aid' class="form-control mr20 w150">
+                        <option value='-1'>请选择小区</option>
+                        <option value='0'<eq name='Think.get.aid' value='0'>selected</eq> >全部小区</option>
+                        <volist name='areaList' id='area'>
+	                        <option value='{$area.id}' <eq name='Think.get.aid' value='$area.id'>selected</eq> >{$area.name}</option>
+                        </volist>
+                    </select>
+              状态：<select name='type' class="form-control mr20 w150">
+                        <option value='-1'>全部</option>
+                        <option value='0' <eq name='Think.get.type' value='0'>selected</eq> >未发布</option>
+                        <option value='1' <eq name='Think.get.type' value='1'>selected</eq> >已发布</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>标题</th>
+                                <th>下发小区</th>
+                                <th>创建时间</th>
+                                <th>发布时间</th>
+                                <th>接收人数</th>
+                                <th>已阅人数</th>
+                                <th width="75">排序</th>
+                                <th width="220">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.title}</td>
+                                    <td>{$list.aname|default='全部小区'}</td>
+                                    <td>{$list.times|date='Y-m-d H:i', ###}</td>
+                                    <td><neq name='list.down_time'>{$list.down_time|date='Y-m-d H:i', ###}<else />未发布</neq></td>
+                                    <td>{$list.number|default='未下发'}</td>
+                                    <td>{$list.look}</td>
+                                    <td><input class="setSort" type="text" size="2" data-url="{:U('Notice/setSort?id='.$list['id'])}" value="{$list.sort}"></td>
+                                    <td>
+                                        <button class="btn-sm btn btn-default look" data-id='{$list.id}' type="button">查看</button>
+                                    	<neq name='list.status' value='1'>
+                                            <button data-id='{$list.id}' class="btn-sm btn btn-default release" type="button">发布</button>
+	                                    	<a class="btn-sm btn btn-default" href="{:U('Notice/edit?id='.$list['id'])}">修改</a>
+                                        </neq>
+                                        <button data-url='{:U("Notice/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+               <!--  <form action="{:U('Notice/desc')}" id="myform1" class="form-horizontal"> -->
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close" type="button">×</button>
+                        <h4 class="modal-title">查看</h4>
+                    </div>
+                    <div class="modal-body" id="html">
+                        <!-- <div id ="desc">{$info.desc}</div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+                        <input type="hidden" name="orderid" />
+                        <button class="btn btn-primary ordersave" type="button">保存</button>
+                    </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    //查看详情及回复
+    $('.look').click(function(){
+        $.post('{:U("Notice/desc")}', {id : $(this).data('id')}, function(data){
+            if(data.status != 1){
+                    showInfo(data.info);
+                }else{
+            html  = '<div>内容：'+data['info']['desc']+'</div>';
+            complete();
+            $('.modal-body').html(html);
+            }
+        });
+         $('#myModal').modal('show');
+    });
+</script>
+
+<script type="text/javascript">
+	$(function(){
+		$('.release').click(function(){
+			waiting();var obj = $(this);
+			$.post('{:U("Notice/release")}', {id : $(this).data('id')}, function(data){
+				complete();
+				showInfo(data.info);
+				if(data.status == 1){location.reload();}
+			});
+		});
+	});
+</script>

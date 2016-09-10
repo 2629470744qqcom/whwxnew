@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+</head>
+<body>
+<div class="m_height"> 
+    <!--幻灯片开始-->
+    <div id="banner_box" class="box_swipe" >
+        <ul>
+            <volist name="slideList" id="slideList1">
+                <li><a href="<empty name='slideList1.url'>javascript:void(0);<else/>{$slideList1.url}</empty>"> <img src="{$slideList1.pic}?imageView2/0/w/600" /></a> </li>
+            </volist>
+        </ul>
+        <ol>
+            <volist name="slideList" id="slideList2">
+                <li class="on"></li>
+            </volist>
+        </ol>
+    </div>
+    <!--幻灯片结束-->
+   
+    <!-- 旅游列表 -->
+    <div class="lv_list">
+        <div class="title clearfix"> <a> <i></i> <p>精品推荐</p> </a></div>
+        <!-- 列表 -->
+        <div class="main_box clearfix">
+            <volist name="lineList" id="lineList1">
+                <eq name="lineList1.recom" value="1">
+                    <div class="list">
+                        <ul>
+                            <li class="pic">
+                                <a href="{:U('Tour/info', array('id' => $lineList1['id']))}">
+                                    <img src="{$lineList1.pics}?imageView2/0/w/300" />
+                                    <eq name="lineList1.self" value="1"><i class="xgj"></i></eq>
+                                    <notempty name="lineList1.tag"><i class="line_tag">{$lineList1.tag}</i></notempty>
+                                </a>
+                            </li>
+                            <li class="tag">&nbsp;
+                                <eq name="lineList1.jing" value="1"><i class="tags line_jing">精</i></eq>
+                                <eq name="lineList1.re" value="1"><i class="tags line_re">热</i></eq>
+                                <eq name="lineList1.hui" value="1"><i class="tags line_hui">惠</i></eq>
+                            </li>
+                            <li class="text"> {$lineList1.name}</li>
+                            <li class="clearfix"> <p class="red">￥{$lineList1.sale}</p> <p> <a href="{:U('Tour/buy', array('id' => $lineList1['id']))}" class="btn_green"> 立即抢购 </a> </p> </li>
+                        </ul>
+                    </div>
+                </eq>
+            </volist>
+        </div> 
+    </div>
+    <div class="lv_list">
+        <div class="title clearfix"> <a> <i></i> <p>热门路线</p> </a></div>
+        <!-- 列表 -->
+        <div class="main_box clearfix">
+            <volist name="lineList" id="lineList2">
+                <neq name="lineList2.recom" value="1">
+                    <div class="list">
+                        <ul>
+                            <li class="pic">
+                                <a href="{:U('Tour/info', array('id' => $lineList2['id']))}">
+                                    <img src="{$lineList2.pics}?imageView2/0/w/300" />
+                                    <eq name="lineList2.self" value="1"><i class="xgj"></i></eq>
+                                    <notempty name="lineList2.tag"><i class="line_tag">{$lineList2.tag}</i></notempty>
+                                </a>
+                            </li>
+                            <li class="tag">&nbsp;
+                                <eq name="lineList2.jing" value="1"><i class="tags line_jing">精</i></eq>
+                                <eq name="lineList2.re" value="1"><i class="tags line_re">热</i></eq>
+                                <eq name="lineList2.hui" value="1"><i class="tags line_hui">惠</i></eq>
+                            </li>
+                            <li class="text"> {$lineList2.name}</li>
+                            <li class="clearfix"> <p class="red">￥{$lineList2.sale}</p> <p> <a href="{:U('Tour/buy', array('id' => $lineList2['id']))}" class="btn_green"> 立即抢购 </a> </p> </li>
+                        </ul>
+                    </div>
+                </neq>
+            </volist>
+        </div> 
+    </div>
+</div>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="/Public/Wap/js/swipe.js" ></script>
+<script>
+$(function(){
+	/*幻灯片*/
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+});
+</script>
+</body>
+</html>

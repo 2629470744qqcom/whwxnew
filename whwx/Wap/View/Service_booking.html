@@ -1,0 +1,68 @@
+<!doctype c>
+<html class="fsvs demo relative" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		预约详情
+		<a id="index_icon" data-url="{:U('Service/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <div class="mine_cont ">
+    	<ul>
+        	<li><label>预约项目：</label><p class="pcont">{$info.catename}</p></li>
+        	<li><label>选择商家：</label><p class="pcont">{$info.company}</p></li>
+        	<li><label>商家号码：</label><a href='tel:{$info.com_phone}'><p class="green pcont">{$info.com_phone}</p></a></li>
+        	<li><label>预约时间：</label><p class="pcont">{$info.day|date='Y-m-d H:i', ###}</p></li>
+<!--         	<li><label>时间：</label>{$info.hour}</li> -->
+        	<li><label>业主姓名：</label><p class="pcont">{$info.name}</p></li>
+        	<li><label>业主手机：</label><a href='tel:{$info.phone}'><p class="green pcont">{$info.phone}</p></a></li>
+        </ul>
+    </div>
+    <notempty name='info.comment'>
+		<div class='order_line'><p>业主评分：</p><span>{$info.comment.score}分</span></div>
+		<div class='order_line'><p>评价时间：</p><span>{$info.comment.times|date='Y-m-d H:i:s', ###}</span></div>
+		<div class='order_line'><p>评价内容：</p><span>{$info.comment.desc}</span></div>
+	</notempty>
+ 	<div class="fix_form"><button type="button" class="post <eq name='info.status' value='1'>bg_c_g deal <else/>bg_c_c</eq>  mt_20 fl ">处理完成</button></div>
+</div> 
+<!--版权-->
+<div class="bottom_copyright"></div>
+<!-- <div class="bottom_copyright"></div>
+<a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.star.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var id = '{$_GET["id"]}', flag = true;
+		$('.deal').click(function(){
+			if(flag){
+				flag = false;waiting();
+				$.post('{:U("Service/booking")}', {id : id}, function(data){
+					complete();
+					showInfo(data.info, 1 , function(){
+						if(data.status == 1){
+							$('.deal').removeClass('bg_c_g').addClass('bg_c_c');
+							location.href = '/Wap/service/index';
+						}
+					});
+				})
+			}
+		});
+	})
+	$('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

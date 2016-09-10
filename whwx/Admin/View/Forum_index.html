@@ -1,0 +1,151 @@
+<div class="row"> <h3 class="page-header">论坛管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Advanced Tables -->
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a class="btn btn-primary addCate" href='{:U("Forum/add")}'>发帖</a></label>
+				<form action='{:U("Forum/index")}' class="form-inline text-right fr m-b-5" >
+					<div class="form-group">
+					<div class="form-group">
+                        <select class="form-control" id="aid" name="aid">
+                            <option value="0" >请选择小区</option>
+                            <volist name='areaList' id='area'>
+                                <option value='{$area.id}' <eq name='Think.get.aid' value='$area["id"]'>selected</eq>>{$area.name}</option>
+                            </volist>
+                        </select>           
+                    </div>
+          			标题：<input type="text" name='title' value='{$Think.get.title}' class="form-control mr20 w150" >
+					板块：<select class="form-control" id="cate_id" name="cate_id">
+						    <option value="0" >全部板块</option>
+					        <volist name='cateList' id='cate'>
+								<option value='{$cate.id}' <eq name='Think.get.cate_id' value='$cate["id"]'>selected</eq>>{$cate.name}</option>
+					        </volist>
+						</select>           
+					</div>
+              		状态：<select name='status' class="form-control mr20 w100" >
+	                        <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >正常</option>
+	                        <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >删除</option>
+	                    </select>
+	                    <select name='top' class="form-control mr20 w150" >
+	                    	<option value="-1">置顶状态</option>
+	                        <option value='1' <eq name='Think.get.top' value='1'>selected</eq> >置顶</option>
+	                        <option value='0' <eq name='Think.get.top' value='0'>selected</eq> >未置顶</option>
+	                    </select>
+	                    <select name='hot' class="form-control mr20 w150" >
+	                    	<option value="-1">热帖状态</option>
+	                        <option value='1' <eq name='Think.get.hot' value='1'>selected</eq> >热帖</option>
+	                        <option value='0' <eq name='Think.get.hot' value='0'>selected</eq> >非热帖</option>
+	                    </select>
+					<button class="btn btn-primary" type="submit">搜索</button>
+				</form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>帖子标题</th>
+                                <th>发帖时间</th>
+                                <th>回帖数</th>
+                                <th>点赞数</th>
+                                <th width="75">置顶</th>
+                                <th width="75">热帖</th>
+                                <th width="75">排序</th>
+                                <th width="75">状态</th>
+                                <th width="180">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.title}</td>
+                                    <td>{$list.times|date='Y-m-d H:i:s', ###}</td>
+                                    <th>{$list.posts}</th>
+                                    <th>{$list.zan}</th>
+                                    <td><button data-url="{:U('Forum/setStatus', array('id' => $list['id'], 'type' => 'top'))}" data-status="{$list.top}" class='btn tophot <eq name="list.top" value="1">btn-primary<else />btn-default</eq> btn-sm' type="button">置顶</button></td>
+                                    <td><button data-url="{:U('Forum/setStatus', array('id' => $list['id'], 'type' => 'hot'))}" data-status="{$list.hot}" class='btn tophot <eq name="list.hot" value="1">btn-primary<else />btn-default</eq> btn-sm' type="button">热帖</button></td>
+                                    <td><input class="setSort" type="text" size="2" data-url="{:U('Forum/setSort?id='.$list['id'])}" value="{$list.sort}"></td>
+                                    <td><button class='btn <eq name="list.status" value="1">btn-primary<else />btn-default</eq> btn-sm' type="button"><eq name="list.status" value='1'>正常<else />删除</eq></button></td>
+                                    <td>
+                                     	<button class="btn-sm btn btn-default look" data-id="{$list.id}">查看</button>
+                                     	<eq name='list.fid' value='0'><a href='{:U("Forum/edit?id=".$list["id"])}' class='btn-sm btn btn-default'>修改</a></eq>
+                                      	<eq name="list.status" value="1"><button data-url='{:U("Forum/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button></eq>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id='html'></div>
+    </div>
+</div>
+<script>
+$(function(){
+	var cateList = $.parseJSON('{$cateStr}'), flag = true;
+	$('#pid').on('change', function(){
+		var id = $(this).val(), html='<option value="0">请选择分类</option>';
+		for(var i = 0; i < cateList.length; i++){
+			if(cateList[i]['pid'] == id){
+				html += '<option value="'+cateList[i]['id']+'">'+cateList[i]['name']+'</option>';
+			}
+		}
+		$('#cate_id').html(html);
+	});
+	$('.look').click(function(){
+		$.post('{:U("Forum/detail")}', {id : $(this).data('id')}, function(data){
+			$('#html').html(data);
+		});
+		$('#myModal').modal('show');
+	});
+	$('body').on('click', '.delPost', function(data){
+		if(confirm('你确定删除吗？')){
+			waiting();var obj = $(this);
+			$.get('{:U("Forum/delPost")}', {id : $(this).data('id')}, function(data){
+				complete();showInfo(data.info);
+				if(data.status == 1){
+					obj.parent().remove();
+				}
+			});
+		}
+	});
+	$('body').on('click', '.post', function(data){
+		var desc = $('#desc').val();
+		if(desc){
+			if(flag){
+				waiting();var obj = $(this);
+				$.post('{:U("Forum/post")}', {tid : $(this).data('id'), desc : desc}, function(data){
+					complete();showInfo(data.info);
+					if(data.status == 1){
+						$('#myModal').modal('hide');
+					}
+				});
+			}
+		}else{
+			showInfo('请输入回帖内容');
+		}
+	});
+	//置顶热帖操作
+	$('.tophot').click(function(){
+		var obj = $(this), url = obj.data('url'), status = obj.data('status');
+		waiting();
+		$.get(url, {status: status}, function(data){
+			complete(); showInfo(data.info);
+			if(data.status == 1){
+				if(status == 1){
+					obj.data('status', 0).removeClass('btn-primary').addClass('btn-default');
+				}else{
+					obj.data('status', 1).removeClass('btn-default').addClass('btn-primary');
+				}
+			}
+		});
+	});
+})
+</script>

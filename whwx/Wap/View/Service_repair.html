@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+<style type="text/css">
+.repair_complete{margin: 6px 10px !important;}
+.repair_complete button{width: 3.5rem; height: 3.5rem; float: left; font-size: 56px; border: 3px solid #F29400; border-radius: 6px; padding-bottom: 5px; color: #F29400; margin: -10px 0 10px;}
+.repair_complete div{position: relative; width: 3.5rem; float: left; margin: -10px 6px 10px;}
+.repair_complete div img{width: 3.5rem; height: 3.5rem;}
+.repair_complete div font{position: absolute; right: 0px; width: 1.2rem; background: #f00; padding-left: 0.3rem; color: #fff; border-radius: 10px;}
+</style>
+</head>
+<body class="bg_c_e ">
+ 	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">报修订单</p>
+	 	<a id="index_icon" data-url="{:U('Service/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<switch name='orderInfo.status'>
+ 		<case value='1'><div class="order_status bg_c_r">订单状态：维修预警</div></case>
+ 		<case value='2'><div class="order_status bg_c_r">订单状态：维修报错</div></case>
+ 		<case value='3'><div class="order_status bg_c_r">订单状态：未处理</div></case>
+ 		<case value='4'><div class="order_status bg_c_r">订单状态：未处理</div></case>
+ 		<case value='5'><div class="order_status bg_c_g">订单状态：未处理</div></case>
+		<case value='6'><div class="order_status bg_c_g">订单状态：未处理</div></case>
+		<case value='7'><div class="order_status bg_c_g">订单状态：处理完成</div></case>
+		<case value='8'><div class="order_status bg_c_g">订单状态：处理完成</div></case>
+		<case value='9'><div class="order_status bg_c_g">订单状态：评价完成</div></case>
+ 	</switch>
+ 	<div class="order_line mt_10"><p>维修区域</p><span>{$orderInfo.name}</span></div>
+ 	<div class="order_line b_b1"><p>维修内容</p><span>{$orderInfo.desc}</span></div>
+ 	<div class="order_line mt_10"><p>业主信息</p><span>{$orderInfo.owner}</span></div>
+ 	<div class="order_line"><p>联系电话</p><a href='tel:{$orderInfo.phone}'><span class="green">{$orderInfo.phone}</span></a></div>
+ 	<notempty name='orderInfo.address'><div class="order_line b_b1"><p>维修地址</p><span>{$orderInfo.address}</span></div></notempty>
+ 	<notempty name='orderInfo.pics'>
+	   	<div class='order_line'><p>图片</p><volist name='orderInfo.pics' id='pic'><a href='{$pic}'><img style="margin-top:10px;" src='{$pic}?imageView2/0/w/600'></a></volist></div>
+  	</notempty>
+  	<notempty name='orderInfo.feedback'>
+  		<div class="order_line b_b1">
+  			<p>处理结果</p>
+  			<span>{$orderInfo.feedback}</span>
+  			<volist name="orderInfo.repairman_pic" id='repairman_pic'>
+				<a href="{$repairman_pic}" target="_blank"><img src='{$repairman_pic}?imageView2/0/w/600'/></a>
+			</volist>
+  		</div>
+  	</notempty>
+  	<notempty name='orderInfo.payment'>
+		<div class='order_line'><p>维修金额</p><span>{$orderInfo.payment.money}元</span></div>
+		<div class='order_line'><p>支付状态</p><span><eq name='orderInfo.payment.status' value='2'>已支付<else />未支付</eq></span></div>
+		<eq name='orderInfo.payment.status' value='2'>
+			<div class='order_line'><p>支付方式</p><span><eq name='orderInfo.payment.status' value='1'>微支付<else />线下支付</eq></span></div>
+			<div class='order_line'><p>支付时间</p><span>{$orderInfo.payment.pay_time|date='Y-m-d H:i:s', ###}</span></div>
+		</eq>
+	</notempty>
+	<notempty name='orderInfo.comment'>
+		<div class='order_line'><p>业主评分</p><span>{$orderInfo.comment.score}分</span></div>
+		<div class='order_line'><p>评价时间</p><span>{$orderInfo.comment.times|date='Y-m-d H:i:s', ###}</span></div>
+		<div class='order_line'><p>评价内容</p><span>{$orderInfo.comment.desc}</span></div>
+	</notempty>
+	<if condition='($orderInfo.status lt 7) and ($orderInfo.status gt 2)'>
+	 	<ul class="fix_form">
+		 	<li data-id='0'><button type="button"  class="post bg_c_g mt_20 fl"> 完成维修 </button></li>
+		 	<li data-id='1'><button type="button"  class="post bg_c_r mt_20 fl"> 维修报错 </button></li>
+	 	</ul>
+ 	</if>
+	<div class="list-budget-bg"  style="display:none;"></div>
+    <ul class="information_frame relative">
+	    <li class="information_case" data-id='0' style="display:none;">
+	    	<h3>处理完成</h3>
+	        <textarea  placeholder="填写处理结果" name='result' rows="3"></textarea>
+	        <div class="repair_complete">
+	        	<button id="chooseImage" type="button">+</button>
+	        </div>
+	        <button class='complete'>提交</button>
+	    </li>
+	    <li class="information_case" data-id='1' style="display:none;">
+	    	<h3>维修报错</h3>
+	        <textarea  placeholder="填写错误原因" name='desc' rows="3"></textarea>
+	        <button class='wrong'>提交</button>
+	    </li>
+	</ul>
+	<div class="bottom_copyright"></div>
+ 	<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+$(function(){
+	var id = '{$_GET["id"]}';
+	$(".fix_form li").click(function(d_id){
+        var d_id=$(this).data('id');
+        $(".information_frame li").hide();
+        $(".information_frame li").eq(d_id).show();
+        $(".list-budget-bg").show();
+	});
+	$(".list-budget-bg").click(function(){
+		$(this).hide();
+		$(".information_frame li").hide();
+	});
+	$('.wrong').click(function(){
+		var desc = $('textarea[name="desc"]').val();
+		if(desc){ waiting();
+			$.post('{:U("Service/wrong")}', {id:id, desc:desc}, function(data){
+				complete();
+				showInfo(data.info, 1, function(){
+    				if(data.status == 1){
+    					$('.order_status').html('订单状态：维修报错').removeClass('bg_c_g').addClass('bg_c_c');
+    					$('.list-budget-bg').hide();
+    					$('.information_frame').remove();
+    					$('.fix_form').remove();
+    				}
+				});
+			});
+		}else{
+    		showInfo('请填写错误原因');
+		}
+	});
+	$('.complete').click(function(){
+		var result = $('textarea[name="result"]').val();
+		if(result){
+			//上传图片
+			var pics = '', len = $('.repair_complete img').length;
+			if(len > 0){
+    			$('.repair_complete img').each(function(i, v){
+    				wx.uploadImage({
+    					localId: $(v).attr('src'),
+    					success:function(res){
+    						pics += ',' + res.serverId;
+    						if(i == (len - 1)){
+    							submit(result, pics);
+    						}
+    					}
+    				});
+    			});
+			}else{
+				submit(result, pics);
+			}
+		}else{
+    		showInfo('请填写处理结果');
+		}
+	});
+});
+//维修完成提交
+var submit = function(result, pics){
+	waiting();
+	$.post('{:U("Service/complete")}', {id:{$Think.get.id}, result:result, pics:pics}, function(data){
+		complete();
+		showInfo(data.info, 1, function(){
+			if(data.status == 1){
+				location.reload();
+			}
+		});
+	});
+}
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+//选择图片
+document.querySelector('#chooseImage').onclick = function () {
+	wx.chooseImage({
+		success: function (res) {
+			$.each(res.localIds, function(i, v){
+				$('.repair_complete').append('<div><img src="' + v + '"><font class="del_pic">X</font></div>');
+			});
+		}
+	});
+};
+//删除图片
+$('.repair_complete').on('click', '.del_pic', function(){
+	$(this).parent().remove();
+})
+</script>
+</body>
+</html>

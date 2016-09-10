@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="orders"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+		订单详情<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+    </div>
+    <div class="status"> 
+        <switch name='info.status'>
+            <case value='0'><p class="p_red"> 订单状态：<span>未付款</span> </p> </case>
+            <case value='1'><p class="p_red"> 订单状态：<span>未付款</span> </p> </case>
+            <case value='2'><p class="p_green"> 订单状态：<span>待发货···</span> </p> </case>
+            <case value='3'><p class="p_green"> 订单状态：<span>快递派送中···</span> </p> </case>
+            <case value='4'><p class="p_gery"> 订单状态：<span>已收货</span></p> </case>
+            <case value='5'><p class="p_gery"> 订单状态：<span>已完成</span></p> </case>
+        </switch>
+    </div>
+    <div class="form_list mt10">
+    	<ul>
+        	<li class="plr_10"><span class="name">收货人</span><span>{$infoman.name}</span></li>
+            <li><span class="name">联系方式</span><span>{$infoman.phone}</span></li>
+            <li><span class="name">收货地址</span><span><if condition='($infoman.address eq "")'>{$Think.session.fansInfo.address}<else/>{$infoman.address}</if></span></li>
+        </ul>
+    </div>
+    <div class="list" style="margin-bottom:60px;">
+        <ul>
+        	<li class="date">
+                <p name="single_time">{$info.single_time|date='m月d日',###}</p>
+                <p>
+                    <span>共<i name="total">{$info.total}</i>件商品</span>
+                     合计:
+                    <switch name='info.style' >
+                        <case value='0'><em name='order_amount'> ￥{$info.order_amount}元</em></case>
+                        <case value='1'><em name='order_amount'>{$info.order_amount}积分</em></case>
+                    </switch>
+                </p>
+            </li>
+            <li class="detail">
+            	<p>
+                    <volist name='info.pics' id='pic' offset='0' length='1'> 
+                        <img src="{$pic}?imageView2/1/h/150/w/150" />
+                    </volist>
+                </p>
+                <p>
+                	<span class="tit">{$info.title}</span>
+                    <switch name='info.style' >
+                        <case value='0'><span id="present" data-present={$info.prix}>￥{$info.prix}元<em name="total">x{$info.total}</em></span></case>
+                        <case value='1'><span class="shop_integral w_30 fl"></span><span class="red">{$info.prix}</span></case>
+                    </switch>
+                    
+                </p>
+            </li>
+            <li class="list_cont">
+            	<p class="tit">订单详情</p>
+                <p><span class="name">订单编号:</span><span name="id">{$info.id|sprintf='%08s',###}</span></p>
+                <p>
+                    <switch name='info.style' >
+                        <case value='0'><span class="name">订单金额:</span></case>
+                        <case value='1'><span class="name">订单积分:</span></case>
+                    </switch>
+                    <span name='order_amount'>{$info.order_amount}<eq name='info.style' value="0">元<else/>积分</eq></span>
+                </p>
+                <p>
+                    <switch name='info.style' >
+                        <case value='0'><span class="name">支付金额:</span></case>
+                        <case value='1'><span class="name">支付积分:</span></case>
+                    </switch>
+                    <span name='pay_amount'>{$info.pay_amount|default=0}<eq name='info.style' value="0">元<else/>积分</eq></span>
+                </p>
+
+                <p>
+                    <span class="name">创建时间:</span>
+                    <span name="single_time">{$info.single_time|date='Y-m-d H:i:s',###}</span>
+                </p>
+                <notempty name="info.pay_time">
+                    <p>
+                        <span class="name">支付时间:</span><span name='order_amount'>{$info.pay_time|date='Y-m-d H:i:s',###}</span>
+                    </p>
+                </notempty>
+                <p>
+                    <span class="name">支付方式:</span>
+                    <span class="pay_type" data-type='{$info.pay_type}' >
+                        <switch name='info.pay_type'>
+                            <case value='0'>未支付</case>
+                            <case value='1'>微信付款</case>
+                            <case value='2'>货到付款</case>
+                            <case value='3'>积分付款</case>
+                        </switch>
+                    </span>
+                </p>
+                <p>
+                    <span class="name">订单状态:</span>
+                    <span class='status' id="status" data-status='{$info.status}' data-product='{$info.product}'>
+                        <switch name='info.status'>
+                            <case value='0'>未支付</case>
+                            <case value='1'>已取消</case>
+                            <case value='2'>已支付</case>
+                            <case value='3'>已发货</case>
+                            <case value='4'>已收货</case>
+                            <case value='5'>已完成</case>
+                            <case value='6'>已删除</case>
+                        </switch>
+                    </span>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="bottom">
+        <lt name='info.status' value='2'>
+        	<ul class="pay_box clearfix" >
+            	<li class="clearfix"> 支付方式： 
+                    <switch name='info.style' >
+                        <case value='0'>
+                            <p class="pay" data-id='1'>微信付款</p>
+                            <p class="pay_list" style="display:none;"><span data-id='1'>微信付款</span><span data-id='2'>货到付款</span></p>
+                        </case>
+                        <case value='1'>
+                             <p class="pay" data-id='3'>积分付款</p>
+                        </case>
+                    </switch>
+                </li>
+                <li class="btn gopay" ><a>去支付</a></li>
+            </ul>
+        </lt>
+        <ul class="btn_box">
+        	<li class="clearfix operation"> 
+                <if condition='($info.status eq 4)'><a class="a_orange" href="{:U('Preferential/evaluate?id='.$info['id'])}"> 评价 </a></if>
+                <eq name='info.status' value="5"><a class="a_orange" href="{:U('Preferential/evaluate?id='.$info['id'])}"> 查看评价 </a></eq>
+                <eq name = 'info.status' value ='2'><a class="a_green"> 待发货 </a> </eq>
+                <if condition='($info.status eq 3)'><a class="a_green" id="a_green"> 确认收货 </a> </if>
+                <if condition='($info.status eq 3)'>
+                    <a href="{:U('Preferential/logistics?id='.$info['id'])}" class="a_white"> 查看物流 </a> 
+                </if>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+
+<!-- <input type="hidden" name="info.product" class="pstatus"> -->
+<!-- <div class="copyright absolute_b0 mb_50"></div> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+        //var  pstatus=$('.pstatus').val();
+        //var  ostatus=$('#status').data("status");
+        if($('#status').data("product")==0 && $('#status').data('status')==0 ){
+            showInfo('物品已下架!');
+           // showInfo(data.info,1,function(){
+                $(".show_msg_ok").click(function(){
+                    location.href = '/Wap/Preferential/orders';
+                })
+           // });
+        }else{
+            var id = '{$_GET["id"]}';
+    		$('.pay').click(function(){$('.pay_list').toggle();});
+    		$('.pay_list span').click(function(){
+    			var html = $(this).html();
+    			$('.pay_list').hide();
+                $('.pay').data('id', $(this).data('id'));
+    			$('.pay').html(html);
+    		});
+            $('.gopay').click(function(){
+                if($('.pay').data('id')==2 || $('.pay').data('id')==3){
+                    // var obj = $('.pay_type');
+                    // var type = obj.data('type');
+                    var obj =$('.pay');
+                    var type=obj.data('id');
+                    waiting();
+                    $.get('{:U("Preferential/type")}', {type: type, id : id}, function(data){
+                    	complete();
+                        showInfo(data.info);
+                        if(data.status == 2){
+                            $('.status').find('p').addClass('p_green').removeClass('p_red');
+                            $('.status').find('p').find('span').html('待发货···');
+                            $('.pay_box').hide();
+                            $('.operation').append('<a class="a_green"> 待发货 </a>');
+                            // $('.operation').append('<a href="/Wap/Preferential/logistics?id='+id+'" class="a_white"> 查看物流 </a> ');
+                            $('.pay_type').html('货到付款');
+                            $('#status').html('已支付');
+                        }else if(data.status == 3){
+                            $('.status').find('p').addClass('p_green').removeClass('p_red');
+                            $('.status').find('p').find('span').html('快递派送中···');
+                            $('.pay_box').hide();
+                            $('.operation').append('<a class="a_green "  id="a_green"> 确认收货 </a>');
+                            $('.operation').append('<a href="/Wap/Preferential/logistics?id='+id+'" class="a_white"> 查看物流 </a> ');
+                            $('.pay_type').html('货到付款');
+                            $('#status').html('已支付'); 
+                        };
+                    });
+                }else{
+                	waiting();
+                    $.post('{:U("Preferential/getPid")}', {id :id}, function(data){
+                    	complete();
+                        if(data > 0){
+                            location.href = '/Home/Pay/index?type=1&id='+data;
+                        }else{
+                            showInfo('请求失败，请稍后再试');
+                        }
+                    });
+               }
+            })
+            $('body').on('click', '#a_green', function(){
+                var obj = $('.pay_type');
+                var type = obj.data('type');
+                waiting();
+                $.get('{:U("Preferential/typea")}', {type: type, id : id}, function(data){
+                	complete();
+                	showInfo(data.info);
+                    if(data.status == 4){
+                        $('.status').find('p').addClass('p_gery').removeClass('p_green');
+                        $('.status').find('p').find('span').html('已收货');
+                        $('.operation').append('<a class="a_orange" href="{:U("Preferential/evaluate?id=".$info["id"])}"> 评价 </a>');
+                        $('#status').html('已收货');
+                        $('#a_green').remove();
+                        $('.a_white').remove();
+                    }
+                })
+            })
+        }
+	});
+    // 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+
+</script>
+</body>
+</html>

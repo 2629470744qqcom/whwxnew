@@ -1,0 +1,172 @@
+<div class="row"> <h3 class="page-header">房号管理</h3></div>
+    <div class="row">
+        <div class="col-md-12"> 
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label><a class="btn btn-primary" href="{:U('Room/add')}">添加</a></label>
+                    <form action='{:U("Room/index")}' class="form-inline text-right fr m-b-5">
+                        <div class="form-group">
+                            <select class="form-control" id="aid" name="aid">
+                                <option value="0" >请选择小区</option>
+                                <volist name='areaList' id='area'>
+                                    <option value='{$area.id}' <eq name='Think.get.aid' value='$area["id"]'>selected</eq>>{$area.name}</option>
+                                </volist>
+                            </select>           
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="bid" name="bid">
+                                <option value="0" >请选择楼栋</option>
+                            </select>           
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="uid" name="uid">
+                                <option value="0" >请选择单元</option>
+                            </select>           
+                        </div>
+                        房号：<input type="text" name='addr' value='{$Think.get.addr}' class="form-control mr20 w100" >
+                        状态：<select name='status' class="form-control mr20 w100" >
+                            <option value='-1'>全部</option>
+                            <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >启用 </option>
+                            <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >禁用 </option>
+                        </select>
+                        <button class="btn btn-primary" type="submit">搜索</button>
+                        <a href="{:U('Room/export', $_GET)}"><button class="btn btn-primary" type="button">导出结果</button></a>
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="60">序号</th>
+                                    <th>房号</th> 
+                                    <th>所在楼栋</th> 
+                                    <th>所在单元</th>
+                                    <th>房间名称</th> 
+                                    <th>面积</th>
+                                    <th>所在小区</th>
+                                    <th>业主姓名</th>
+                                    <th>业主手机</th>
+                                    <th width="75">排序</th>
+                                    <th width="75">状态</th>
+                                    <th width="130">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <volist name="list" id="list">
+                                    <tr>
+                                        <td>{$i}</td>
+                                        <td>{$list.addr}</td>
+                                        <td>{$list.block}</td>
+                                        <td>{$list.unit}</td>
+                                        <td>{$list.name}</td>
+                                        <td>{$list.size}平米</td> 
+                                        <td>{$list.area}</td>
+                                        <td>{$list.owner|default='未知'}</td>
+                                        <td>{$list.phone|default='未知'}</td>
+                                        <td>
+                                            <input class="setSort" type="text" size="2" data-url="{:U('Room/setSort?id='.$list['id'])}" value="{$list.sort}">
+                                        </td>
+                                        <td>
+                                            <switch name='list.status'>
+                                                <case value='0'>
+                                                   <button class=" btn btn-default btn-sm setStatus" type="button" data-url='{:U("Room/setStatus?id=".$list["id"])}' data-status="{$list.status}">禁用</button>
+                                                </case>
+                                                <case value='1'>
+                                                    <button class="btn btn-primary btn-sm setStatus" type="button" data-url='{:U("Room/setStatus?id=".$list["id"])}' data-status="{$list.status}">启用</button>
+                                                </case>
+                                            </switch>
+                                        </td>
+                                        <td>
+                                            <a class=" btn btn-default btn-sm" href="{:U('Room/edit?id='.$list['id'])}">修改</a>
+                                            <button data-url='{:U("Room/del?id=".$list["id"])}' class=" btn btn-default btn-sm delBtn" type="button">删除</button>
+                                        </td>
+                                    </tr>
+                                </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" >
+  $(function(){
+      var aid1 = '{$_GET["aid"]}', bid1 = '{$_GET["bid"]}', uid1 = '{$_GET["uid"]}', rid1 = '{$_GET["rid"]}';
+      if(aid1 > 0){
+          waiting();
+          $.get('{:U("Block/getBlockByAid")}', {aid : aid1}, function(data){
+              var html = '';complete();
+              if(data){
+                  html += '<option value="0" >请选择楼栋</option>';
+                  for(var i = 0; i< data.length; i++){
+                      if(bid1 == data[i]['id']){
+                        html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                      }else{
+                        html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                      }
+                  }
+              }else{
+                  html = '<option value="0" >该小区还没有楼栋</option>';
+              }
+              $('#bid').html(html);
+          });
+          if(bid1 > 0){
+              waiting();
+              $.get('{:U("Unit/getUnitByBid")}', {bid : bid1}, function(data){
+                  var html = '';complete();
+                  if(data){
+                      html += '<option value="0" >请选择单元</option>';
+                      for(var i = 0; i< data.length; i++){
+                          if(uid1 == data[i]['id']){
+                              html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                          }else{
+                              html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                          }
+                      }
+                  }else{
+                      html = '<option value="0" >该楼栋还没有单元</option>';
+                  }
+                  $('#uid').html(html);
+              });
+          }
+      }
+      $('#aid').change(function(){
+          var aid = $(this).val(), html='';
+          if(aid > 0){
+              waiting();
+              $.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+                  complete();
+                  if(data){
+                      html += '<option value="0" >请选择楼栋</option>';
+                      for(var i = 0; i< data.length; i++){
+                        html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                      }
+                  }else{
+                      html = '<option value="0" >该小区还没有楼栋</option>';
+                  }
+                  $('#bid').html(html);
+              });
+          }
+      });
+      $('#bid').change(function(){
+          var bid = $(this).val(), html='';
+          if(bid > 0){
+              waiting();
+              $.get('{:U("Unit/getUnitByBid")}', {bid : bid}, function(data){
+                  complete();
+                  if(data){
+                      html += '<option value="0" >请选择单元</option>';
+                      for(var i = 0; i< data.length; i++){
+                        html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+                      }
+                  }else{
+                      html = '<option value="0" >该楼栋还没有单元</option>';
+                  }
+                  $('#uid').html(html);
+              });
+          }
+      });
+  });
+</script>
+
+   

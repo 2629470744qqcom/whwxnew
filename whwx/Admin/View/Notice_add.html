@@ -1,0 +1,54 @@
+<div class="row"> 
+	<h3 class="page-header">通知公告&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<else/>添加</gt>公告</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">公告标题：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="title" value="{$info.title}" maxlength='50'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">下发小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="aid" name="aid">
+			        		<eq name="Think.session.aid" value="1"><option value="0" >全部小区</option></eq>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <!--div class="form-group">
+		            <label class="col-sm-3 control-label">公告摘要：</label>
+		            <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="abstract" maxlength='200'>{$info.abstract}</textarea>
+		            </div>
+		        </div-->
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+		        <div class="form-group">
+		            <label class="col-sm-3 control-label">公告内容：<span class="c-red">*</span></label>
+		            <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Notice/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

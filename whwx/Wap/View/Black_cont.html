@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div>
+ 	<div class="forum_head">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">红黑榜</p> 
+	 	<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<div class="black_cont">
+    	<ul>
+            <li class="tit">{$info.title}</li>
+            <li class="date">{$info.day|date='Y-m-d',###}</li>
+            <li class="cont">
+               <notempty name='info.pic'><p><img src="{$info.pic}?imageView2/1/w/618"/></p></notempty>
+               <p>{$info.desc}</p>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="by_zan">
+	<ul class="clearfix">
+    	<li><i class="love"></i><span id="love">{$info.zan}</span>个赞</li>
+    	<gt name='info.is_zan' value='0'>
+        	<li><a class="btn" style='background: #999;'><i></i>已点赞</a></li>
+		<else />
+			<li><a class="btn"><i></i>点赞</a></li>
+		</gt>
+	</ul>
+</div>
+<div class="bottom_copyright mb_70"></div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript"> 
+$(function(){ 
+	var bid = '{$_GET["id"]}';
+	//点赞效果
+	$('.by_zan .btn').click(function() {
+		var obj = $(this);
+		waiting();
+		$.post('{:U("Black/zan")}', {bid : bid}, function(data){
+			complete();showInfo(data.info, 1, function(){
+				if(data.status == 1){
+					var num = parseInt($('#love').text());
+					num++;
+					$('#love').text(num); 
+					obj.html('<i></i>已点赞');
+					obj.css("background","#999");
+				}
+			});
+		});
+	});
+});
+// 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>	
+</body>
+</html>

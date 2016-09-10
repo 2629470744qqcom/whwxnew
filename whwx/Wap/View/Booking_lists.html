@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>{:C('site_name')}</title>
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css-booking.css" />
+</head>
+<body class="bg_gery">
+<div> 
+	<div class="top clearfix"> <a href="javascript:history.go(-1)" class="icon return"></a> <span>预约服务</span> <a href="{:U('Index/index')}" class="icon home"></a> <a class="top_mine" href="{:U('Booking/mine')}">我的</a> </div>
+    <div class="bespoke_list">
+        <ul class=" clearfix">
+            <volist name='company' id='company'>
+                <li>                    
+                    <a href='{:U("Booking/details?id=".$company["id"])}'>
+                        <p><img src="{$company.pic}"/></p>
+                        <p class="tit">{$company.name}</p>
+                        <p>服务区域 &nbsp;{$company.service|default='全芜湖'}</p>
+                        <p class="price">￥{$company.price|default='面议'}</p>
+                    </a>
+                </li>
+            </volist>
+        </ul>
+    </div>
+</div>
+<div class="copyright"></div>
+<script type="text/javascript" src="{:JQ}"></script>
+</body>
+</html>

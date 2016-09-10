@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="/Public/Admin/css/bootstrap.min.css" rel="stylesheet" />
+<link href="{:COM}css/common.min.css" rel="stylesheet" />
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<title>Insert title here</title>
+</head>
+<body>
+<div class="uploadify-div"></div>
+<button type="button" id='upload' data-type='file' data-name="file">选择文件</button>
+
+<button type='button' class='import'>导入数据</button>
+<script type="text/javascript" src='{:JQ}'></script>
+<script type="text/javascript" src='{:COM}js/common.min.js'></script>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script type="text/javascript">
+	$(function(){
+		$.ajax({url:'/Public/Common/js/jquery.uploadify.min.js', dataType:'script', cache:true}).done(function(){
+   			var obj = $(this), buttonText = obj.html(), id = obj.attr('id'), name = 'file', fileTypeExts = '*.xls;*.xlsx';
+   			$('#upload').uploadify({
+   				'uploader' : '/Home/Upload/upload', 'swf':'/Public/Common/css/uploadify.swf', 'fileObjName':'file', 'buttonText':buttonText, 'fileSizeLimit':'2MB',
+   				'queueSizeLimit':10, 'removeTimeout':1, 'fileTypeExts':fileTypeExts,
+   				'onUploadSuccess' : function(file, data, response){
+ 					data = $.parseJSON(data);
+ 					var div = $('.uploadify-div'), html = '<li>';
+ 					html += "<a href='"+data.url+"'>"+file.name+"</a>"
+ 					html += "<input type='hidden' name='excelname' value='"+file.name+"' /></li><input type='hidden' name='excelfile' value='"+data.url+"' /></li>";
+ 					div.html(html);
+   				}
+   			});
+    	});
+		$('.import').click(function(){
+			if(confirm('你确定需要导入数据？')){
+    			$.post('{:U("Import/import2")}', {excelfile : $('input[name="excelfile"]').val()}, function(data){
+    				showInfo(data.info);
+    			});
+    		}
+		});
+	});
+</script>
+</body>
+</html>

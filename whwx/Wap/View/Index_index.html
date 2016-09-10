@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css?v=20160317" rel="stylesheet" />
+<link href="{:CSS}swiper-3.3.1.min.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div class="index_cont pb_60">
+    <div id="banner_box" class="box_swipe">
+        <ul>
+        	<volist name='slideList' id='slide'>
+	            <li>
+		            <a <notempty name='slide.url'> href="{$slide.url}" <else /> href='{:U("About/detail?type=1&id=".$slide["id"])}' </notempty> >
+		           	 	<img src="{$slide.pic}?imageView2/1/h/420/w/735" style="width:100%;">
+		            </a>
+	            </li>
+        	</volist>
+        </ul>
+        <ol>
+        	<volist name='slideList' id='silde'>
+	            <li <eq name='i' value='1'> class="on" </eq>></li>
+        	</volist>
+        </ol>
+    </div>
+    <div class="them_admin">
+    	<ul style="padding-bottom:0px;">
+    		<eq name='Think.session.fansInfo.type' value='1'>
+	    		<notempty name='notice'>
+		        	<div class="list" id="marqueebox0">
+		        		<volist name='notice' id='notice1'>
+			               <switch name='notice1.type'>
+		        				<case value='1'>
+			        				<p>
+				        				<a href="{:U('Notice/notice?id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        				<case value='2'>
+			        				<p>
+				        				<a href="{:U('Fix/mine_status?typeid='.$notice1['id'].'&id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        				<case value='3'>
+			        				<p>
+				        				<a href="{:U('Owner/cont?typeid='.$notice1['id'].'&id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        				<case value='4'>
+			        				<p>
+				        				<a href="{:U('Preferential/orders_details?typeid='.$notice1['id'].'&id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        				<case value='5'>
+			        				<p>
+				        				<a href="{:U('Complaint/detail?id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        				<case value='5'>
+			        				<p>
+				        				<a href="{:U('Booking/evaluate?id='.$notice1['typeid'])}">
+					        				<i class="icon_img icon_notice_green"></i>
+					        				{$notice1.desc}
+				        				</a>
+			        				</p>
+		        				</case>
+		        			</switch>
+		        		</volist>
+		            </div>
+		        <else />
+		        <p>
+	            	<span class="icon_img icon_location_green fl mt_9"></span>
+	                <span class="f_w_40">{$Think.session.fansInfo.address}
+	                </span> 
+	                <a href="{:U('Notice/index')}">
+	                	<span class="icon_img icon_news_green fr mt_9"></span>
+	                </a>
+	            </p>
+	        	</notempty>
+		    </eq>
+    	</ul>
+    </div>
+    <div class="device">
+        <div class="swiper-container">
+		    <div class="them_admin swiper-wrapper" id="list">
+		    	<ul class="clearfix swiper-slide" data-id='0'>
+		            <volist name='plateList' id='plate'>
+			            <eq name='plate.type' value='1'>
+				            <li>
+					            <a data-look='{$plate.look}' data-url="{$plate.link}">
+						            <!-- <span class="index_icon m_t_16" <notempty name='plate.pic'> style='background:url({$plate.pic}) no-repeat scroll 0% 0% / 50% auto;'</notempty> > -->
+						           <img src="{$plate.pic}?imageView2/1/h/100/w/100" style="width:42%;margin:8px 28% 0px;">
+						            <eq name='i' value='1'>
+							            <notempty name='notice'>
+								            <div class="red_circle" style='margin-right:26px;margin-top:1px;position: absolute;top: 8px;left: 21%;width:18px;height:18px;border-radius:9px;color:#fff;font-size:12px;line-height:18px'>
+								            <gt name="count.notice" value="9">9+<else/>{$count.notice}</gt>
+								            </div>
+										</notempty>
+									</eq>
+						            <!-- </span> -->
+						            <p class="f_w_40" style="line-height: 30px;">{$plate.name}</p>
+					            </a>
+				            </li>
+			            </eq>
+		            </volist>
+		    	</ul>
+		        <ul class="clearfix swiper-slide" data-id='1'>
+		        	<volist name='plateList' id='plate'>
+			            <eq name='plate.type' value='2'>
+				            <li>
+					            <a data-look='{$plate.look}' data-url="{$plate.link}">
+						           <!--  <span class="index_icon m_t_16" <notempty name='plate.pic'> style='background:url({$plate.pic}) no-repeat scroll 0% 0% / 50% auto;'</notempty>></span> -->
+						             <img src="{$plate.pic}?imageView2/1/h/100/w/100" style="width:42%;margin:8px 28% 0px;">
+						            <p class="f_w_40">{$plate.name}</p>
+					            </a>
+				            </li>
+			            </eq>
+		            </volist>
+		        </ul>
+		        <ul class="clearfix swiper-slide" data-id='2'>
+		        	<volist name='plateList' id='plate'>
+			            <eq name='plate.type' value='3'>
+				            <li>
+					            <a data-look='{$plate.look}' data-url="{$plate.link}">
+						           <!--  <span class="index_icon m_t_16" <notempty name='plate.pic'> style='background:url({$plate.pic}) no-repeat scroll 0% 0% / 50% auto;'</notempty>></span> -->
+						            <img src="{$plate.pic}?imageView2/1/h/100/w/100" style="width:42%;margin:8px 28% 0px;">
+						            <p class="f_w_40">{$plate.name}</p>
+					            </a>
+				            </li>
+			            </eq>
+		            </volist>
+		        </ul> 
+		    </div>
+	    </div>
+	    <div class="nav_3 tabs clearfix" id="pager">
+	    	<a  href="#" hidefocus="true" class="active" class="active"><span class="icon_img icon_alert_white"></span><p>物业服务</p></a>
+	    	<a  href="#" hidefocus="true"><span class="icon_img icon_box_white"></span><p>生活服务</p></a>
+	    	<a  href="#" hidefocus="true"><span class="icon_img icon_wei_white"></span><p>邻里社交</p></a>
+	    </div>
+    </div>
+</div>
+<style>
+.tabs a{display:block;float:left;width:33.33%;color:#333;text-align:center;background:#eee;line-height:40px;font-size:16px;text-decoration:none;border-right:1px solid #dcdcdc;background-color:#fff;height:100%; }
+.tabs a.active{ background-color:#1eaa39; color:#fff;}
+.tabs a.active span.icon_alert_white{width:24px;height:24px;background-position:-222px -13px;}
+.tabs a.active span.icon_box_white{width:24px;height:24px;background-position:-254px -13px; }
+.tabs a.active span.icon_wei_white{width:24px;height:24px;background-position:-292px -13px; }
+.nav_3 a span{ display:block; margin:10px auto 0px auto;}
+.nav_3 a p{width: 100%;line-height: 34px;}
+</style>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}swipe.js"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="{:JS}swiper-3.3.1.jquery.min.js"></script>
+{$shareJs}
+<script type="text/javascript">
+var tabsSwiper = new Swiper('.swiper-container',{
+ 	onSlideChangeEnd: function(swiper){
+		$(".tabs .active").removeClass('active');
+		$(".tabs a").eq(swiper.activeIndex).addClass('active');
+	}
+});
+
+tabsSwiper.slideTo({$Think.get.show|default=0});
+
+$(".tabs a").on('touchstart mousedown',function(e){
+	$(".tabs .active").removeClass('active');
+	$(this).addClass('active');
+	tabsSwiper.slideTo($(this).index());
+});
+
+$(function(){
+	var type = '{$Think.session.fansInfo.type}';
+	$('.them_admin ul li').click(function(){
+		if((type == -1) && ($(this).find('a').data('look') == 0)){
+			showInfo('你没有权限，请注册', 2, function(){
+				location.href = '{:U("Public/index")}';
+			});
+		}else{
+			window.location.href = $(this).find('a').data('url');
+		}
+	});
+    //幻灯片
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+	//公告滚动
+	function startmarquee(lh,speed,delay,index){
+		var t;
+		var p=false;
+		var o=document.getElementById("marqueebox"+index);
+		o.innerHTML+=o.innerHTML;
+		o.onmouseover=function(){p=true}
+		o.onmouseout=function(){p=false}
+		o.scrollTop = 0;
+		function start(){
+			t=setInterval(scrolling,speed);
+			if(!p) o.scrollTop += 2;
+		}
+		function scrolling(){
+			if(o.scrollTop%lh!=0){
+				o.scrollTop += 2;
+				if(o.scrollTop>=o.scrollHeight/2) o.scrollTop = 0;
+			}else{
+				clearInterval(t);
+				setTimeout(start,delay);
+			}
+		}
+		setTimeout(start,delay);
+	}
+	if(document.getElementById("marqueebox0")){
+		startmarquee(40,50,2200,0);
+	}
+});
+$("#banner_box ul").find('img').css("height",$(this).width()*0.57);
+</script>
+</body>
+</html> 

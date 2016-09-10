@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="login_bg">
+ 	<div class="login_index clearfix">
+ 		<div class="login_text">
+	 		<a href="{:U('Public/regedit', array('type' => 1))}">
+		 		<span class="icon_img icon_owner"></span>
+		 		<p>我是业主</p>
+	 		</a>
+ 		</div>
+ 		<div class="login_text">
+	 		<a href="{:U('Public/regedit', array('type' => 2))}">
+		 		<span class="icon_img icon_friend"></span>
+		 		<p>业主亲友/租客</p>
+	 		</a>
+ 		</div>
+ 		<div class="login_text">
+	 		<a href="{:U('Public/regedit', array('type' => 3))}">
+		 		<span class="icon_img icon_housekeeper"></span>
+		 		<p>物业管家</p>
+	 		</a>
+ 		</div>
+ 		<div class="login_text">
+	 		<a href="{:U('Index/index?is_fans=1')}">
+		 		<span class="icon_img icon_housekeeper"></span>
+		 		<p>游客身份</p>
+	 		</a>
+ 		</div>
+ 	</div>
+ 	<div class="bottom_title_img"><img src="{:IMG}bottom_w_img.png"></div>
+ 	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	{$shareJs}
+	<!-- 请不要删除或放在css中 -->
+	<style>
+		html,body{height:100%;}
+	</style>
+</body>
+</html>

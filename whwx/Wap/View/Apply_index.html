@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body >
+<div class="fix pb_66"> 
+	<div class="fix_top">
+        <div class="top clearfix">
+	        <a href="javascript:history.go(-1);" class="return"></a>
+	        装修申请<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+        </div>
+        <div class="price_title">
+            <ul class="clearfix">
+                <li class="photo"><img src="{$Think.session.fansInfo.pic}?imageView2/1/h/100/w/100" /></li>
+                <li class="text">
+                    <p class="name">{$Think.session.fansInfo.name}</p>
+                    <p class="address_text_line" ><i class="icon_address"></i>{$Think.session.fansInfo.address}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pt_150">
+        <form id='myform' method="post">
+            <div class="form" style="position: relative;z-index: 2;">
+                <div class="cont">
+                    <ul class="w100">
+                        <li><label>申请项目</label>装修</li>
+                        <li><label>户型面积</label>{$owner.size}㎡</li>
+                        <li><label>垃圾处理费</label><span class="red">{$owner.decorate}元</span></li>
+                        <li><label>墙体施工费</label>现场测量缴费</li>
+                    </ul>
+                </div>
+            </div>
+            <input type='hidden' name="id_pic" value='{$decorate.id_pic}' />
+            <input type='hidden' name="company_pic" value='{$decorate.company_pic}'/>
+            <input type='hidden' name="design_pic" value='{$decorate.design_pic}'/>
+            <gt name='decorate.id' value='0'><input name='id' type="hidden" value='{$decorate.id}' /></gt>
+        </form>
+        <iframe name="frame" id='frame' style="display:none"></iframe>
+        <div class="picture forum_release_form relative fl_m3 clearfix">
+            <form id='fileForm1' action="http://upload.qiniu.com/" method="post" target="frame" enctype="multipart/form-data">
+                <label><span class='red'>*</span>身份证认证</label>
+                <neq name="decorate.status" value="1">
+                    <input type='file' name='file' data-name='id_pic' accept="image/*" class='uploadImg' />
+                </neq>
+                <input type='hidden' name='token' />
+                <a href='{$decorate.id_pic}' class="file_up">
+                	<empty name='decorate.id_pic'>+<else /><img src='{$decorate.id_pic}?imageView2/1/h/100/w/100' /></empty>
+                </a>
+            </form>
+        </div>
+        <div class="picture forum_release_form relative fl_m3 clearfix">
+            <form id='fileForm2' action="http://upload.qiniu.com/" method="post" target="frame" enctype="multipart/form-data">
+                <label>装修公司认证</label>
+                <neq name="decorate.status" value="1">
+                    <input type='file' name='file' data-name='company_pic' accept="image/*" class='uploadImg' />
+                </neq>
+                <input type='hidden' name='token' />
+                <a href='{$decorate.company_pic}' class="file_up">
+                	<empty name='decorate.company_pic'>+<else /><img src='{$decorate.company_pic}?imageView2/1/h/100/w/100' /></empty>
+                </a>
+            </form>
+        </div>
+        <div class="picture forum_release_form relative fl_m3 clearfix">
+            <form id='fileForm3' action="http://upload.qiniu.com/" method="post" target="frame" enctype="multipart/form-data">
+                <label>设计图纸认证</label>
+                <neq name="decorate.status" value="1">
+                    <input type='file' name='file' data-name='design_pic' accept="image/*" class='uploadImg' />
+                </neq>
+                <input type='hidden' name='token' />
+                <a href='{$decorate.design_pic}' class="file_up">
+                	<empty name='decorate.design_pic'>+<else /><img src='{$decorate.design_pic}?imageView2/1/h/100/w/100' /></empty>
+                </a>
+            </form>
+        </div>
+        <div class="btn">
+            <eq name='decorate.status' value='1'>
+                <a class="sale fl mtb_10">已完成并支付完成</a>
+            <else />
+                <a class="post fl mtb_10"><gt name="decorate.id" value="0">修改<else/>申请</gt></a>
+                <a class="post fl mtb_10" data-pay="1"><gt name="decorate.id" value="0">修改<else/>申请</gt>并支付</a>
+            </eq>
+        </div>
+        <div class="chioce">
+	        <span class="ckbox">
+		        <input type="checkbox" name="chioce" id="chioce" <gt name='decorate.id' value='0'>checked</gt> />
+		        <label for="chioce">装修申请电子合同&nbsp;&nbsp;&nbsp;&nbsp;</label><a class="link">点击查看</a>
+	        </span>
+        </div>
+    </div>
+</div>
+<div id="ht_bg" style="position: fixed; z-index: 100; width: 100%; height: 100%; top: 0; left: 0; background: rgba(0,0,0,0.5); display: none;"></div>
+<div id="ht_close" style="position: fixed; width: 2rem; height: 2rem; border-radius: 1rem; background: #E46262; color: #fff; text-align: center; font-size: 1.5rem; top: 3%; left: 90%; z-index: 130; display: none;">X</div>
+<div id="ht" style="position: fixed; z-index: 110; width: 94%; height: 90%; margin-left: 3%; top: 5%; border-radius: 6px; background: #fff; padding: 0.6rem; overflow: scroll; display: none;"></div>
+<!--版权-->
+<!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright absolute_b0 mb30"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+	$(function(){
+		var obj, pid = '{$owner["pid"]}';
+		if(pid > 0){
+			showInfo('该功能只能由业主操作', 1, function(){location.href='{:U("Index/index")}'});
+		}
+		$('.pay').click(function(){$('.pay_list').toggle();});
+		$('.pay_list span').click(function(){
+			var html = $(this).html();
+			$('.pay_list').hide();
+			$('.pay').html(html);
+		});
+		$.get('/Home/Upload/getToken',function(token){
+			$('input[name="token"]').val(token);
+		});
+		//上传文件
+		$('.uploadImg').change(function(){
+			waiting();
+			obj = $(this).parent('form').attr('id');
+			$('#'+obj).submit();
+		});
+		//获取上传文件返回值
+		$('iframe').load(function(){
+			var info = $(window.frames["frame"].document).find("body").text();
+			info = $.parseJSON(info);
+			$('input[name="'+$('#'+obj).find('input[name="file"]').data('name')+'"]').val(info.url);
+			$('#'+obj).find('.file_up').html('<img src="'+info.url+'?imageView2/1/h/100/w/100">');
+			complete();
+		});
+
+		$('.post').click(function(){
+			var flag = true, obj = $(this), pay = obj.data('pay');
+			if(!$('input[name="id_pic"]').val()){
+				showInfo('请上传身份证照片');flag = false;
+				return false;
+			}
+			if(!$("input[name='chioce']").is(':checked')){
+				showInfo('请勾选装修申请合同');
+				flag = false;
+				return false;
+			}
+			if(flag){
+				waiting();
+				$.post('{:U("Apply/apply")}', $('#myform').serialize(), function(data){
+					complete();
+					if(data.status == 1){
+						showInfo(data.info, 1, function(){
+							if(data.status == 1){
+								location.href = pay == 1 ? '/Home/Pay/index?type=1&id='+data.pid : '/Wap/Index/index';
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+    //查看装修合同
+    $('.link').click(function(){
+        waiting();
+        $.get('{:U("Contract/index")}', function(data){
+            complete();
+            $('#ht_close,#ht_bg,#ht').show();
+            $('#ht').html(data);
+        });
+    });
+    $('#ht_close').click(function(){
+        $('#ht_close,#ht_bg,#ht').hide();
+    });
+	//首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/Public/Admin/css/morris.min.css">
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-header">统计报表 <small>报修统计</small></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-inline" style="margin-bottom: 6px; float: right;"> 
+            <div class="form-group">
+                <select class="form-control" id="aid" name="aid" data-bid="#bid">
+                    <option value="0" >请选择小区</option>
+                    <volist name='areaList' id='areaList1'>
+                        <option value='{$areaList1.id}'>{$areaList1.name}</option>
+                    </volist>
+                </select>           
+            </div>
+            <button type="button" class="btn btn-primary btn_time" data-num="7">最近7天</button>
+            <button type="button" class="btn btn-default btn_time" data-num="30">最近30天</button>
+            <button type="button" class="btn btn-default btn_time" data-num="6">最近6个月</button>
+            <button type="button" class="btn btn-default btn_time" data-num="12">最近12个月</button>
+            时间区间：<input type="text" name='start_time' placeholder="开始时间" class="form-control w100 datepicker" >
+            <input type="text" name='end_time' placeholder="结束时间" class="form-control w100 datepicker" >
+            <button type="button" class="btn btn-info">查看</button>
+        </div>
+        <h3 class="form-inline" style="margin-bottom: 6px;">报修数量统计</h3>
+        <div class="panel panel-default" style='text-align:center;'>
+            <div class="panel-body"><div id="morris-bar-chart1"></div></div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 class="form-inline" style="margin-bottom: 6px;">服务评分统计</h3>
+        <div class="panel panel-default" style='text-align:center;'>
+            <div class="panel-body"><div id="morris-bar-chart2"></div></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/Public/Admin/js/raphael.min.js"></script>
+<script type="text/javascript" src="/Public/Admin/js/morris.min.js"></script>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script type="text/javascript">
+$('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+//柱状图
+var bar1 = Morris.Bar({
+    data: [<volist name='data.dataNum' id='dataNum'>{y: {$dataNum.y}, a: {$dataNum.a}, b: {$dataNum.b}, c: {$dataNum.c}},</volist>],
+    element: 'morris-bar-chart1', xkey: 'y', ykeys: ['a', 'b', 'c'], labels: ['报修数', '处理数', '完成数'], hideHover: 'auto', parseTime:false, resize: true
+});
+var bar2 = Morris.Bar({
+    data: [<volist name='data.dataScore' id='dataScore'>{y: {$dataScore.y}, a: {$dataScore.a}, b: {$dataScore.b}, c: {$dataScore.c}, d: {$dataScore.d}, e: {$dataScore.e}},</volist>],
+    element: 'morris-bar-chart2', xkey: 'y', ykeys: ['a', 'b', 'c', 'd', 'e'], labels: ['1分', '2分', '3分', '4分', '5分'], hideHover: 'auto', parseTime:false, resize: true
+});
+$('.btn_time').click(function(){
+    $('.btn-primary').attr('class', 'btn btn-default btn_time');
+    $(this).addClass('btn-primary');
+    $('input').val('');
+    getData();
+});
+$('.btn-info').click(function(){
+    $('.btn_time').attr('class', 'btn btn-default btn_time');
+    getData();
+});
+$('select').change(function(){
+    getData();
+});
+//获取数据
+var getData = function(){
+    var start_time = $('input[name="start_time"]').val(), end_time = $('input[name="end_time"]').val(), day = $('.btn-primary').data('num'), aid = $('select').val();
+    waiting();
+    $.get('', {start_time: start_time, end_time: end_time, day: day, aid: aid}, function(data){
+        complete(); bar1.setData(data.dataNum); bar2.setData(data.dataScore);
+    });
+}
+</script>

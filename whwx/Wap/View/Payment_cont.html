@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css?v=20160310" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="fix pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        <!-- <a href="{:U('Payment/lists')}" class="return"></a> -->
+        缴费记录<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+	<div class="price_status">
+		<gt name='info.status' value='1'><p class="sussess">交易成功</p><else /><p class="wait">等待付款</p></gt>
+        <p class="price_price">-<notempty name='info.real_money'>{$info.real_money}<else />{$info.money}</notempty></p>
+    </div>
+    <div class="mine_cont mb_20">
+    	<ul>
+        	<li>
+                <label>缴费项目：</label>
+        		<switch name='info.type'>
+        			<case value='1'><p class="pcont">在线缴物业费</p></case>
+        			<case value='2'><p class="pcont">报修费用</p></case>
+        			<case value='3'><p class="pcont">特惠团订单</p></case>
+        			<case value='4'><p class="pcont">装修申请费用</p></case>
+        		</switch>
+        	</li>
+        	<gt name='info.point' value='0'>
+                <li><label>积分抵用：</label><p class="pcont">使用{$info.point}积分抵{$info.change_money}元</p></li>
+            </gt>
+        	<li><label>创建时间：</label><p class="pcont">{$info.creat_time|date='Y-m-d H:i:s', ###}</p></li>
+        	<li><label>应缴金额：</label><p class="pcont">{$info.money}元</p></li>
+        </ul>
+    </div>
+    <lt name='info.status' value='2'>
+        <a href='/Home/Pay/index?type=1&id={$info.id}'>
+            <div class="form">
+                <button type="button" name="" class="post"> 去支付 </button>
+            </div>
+        </a>
+    </lt>
+</div>
+
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

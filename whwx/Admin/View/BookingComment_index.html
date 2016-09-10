@@ -1,0 +1,85 @@
+<div class="row"><h3 class="page-header">评论管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+               <!--  <label><a class="btn btn-primary export">数据导出</a></label> -->
+                <form action='{:U("BookingComment/index")}' class="form-inline text-right fr m-b-5">
+                    <!-- 类型 -->
+                    <div class="form-group">
+                        <select class="form-control" id="typeid" name="typeid">
+                            <option value="0" >全部类型</option>
+                            <volist name='typeList' id='type'>
+                                <option value="{$type.id}"<eq name='type.id' value='$_GET.typeid'> selected </eq> >{$type.name}</option>
+                            </volist>
+                        </select>           
+                    </div>
+                    <!-- 供应商 -->
+                    <div class="form-group">
+                        <select class="form-control" id="supplier" name="supplierid">
+                            <option value="0" >全部供应商</option>
+                            <volist name='supplierList' id='supplier'>
+                                <option value="{$supplier.id}"<eq name='supplier.id' value='$_GET.supplierid'> selected </eq> >{$supplier.name}</option>
+                            </volist>
+                        </select>           
+                    </div>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>业主</th>
+                                <th>联系方式</th>
+                                <th>供应商</th>
+                                <th>供应商联系方式</th>
+                                <th>评分</th>
+                                <th>评论时间</th>
+                                <th>评论内容</th>
+                                <th width="130">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}</td>
+                                    <td>{$list.phone}</td>
+                                    <td>{$list.supplier}</td>
+                                    <td>{$list.tel}</td>
+                                    <td>{$list.score}</td>
+                                    <td>{$list.times|date='Y-m-d H:i', ###}</td> 
+                                    <td><eq name="list.desc" value="">无<else/>{$list.desc}</eq></td>
+                                    <td>
+                                        <button class="btn-sm btn btn-default look" data-id='{$list.id}'  data-rid='{$list.rid}' type="button">查看</button>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="html"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    var type = parseInt("{$_GET['type']}");
+    $('.look').click(function(){
+        type = type > 0 ? type : 4;
+        if(type == 4){
+            waiting();
+            $.get('{:U("BookingComment/detail")}', { id : $(this).data('rid')}, function(data){
+              complete();$('#html').html(data);
+          });
+        }
+    $('#myModal').modal('show');
+  });
+</script>
+    

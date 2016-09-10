@@ -1,0 +1,99 @@
+<style type="text/css">.control-label{padding-top:0 !important;}</style>
+<div class="row"><h3 class="page-header">投诉建议&nbsp;<small>添加</small></h3></div>
+
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form id="myform" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control aid" id="aid" name="aid" >
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='areaList'>
+			        			<option value="{$areaList.id}">{$areaList.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="bid" name="bid">
+			        		<option value="0" >请选择楼栋号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">姓名：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" maxlength='10'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required tel" name="tel">
+			        </div>
+			    </div>
+			    <div class="form-group">
+		           <label class="col-sm-3 control-label">内容描述：<span class="c-red">*</span></label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control required" name="desc" maxlength='500'></textarea>
+		           </div>
+		        </div>
+		        <div class="form-group">
+			        <label class="col-sm-3 control-label">图片：</label>
+			        <div class="col-sm-4">
+			       		<div class="uploadify-div"></div> 
+			       		<button data-multi='true' type="button" data-callback='showImg' class="upload" id="upload">选择图片</button>
+			        </div>
+			    </div>
+			    <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Complaint/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+		       	<input type="hidden" id="block" name="block" value="未知" />
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" >
+function showImg(data){
+	data = $.parseJSON(data);
+	var div = $('#upload').parent().find('.uploadify-div'), html = '<li>';
+	html += "<img src='"+data.url+"' />";
+	html += "<input type='hidden' name='pic[]' value='"+data.url+"' /><a class='delImgBtn'>删除</a></li>";
+	div.append(html);
+}
+$('body').on('click', '.delImgBtn', function(){
+	$(this).parents('li').remove();
+});
+
+$(function(){
+	$('#aid').change(function(){
+		var aid = $(this).val(), html='';
+		if(aid > 0){
+			waiting();
+			$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+				complete();
+				if(data){
+					html = '<option value="0">请选择楼栋</option>';
+					for(var i = 0; i< data.length; i++){
+						html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+					}
+				}else{
+					html = '<option value="0" >该小区还没有楼栋</option>';
+				}
+				$('#bid').html(html);
+			});
+		}
+	});
+
+	$('#bid').change(function(){
+		$('#block').val($(this).find('option:selected').html());
+	});
+});
+</script>

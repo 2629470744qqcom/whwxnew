@@ -1,0 +1,83 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row"> 
+	<h3 class="page-header">红黑榜&nbsp;&nbsp;<small><gt name='info.id' value='0'>修改<eq name='info.type' value='1'>黑<else />红</eq>榜<else/>添加<eq name='Think.get.type' value='1'>黑<else />红</eq>榜</gt></small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">标题：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="title" value="{$info.title}" maxlength='30'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">上传图片：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pic'>
+						    	<li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+						    </notempty>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                	</div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">时间：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	<input type="text" id="day" name="day" value="<empty name='info.day'>{:date('Y-m-d')}<else/>{$info.day|date='Y-m-d', ###}</empty>" class="wid_24  pointer datepicker form-control" readonly />
+			        </div>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">红黑榜：</label>
+					<div class="col-sm-4">
+					 <label class="radio-inline">
+		                <input type="radio" value="0"  id="type2" name="type" <neq name="info.type" value="1">checked</neq>>红榜
+		            </label>
+		            <label class="radio-inline">
+		                <input type="radio" value="1" id="type1" name="type" <eq name="info.type" value="1">checked</eq>>黑榜
+		            </label>
+		            </div>
+		        </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+		            <label class="radio-inline">
+		                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+		            </label>
+		            <label class="radio-inline">
+		                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+		            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">详细说明：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'><input type='hidden' name='id' id="id" value='{$info.id}'><else /></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('BlackList/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script>
+	$(document).ready(function() {
+		$('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+	});
+</script>

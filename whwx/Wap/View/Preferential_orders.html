@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="orders pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+		我的订单<a id="index_icon" data-url="{:U('Index/index')}">
+            <span class="icon_home_index fr"></span>
+        </a>
+    </div>
+    <div class="list">
+        <volist name="list" id="list">
+            <ul>
+            	<li class="date">
+                    <p>{$list.single_time|date='m月d日',###}</p>
+                    <p>
+                        <span>共<i>{$list.total}</i>件商品</span> 
+                        合计:
+                        <switch name='list.style' >
+                            <case value='0'><em> ￥{$list.order_amount}</em></case>
+                            <case value='1'><em>{$list.order_amount}积分</em></case>
+                        </switch>
+                    </p>
+                </li>
+                <li class="detail">
+                    <a  <neq name="list.status" value="1">href="{:U('Preferential/orders_details?id='.$list['id'])}"</neq>>
+                        <p>
+                            <volist name='list.pics' id='pic' offset='0' length='1'> 
+                                <img src="{$pic}?imageView2/1/h/150/w/150" />
+                            </volist>
+                        </p>
+                        <p>
+                            <span class="tit">{$list.name}</span>
+                            <switch name='list.style' >
+                                <case value='0'><span id="prix">￥{$list.prix}<em>x{$list.total}</em></span></case>
+                                <case value='1'><span class="shop_integral w_30 fl"></span><span class="red">{$list.prix}</span></case>
+                            </switch>
+                            
+                        </p>
+                    </a>
+                </li>
+                <li class="btn" data-status='{$list.status}' data-id='{$list.id}'>
+                    <switch name='list.status'>
+                        <case value='0'>
+                            <a class="none cancel">取消订单</a>
+                            <a class="pay" href="{:U('Preferential/orders_details?id='.$list['id'])}">去支付</a>
+                        </case>
+                        <case value='1'><a class="pay delete" href='#'>删除</a><a class="none">订单已取消</a></case>
+                        <case value='2'><a class="sure" href="{:U('Preferential/orders_details?id='.$list['id'])}">待发货</a></case>
+                        <case value='3'><a class="sure" href="{:U('Preferential/orders_details?id='.$list['id'])}">确认收货</a> </case>
+                        <case value='4'><a class="evaluate" href="{:U('Preferential/orders_details?id='.$list['id'])}">评价</a></case>
+                        <case value='5'><a class="pay delete" href='#'>删除</a><a class="evaluate" href="{:U('Preferential/orders_details?id='.$list['id'])}">查看</a></case>
+                    </switch>
+                </li>
+            </ul>
+        </volist>
+    </div>
+ {$page}
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+    $('.cancel').click(function(){
+        var obj =$(this).parents('.btn');
+        var status=obj.data('status');
+        var id=obj.data('id');
+        waiting();
+        $.get('{:U("Preferential/status")}',{status:status,id:id},function(data){
+        	complete();
+            showInfo(data.info, 1, function(){
+	            if(data.status==1){
+	                obj.find('a').hide();
+	                $('.detail').find('a').attr("href","#");
+	                obj.append('<a class="none">订单已取消</a>');   
+	            }
+            });
+        });    
+    });
+    $('.delete').click(function(){
+        var obj =$(this).parents('.btn');
+        var status=obj.data('status');
+        var id=obj.data('id');
+        waiting();
+        $.get('{:U("Preferential/del")}',{id:id,status:status},function(data){
+        	complete();
+            showInfo(data.info,1,function(){
+               if(data.status==6){
+                   location.reload();
+                }; 
+            });
+            
+        });
+    })
+});
+// 首页跳转
+$('#index_icon').click(function(){
+    location.href = $(this).data('url');
+})
+</script>
+</body>
+</html>

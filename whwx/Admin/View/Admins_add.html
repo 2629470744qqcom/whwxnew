@@ -1,0 +1,73 @@
+<div class="row"> 
+	<h3 class="page-header">员工管理&nbsp;&nbsp;
+		<small><gt name='info.id' value='0'>修改<else/>添加</gt>员工</small>
+	</h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">员工名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="name" value="{$info.name}" maxlength='20'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">员工密码：<elt name='info.id' value='0'><span class="c-red">*</span></elt></label>
+			        <div class="col-sm-4">
+			        	<input type="password" id="pwd" class="form-control <elt name='info.id' value='0'> required </elt> " name="pwd" maxlength='15' minlength='6'>
+			        </div>
+			        <gt name='info.id' value='0'><small>若不修改密码，此处请留空</small></gt>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">确认密码：</label>
+			        <div class="col-sm-4">
+			        	<input type="password" class="form-control" equalTo="#pwd" name="pwd2" maxlength='15' minlength='6'>
+			        </div>
+			        <gt name='info.id' value='0'><small>若不修改密码，此处请留空</small></gt>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="tel" value="{$info.tel}" maxlength='11'>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">选择所属组：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control" id="gid" name="gid">
+			        		<volist name='groupList' id='group'>
+			        			<option value="{$group.id}"<eq name='group.id' value='$info.gid'> selected </eq> >{$group.name}</option>
+			        		</volist>
+						</select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+					<label  class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+		            <label class="radio-inline">
+		                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+		            </label>
+		            <label class="radio-inline">
+		                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+		            </label>
+		            </div>
+		        </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">备注：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="remark" maxlength='20'>{$info.remark}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Admins/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

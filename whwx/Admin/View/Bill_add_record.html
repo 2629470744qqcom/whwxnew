@@ -1,0 +1,93 @@
+<div class="row">
+	<h3 class="page-header">账单管理<small>添加账单</small>
+	</h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房间号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="addr" value="{$Think.get.addr}" readonly>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">物业费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="porperty">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="porperty_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">二次供水费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="water">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="water_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">能耗费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right'  name="energy">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="energy_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">车位费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="carport">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="carport_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">车位管理费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="car_manger">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="car_manger_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">历年欠费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="arrear_money">
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="arrear_money_pay">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">历年欠费详情：</label>
+			        <div class="col-sm-4">
+			        	<input class="form-control" name="arrear_money_note" value="{$info.arrear_money_note}">
+			        </div>
+			        <small>例：2015年欠费3元；</small>
+			    </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">说明：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="note" maxlength="200">{$info.note}</textarea>
+		           </div>
+		        </div>
+		        <input type='hidden' name='rid' value='{$Think.get.id}'>
+		        <input type='hidden' name='bill_id' value='{$Think.get.bill_id}'>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Bill/compare?bill_id='.$_GET['bill_id'])}"><button class="btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

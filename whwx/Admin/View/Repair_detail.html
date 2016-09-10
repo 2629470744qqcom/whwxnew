@@ -1,0 +1,73 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看/反馈信息（管理员）</h4>
+</div>
+<div class="modal-body" id="html">
+	<div>
+		<b>
+			业主姓名：{$info.owner}&nbsp;&nbsp;&nbsp;
+			联系方式：{$info.phone}&nbsp;&nbsp;&nbsp;
+			报修时间：{$info.creat_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;
+			损坏地点：{$info.address|default='未填写'}
+		</b>
+		<br>{$info.desc}<br>
+		<notempty name='info.pics'>
+	 		<volist name="info.pics" id='pic'>
+	 			<a href="{$pic}" target="_blank"><img src='{$pic}?imageView2/2/h/160/interlace/1/q/100'/></a>
+	 		</volist>
+		</notempty>
+		<hr>
+	</div>
+	<volist name='list' id='list'>
+		<div>
+			<b>
+				姓名：{$list.oname}&nbsp;&nbsp;&nbsp;
+				联系方式：{$list.otel}&nbsp;&nbsp;&nbsp;
+				反馈时间：{$list.times|date='Y-m-d H:i:s', ###}
+			</b>
+			<br>{$list.content}<br>
+		    <hr>
+	    </div>
+	</volist>
+	<notempty name='info.repairman_pic'>
+		<b>维修结果</b><br />
+		<volist name="info.repairman_pic" id='repairman_pic'>
+			<a href="{$repairman_pic}" target="_blank"><img src='{$repairman_pic}?imageView2/2/h/160/interlace/1/q/100'/></a>
+		</volist>
+		<hr />
+	</notempty>
+	<gt name='info.status' value='6'>
+		<div>
+			<b>维修金额：{$info.price|default=0}元&nbsp;&nbsp;&nbsp;
+				<eq name='info.type' value='4'>
+					支付金额：{$info.pay.money}元&nbsp;&nbsp;&nbsp;支付方式：线下支付
+				<else />
+					<notempty name='info.pay'>支付金额：{$info.pay.money}元&nbsp;&nbsp;&nbsp;支付时间：{$info.pay.pay_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;支付方式：<eq name='info.pay.pay_type' value='1'>微信支付<else />线下支付</eq></notempty>
+				</eq>
+			</b>
+			<hr>
+		</div>
+	</gt>
+	<notempty name='info.comment'>
+		<div>
+			<b>评分：{$info.comment.score}&nbsp;&nbsp;&nbsp;评价时间：{$info.comment.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$info.comment.desc}<br>
+			<hr>
+		</div>
+	</notempty>
+	<notempty name='info.feedback'>
+		<div>
+			反馈：{$info.feedback}<br>
+			<hr>
+		</div>
+	</notempty>
+	<if condition='($info.status lt 9) and ($info.status gt 0)'>
+		<div><textarea rows="3" class="form-control" id="content" placeholder="请输入回复内容（仅管理员可见）"></textarea></div>
+	</if>
+	<input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <lt name='info.status' value="9"><button class="btn btn-primary submit" type="button">提交</button></lt>
+</div>

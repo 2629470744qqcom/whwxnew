@@ -1,0 +1,60 @@
+<div class="row"> <h3 class="page-header">轮播图管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Advanced Tables -->
+        <div class="panel panel-default">
+            <div class="panel-body">
+          		<label><a class="btn btn-primary" href="{:U('TourSlide/add')}">添加图片</a></label>
+				<form action='{:U("TourSlide/index")}' class="form-inline text-right m-b-5" style="float:right;">
+                    <div class="form-group">
+                        <select class="form-control" name="type">
+                            <option value="-1">显示位置</option>
+                            <option value="0"<eq name='Think.get.type' value='0'> selected </eq>>首页</option>
+                            <volist name='clist' id='clist'>
+                                <option value="{$clist.id}"<eq name='Think.get.type' value='$clist["id"]'> selected </eq> >{$clist.name}</option>
+                            </volist>
+                        </select>
+                    </div>
+                    <select name='status' class="form-control mr20">
+                        <option value='-1'>状态</option>
+                        <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >启用 </option>
+                        <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >禁用 </option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>标题</th>
+                                <th>链接</th>
+                                <th width="75">排序</th>
+                                <th width="75">状态</th>
+                                <th width="120">操作</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}</td>
+                                    <td>{$list.url|default='无'}</td>
+                                    <td><input class="setSort" type="text" size="2" data-url="{:U('TourSlide/setSort?id='.$list['id'])}" value="{$list.sort}"></td>
+                                    <td class="center">
+                                     	<button class='btn <eq name="list.status" value="1">btn-primary<else />btn-default</eq> btn-sm setStatus' type="button" data-url='{:U("TourSlide/setStatus?id=".$list["id"])}' data-status="{$list.status}"><eq name="list.status" value='1'>启用<else />禁用</eq></button>
+                                    </td>
+                                    <td class="center">
+                                     	<a href='{:U("TourSlide/edit?id=".$list["id"])}' class="btn-sm btn btn-default">修改</a>
+                                      	<button data-url='{:U("TourSlide/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>

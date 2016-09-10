@@ -1,0 +1,93 @@
+<div class="row">
+	<h3 class="page-header">账单管理&nbsp;&nbsp;
+		<small><gt name='info.id' value='0'>修改<else/>添加</gt>账单</small>
+	</h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">房间号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="addr" value="{$info.addr}" maxlength='30' readonly>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">物业费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="porperty" value="{$info.porperty|default='0'}" maxlength='30' <?php if(in_array('porperty', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="porperty_pay" value="{$info.porperty_pay|default='0'}" maxlength='30' <?php if(in_array('porperty', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">二次供水费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="water" value="{$info.water|default='0'}" maxlength='30' <?php if(in_array('water', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="water_pay" value="{$info.water_pay|default='0'}" maxlength='30' <?php if(in_array('water', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">能耗费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right'  name="energy" value="{$info.energy|default='0'}" maxlength='30' <?php if(in_array('energy', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="energy_pay" value="{$info.energy_pay|default='0'}" maxlength='30' <?php if(in_array('energy', $info['pay_cate'])){ echo 'readonly';} ?> >
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">车位费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="carport" value="{$info.carport|default='0'}" maxlength='30' <?php if(in_array('carport', $info['pay_cate'])){ echo 'readonly';} ?> >
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="carport_pay" value="{$info.carport_pay|default='0'}" maxlength='30' <?php if(in_array('carport', $info['pay_cate'])){ echo 'readonly';} ?>  >
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">车位管理费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="car_manger" value="{$info.car_manger|default='0'}" maxlength='30' <?php if(in_array('car_manger', $info['pay_cate'])){ echo 'readonly';} ?> >
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="car_manger_pay" value="{$info.car_manger_pay|default='0'}" maxlength='30' <?php if(in_array('car_manger', $info['pay_cate'])){ echo 'readonly';} ?> >
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">历年欠费：<span class="c-red">*</span></label>
+			        <div class="col-sm-2">
+			        	应收：<input class="form-control required money" style='width:80%;float:right' name="arrear_money" value="{$info.arrear_money|default='0'}" maxlength='30' <?php if(in_array('arrear_money', $info['pay_cate'])){ echo 'readonly';} ?>>
+			        </div>
+			        <div class="col-sm-2">
+			        	实收：<input class="form-control required money" style='width:80%;float:right' name="arrear_money_pay" value="{$info.arrear_money_pay|default='0'}" maxlength='30' <?php if(in_array('arrear_money', $info['pay_cate'])){ echo 'readonly';} ?> >
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">历年欠费详情：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control" name="arrear_money_note" value="{$info.arrear_money_note}">
+			        </div>
+			        <small>例：2015年欠费3元；</small>
+			    </div>
+		       	<div class="form-group">
+		           <label class="col-sm-3 control-label">说明：</label>
+		           <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control" name="note" maxlength="200">{$info.note}</textarea>
+		           </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'><input type='hidden' name='bid' value='{$info.bid}'><input type='hidden' name='p' value='{$Think.get.p}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">提交</button>
+				       	<a href="{:U('Bill/record?id='.$info['bid'].'&p='.$_GET['p'])}"><button class=" btn btn-default" type="button">返回</button></a>
+		       		</div>
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

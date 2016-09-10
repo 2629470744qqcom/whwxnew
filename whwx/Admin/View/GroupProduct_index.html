@@ -1,0 +1,96 @@
+<div class="row"> <h3 class="page-header">产品管理</h3></div>
+    <div class="row">
+        <div class="col-md-12"> 
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label><a class="btn btn-primary" href="{:U('GroupProduct/add')}">添加</a></label>
+                    <form action='{:U("GroupProduct/index")}' class="form-inline text-right fr">
+                  名称：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20 w150" >
+                  购买方式：<select name='category' class="form-control mr20 w150" >
+                            <option value='-1'>全部</option>
+                            <option value='0' <eq name='Think.get.category' value='0'>selected</eq> >人民币 </option>
+                            <option value='1' <eq name='Think.get.category' value='1'>selected</eq> >积分兑换 </option>
+                        </select>
+                  状态：<select name='status' class="form-control mr20 w150" >
+                            <option value='-1'>全部</option>
+                            <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >上架 </option>
+                            <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >下架 </option>
+                        </select>
+                        <button class="btn btn-primary" type="submit">搜索</button>
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="60">序号</th>
+                                    <th>名称</th>
+                                    <th>购买方式</th>
+                                    <th>库存</th>
+                                    <th>现价</th>
+                                    <th>原价</th>
+                                    <th>积分</th>
+                                    <th width="70">排序</th>
+                                    <th width="75">状态</th>
+                                    <th width="120">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <volist name="list" id="list">
+                                    <tr>
+                                        <td>{$i}</td>
+                                        <td>{$list.name}</td>
+                                        <td>
+                                            <switch name='list.category'>
+                                                <case value='0'>人民币</case>
+                                                <case value='1'>积分兑换</case> 
+                                            </switch>
+                                        </td>
+                                        <td>{$list.num}</td>
+                                        <td>{$list.present_price}</td>
+                                        <td>{$list.original_price}</td>
+                                        <td>{$list.credit}</td>
+                                        <td>
+                                            <input class="setSort" type="text" size="2" data-url="{:U('GroupProduct/setSort?id='.$list['id'])}" value="{$list.sort}">
+                                        </td>
+                                        <td>
+                                            <switch name='list.status'>
+                                                <case value='0'>
+                                                   <button class=" btn btn-default btn-sm setFrame" type="button" data-url='{:U("GroupProduct/setStatus?id=".$list["id"])}' data-status="{$list.status}">下架</button>
+                                                </case>
+                                                <case value='1'>
+                                                    <button class="btn btn-primary btn-sm setFrame" type="button" data-url='{:U("GroupProduct/setStatus?id=".$list["id"])}' data-status="{$list.status}">上架</button>
+                                                </case>
+                                            </switch>
+                                        </td>
+                                        <td>
+                                            <a class=" btn btn-sm btn-default" id="order_button" data-id='{$list.id}' href="{:U("GroupOrders/index?id=".$list['id'])}">订单</a>
+                                            <a class=" btn btn-sm btn-default" href="{:U('GroupProduct/edit?id='.$list['id'])}">修改</a>
+                                            <!-- <button data-url='{:U("GroupProduct/del?id=".$list["id"])}' class=" btn btn-sm btn-default delBtn" type="button">删除</button> -->
+                                        </td>
+                                    </tr>
+                                </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $('.setFrame').click(function(){
+            var status=$(this).data('status')==1 ? 0:1;
+            var obj = $(this);  waiting();
+            $.get($(this).data('url'), {status: status}, function(data){
+                complete();
+                if(data.status == 1){
+                    if(status == 1){
+                         obj.removeClass("btn-default").addClass("btn-primary").html("上架");
+                    }else{
+                         obj.addClass("btn-default").removeClass("btn-primary").html("下架");
+                    }
+                    obj.data('status', status);
+                }
+            }); 
+        });
+    </script>

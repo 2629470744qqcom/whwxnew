@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>星悦旅游</title>
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/common.css" media="all">
+<link rel="stylesheet" type="text/css" href="/Public/Wap/css/tour.css" />
+</head>
+<body>
+<div class="m_height"> 
+    <div class="top clearfix" style="margin:0;">
+        <a href="javascript:history.go(-1)" class="return"></a>星悦旅游
+        <a href="{:U('Wap/Index/index')}"><span class="icon_home_index fr" style="margin:0;"></span></a>
+    </div>
+    <!--幻灯片开始-->
+    <div id="banner_box" class="box_swipe" >
+        <ul>
+            <volist name="slideList" id="slideList1">
+                <li><a href="<empty name='slideList1.url'>javascript:void(0);<else/>{$slideList1.url}</empty>"> <img src="{$slideList1.pic}?imageView2/0/w/600" style="height:182px;" /></a> </li>
+            </volist>
+        </ul>
+        <ol style="background:none;">
+            <volist name="slideList" id="slideList2">
+                <li class="on"></li>
+            </volist>
+        </ol>
+        <img src="/Public/Wap/images/tour_logo.png" style="position:absolute;left:6px;top:6px;width:65px;">
+    </div>
+    <!--幻灯片结束-->
+    <!--搜索-->
+    <div class="search">
+    	<form method="get">
+        	<ul class="clearfix">
+            	<li class="name">热门搜索</li>
+                <li class="text"> <input type="text" name="keyword" value="{$Think.get.keyword}" /> </li>
+                <li class="post"> <button type="submit"></button> </li>
+            </ul>
+        </form>
+    </div>
+    <!-- 快捷菜单 -->
+    <div class="menu">
+    	<ul class="clearfix">
+            <volist name="classifyList" id="classifyList">
+        	<li>
+            	<a href="<empty name='classifyList.link'>{:U('Tour/lists', array('id' => $classifyList['id']))}<else/>{$classifyList.link}</empty>">
+                    <p class="pic"><img src="{$classifyList.pic}?imageView2/0/w/100/h/100"/></p>
+                    <p class="name">{$classifyList.name}</p>
+                </a>
+            </li>
+            </volist>
+        </ul>
+    </div>
+    <!-- 列表 -->
+    <div class="main_box clearfix">
+        <volist name="lineList" id="lineList">
+        <div class="list">
+            <ul>
+                <li class="pic">
+                    <a href="{:U('Tour/info', array('id' => $lineList['id']))}">
+                        <img src="{$lineList.pics}?imageView2/0/w/300" />
+                        <eq name="lineList.self" value="1"><i class="xgj"></i></eq>
+                        <notempty name="lineList.tag"><i class="line_tag">{$lineList.tag}</i></notempty>
+                    </a>
+                </li>
+                <li class="tag">&nbsp;
+                    <eq name="lineList.jing" value="1"><i class="tags line_jing">精</i></eq>
+                    <eq name="lineList.re" value="1"><i class="tags line_re">热</i></eq>
+                    <eq name="lineList.hui" value="1"><i class="tags line_hui">惠</i></eq>
+                </li>
+                <li class="text">{$lineList.name}</li>
+                <li class="clearfix"> <p class="red">￥{$lineList.sale}</p> <p> <a href="{:U('Tour/buy', array('id' => $lineList['id']))}" class="btn_green"> 立即抢购 </a> </p> </li>
+            </ul>
+        </div>
+        </volist>
+    </div> 
+</div>
+<div style="position:fixed;right:10px;bottom:10px;z-index:10;width:60px;height:60px;background:#00a0ea;border-radius:30px;text-align:center;line-height:60px;font-size:20px;">
+    <a style="color:#fff;" href="{:U('Tour/orders')}">订单</a>
+</div>
+<script type="text/javascript" src="/Public/Wap/js/jquery.min.js" ></script>
+<script type="text/javascript" src="/Public/Wap/js/swipe.js" ></script>
+<script>
+$(function(){
+	/*幻灯片*/
+	new Swipe(document.getElementById('banner_box'), {
+		speed:500,
+		auto:3000,
+		callback: function(){
+			var lis = $(this.element).next("ol").children();
+			lis.removeClass("on").eq(this.index).addClass("on");
+		}
+	});
+});
+</script>
+</body>
+</html>

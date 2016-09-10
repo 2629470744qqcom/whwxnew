@@ -1,0 +1,52 @@
+<div class="row"> <h3 class="page-header">旅行社管理</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a href="{:U('TourMerchant/add')}" class="btn btn-primary">添加</a></label>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>名称</th>
+                                <th>电话</th>
+                                <th width="75">状态</th>
+                                <th width="180">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<volist name="list" id="list">
+                                <tr>
+                                    <td>{$i}</td>
+                                    <td>{$list.name}<eq name='list.fid' value='0'>【WXBD#5#{$list.phone}#{$list.id}】</eq></td>
+                                    <td>{$list.phone}</td>
+                                    <td>
+                                        <button class='btn <eq name="list.status" value="1">btn-primary<else />btn-default</eq> btn-sm setStatus' type="button" data-url='{:U("TourMerchant/setStatus?id=".$list["id"])}' data-status="{$list.status}"><eq name="list.status" value='1'>启用<else />禁用</eq></button>
+                                    </td>
+                                    <td>
+                                 	    <a class="btn-sm btn btn-default" href='{:U("TourMerchant/edit?id=".$list["id"])}'>修改</a>
+                                        <button data-url='{:U("TourMerchant/reset?id=".$list["id"])}' class="btn-sm btn btn-default resetBtn" type="button">重置</button>
+                                 	    <button data-url='{:U("TourMerchant/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$('.resetBtn').click(function(){
+   if(confirm('确定要重置？')){
+        waiting();
+        $.get($(this).data('url'), function(data){
+            showInfo(data.info);
+            data.status == 1 && setTimeout('location.reload();', 0);
+        });
+   }
+});
+</script>

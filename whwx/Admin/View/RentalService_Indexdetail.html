@@ -1,0 +1,48 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看信息</h4>
+</div>
+<div class="modal-body" id="html">
+    <div>
+        <b>业主姓名：</b>{$info.owner}&nbsp;&nbsp;&nbsp;
+        <b>联系方式：</b>{$info.tel}&nbsp;&nbsp;&nbsp;
+        <b>发布时间：</b>{$info.times|date='Y-m-d H:i:s', ###}
+        <br>
+        <if condition='($info.style eq 1) or ($info.style eq 2) or ($info.style eq 5)'>
+            <b>房屋户型：
+                {$info.room}室&nbsp;&nbsp;&nbsp;
+                {$info.hall}厅&nbsp;&nbsp;&nbsp;
+                {$info.toilet}卫&nbsp;&nbsp;&nbsp;
+            </b>
+            <b>第{$info.floor_several}层</b>&nbsp;&nbsp;&nbsp;
+            <b>共{$info.floor_all}层 </b>&nbsp;&nbsp;&nbsp;
+            <b>面积：</b>{$info.size}(M<sup>2</sup>)&nbsp;&nbsp;&nbsp;
+            <b>房号：{$info.house}室</b>
+        </if>
+        <br>
+        <b>类型：</b>
+        <switch name='info.style'>
+            <case value='1'>出租房屋</case>
+            <case value='2'>出售房屋</case> 
+            <case value='3'>出租车位</case> 
+            <case value='4'>出售车位</case>  
+            <case value='5'>出租单间</case>  
+        </switch> 
+        <br>
+        <br><b>标题：</b>{$info.title}<br>
+        <br><b>小区：</b>{$info.area}<br>
+        <br><b>价格：</b>{$info.price}元<br>
+        <br><b>详细地址：</b>{$info.address}<br>
+        <br><b>描述：</b>{$info.content}<br>
+        <notempty name='info.pics'>
+            <volist name="info.pics" id='pic'>
+                <a href="{$pic}" target="_blank"><img src='{$pic}?imageView2/2/h/160'/></a>
+            </volist>
+        </notempty>
+        <hr>
+    </div>
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+</div>

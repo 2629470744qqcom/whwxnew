@@ -1,0 +1,48 @@
+{__NOLAYOUT__}
+<style> img{width:200px;margin-right:10px;}</style>
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看信息</h4>
+</div>
+<div class="modal-body" id="html">
+	<div>
+		<b>业主姓名：</b>{$info.name}&nbsp;&nbsp;&nbsp;&nbsp;
+		<b>联系方式：</b>{$info.phone}&nbsp;&nbsp;&nbsp;&nbsp;
+		<b>提交时间：</b>{$info.submit_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;&nbsp;
+		<b>预约类型：</b>{$info.tname}
+		<br>
+		<b>预约内容：</b>{$info.desc}
+		<br>
+		<hr>
+	</div>
+	<div>
+		<b>供应商：</b>{$info.title}&nbsp;&nbsp;&nbsp;&nbsp;
+		<b>联系方式：</b>{$info.tel}&nbsp;&nbsp;&nbsp;&nbsp;
+		<b>地址: </b>{$info.address}
+		<hr>
+	</div>
+	<volist name='list' id='list'>
+		<div>
+			<b>发送人：{$list.oname}&nbsp;&nbsp;&nbsp;&nbsp;
+			联系方式：{$list.otel}&nbsp;&nbsp;&nbsp;&nbsp;
+			时间：{$list.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$list.content}<br>
+		    <hr>
+	    </div>
+	</volist>
+	<notempty name='info.comment'>
+		<div>
+			<b>评分：{$info.comment.score}&nbsp;&nbsp;&nbsp;&nbsp;
+			评价时间：{$info.comment.times|date='Y-m-d H:i:s', ###}</b>
+			<br><b>评论内容：</b>{$info.comment.desc}<br><hr>
+		</div>
+	</notempty>
+	<lt name='info.status' value="2">
+		<div><textarea rows="3" class="form-control" id="content" placeholder="请输入回复内容"></textarea></div>
+	</lt>
+	<input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <lt name='info.status' value="2"><button class="btn btn-primary save" type="button">提交</button></lt>
+</div>

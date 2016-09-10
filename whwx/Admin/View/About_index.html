@@ -1,0 +1,37 @@
+<div class="row"> <h3 class="page-header">关于伟星</h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form id="myform" class="form-horizontal">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">标题：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="about_title" value="{:C('about_title')}">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label">图片：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4 imgreq">
+			       		<div class="uploadify-div">
+					    	<?php if(C('about_pic')){ echo '<li><img src="'.C('about_pic').'"><input type="hidden"  value="'.C('about_pic').'" name="about_pic"></li>'; } ?>
+					    </div>
+	                   	<button type="button" class='upload' id='upload1' data-name="about_pic">选择图片</button>
+                	</div>
+			    </div>
+			    <div class="form-group">
+		            <label class="col-sm-3 control-label">详情：</label>
+		            <div class="col-sm-4">
+		           		<textarea rows="3" class="form-control keditor" name="about_desc">{:C('about_desc')}</textarea>
+		            </div>
+		            <small>请不要使用英文状态下的单双引号</small>
+		        </div>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('Index/index')}"><button class="btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+{__NOLAYOUT__}
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">帖子详情</h4>
+</div>
+<div class="modal-body" id="html">
+	<div>
+	    <b>业主：</b>{$info.name}[{$info.nickname|default='无'}]&nbsp;&nbsp;&nbsp;<b>手机号：</b>{$info.phone}&nbsp;&nbsp;&nbsp;<b>房号：</b>{$info.addr}&nbsp;&nbsp;&nbsp;<b>小区：</b>{$info.aname}&nbsp;&nbsp;&nbsp;<b>创建时间：</b>{$info.times|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;<b>板块名：</b>{$info.plate}
+	    <br>{$info.desc}<br>
+		<notempty name='info.pics'>
+	 		<volist name="info.pics" id='pic'>
+	 			<a href="{$pic}" target="_blank"><img src='{$pic}?imageView2/2/h/160'/></a>
+	 		</volist>
+		</notempty>
+	    <hr>
+	</div>
+	<volist name='postList' id='list'>
+		<div>
+			<button class='btn btn-sm btn-danger delPost' data-id='{$list.id}' style='float:right;'>X</button>
+			<b>业主：</b>{$list.name}[{$list.nickname|default='无'}]&nbsp;&nbsp;&nbsp;<b>手机号：</b>{$list.phone}&nbsp;&nbsp;&nbsp;<b>房号：</b>{$list.addr}&nbsp;&nbsp;&nbsp;<b>小区：</b>{$list.aname}&nbsp;&nbsp;&nbsp;<b>回复时间：</b>{$list.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$list.desc}<br>
+		    <hr>
+	    </div>
+	</volist>
+	<div><textarea rows="3" class="form-control" id="desc" placeholder="请输入回帖内容" maxlength='500'></textarea></div>
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <button class="btn btn-primary post" data-id='{$info.id}' type="button">提交</button>
+</div>
+<style>
+	img.face{width:30px;height:30px;}
+</style>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div>
+ 	<div class="forum_head">
+	 	<a href='javascript:history.go(-1)'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">红黑榜</p> 
+        <a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+ 	</div>
+ 	<div class="forum_card_list"> 
+ 		<ul class="nav_2"> 
+ 			<a href='{:U("Black/index")}'><li data-id='0'><p <neq name='Think.get.type' value='1'> class="green_c_b"</neq> >红榜</p></li></a>
+ 			<a href='{:U("Black/index?type=1")}'><li data-id='1'><div class="hr_forum_card fl "></div><p <eq name='Think.get.type' value='1'> class="green_c_b"</eq> >黑榜</p></li></a>
+ 		</ul> 
+ 	</div>
+    <div class="wrapper">
+        <ul class="wall" <eq name='Think.get.type' value='1'> style="display:none" </eq> >
+        	<volist name='blackList' id='list'>
+	            <li class="article">
+	                <a href="{:U('Black/cont?id='.$list['id'])}">
+	                	<p><img src="{$list.pic}?imageView2/1/w/320" /></p>
+	                	<p>{$list.title}</p>
+	                    <p class="date">{$list.day|date='Y-m-d',###}</p>
+	                    <p class="zan <lt name='list.is_zan' value='1'> on </lt> ">
+		                    <span> <i></i>{$list.zan}</span>
+		                    <span><em><lt name='list.is_zan' value='1'>去点赞<else />已点赞</lt></em></span>
+	                    </p>
+	                </a>
+	            </li>
+            </volist>
+        </ul>
+        <ul class="wall" <neq name='Think.get.type' value='1'> style="display:none" </neq>>
+			<volist name='blackList' id='list'>
+	            <li class="article">
+	                <a href="{:U('Black/cont?id='.$list['id'])}">
+	                	<p><img src="{$list.pic}?imageView2/1/w/320" /></p>
+	                	<p>{$list.title}</p>
+	                    <p class="date">{$list.day|date='Y-m-d',###}</p>
+	                    <p class="zan <lt name='list.is_zan' value='1'> on </lt> ">
+		                    <span><i></i>{$list.zan}</span>
+		                    <span><em><lt name='list.is_zan' value='1'>去点赞<else />已点赞</lt></em></span>
+	                    </p>
+	                </a>
+	            </li>
+            </volist>
+        </ul>
+       
+    </div>
+</div>
+<div style="width:100%;height:70px;float:left;"></div>
+<div style="width:100%;position:absolute;bottom:40px;">
+{$page}
+</div>
+<!--版权-->
+<script type="text/javascript" src="{:JQ}"></script>
+<!--瀑布流-->
+<script type="text/javascript" src="{:JS}jaliswall.js"></script> 
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript"> 
+$(function(){ 
+	//瀑布流
+	$('.wall').jaliswall({ item: '.article' });
+});
+// 首页跳转
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+    })
+</script>	
+</body>
+</html>

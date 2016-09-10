@@ -1,0 +1,70 @@
+{__NOLAYOUT__}
+<style> img{margin:3px;}</style>
+<div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">×</button>
+    <h4 class="modal-title">查看信息</h4>
+</div>
+<div class="modal-body" id="html">
+    <div>
+		<b>
+			意向者姓名：{$info.name}&nbsp;&nbsp;&nbsp;
+			联系方式：{$info.phone}&nbsp;&nbsp;&nbsp;
+			提交时间：{$info.submit_time|date='Y-m-d H:i:s', ###}&nbsp;&nbsp;&nbsp;
+			意向类型：
+			<switch name='info.style'>
+                <case value='1'>出租房屋</case>
+                <case value='2'>出售房屋</case> 
+                <case value='3'>出租车位</case> 
+                <case value='4'>出售车位</case>  
+                <case value='5'>出租单间</case>  
+            </switch> 
+        </b>
+		<br>备注:<eq name="info.desc" value="">无<else/>{$info.desc}</eq><br>
+		<hr>
+	</div>
+	<div>
+		<b>业主姓名：{$info.owner}&nbsp;&nbsp;&nbsp;联系方式：{$info.tel}&nbsp;&nbsp;&nbsp;发布时间：{$info.times|date='Y-m-d H:i:s', ###}</b>
+		<br><b>标题：</b>{$info.title}<br>
+		<notempty name='info.pics'>
+	 		<volist name="info.pics" id='pic'>
+	 			<a href="{$pic}" target="_blank"><img src='{$pic}?imageView2/2/h/160'/></a>
+	 		</volist>
+		</notempty>
+		<hr>
+	</div>
+	<volist name='list' id='list'>
+		<div>
+			<b>发送人：{$list.oname}&nbsp;&nbsp;&nbsp;联系方式：{$list.otel}&nbsp;&nbsp;&nbsp;时间：{$list.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$list.content}<br>
+		    <hr>
+	    </div>
+	</volist>
+	<!-- <eq name="info.status" value="2">
+		<div>
+			<b>评分：{$info.comment.score}&nbsp;&nbsp;&nbsp;评价时间：{$info.comment.times|date='Y-m-d H:i:s', ###}</b>
+			<br>{$info.comment.desc}<br><hr>
+		</div>
+	</eq> -->
+	<lt name='info.status' value="2">
+		<div><textarea rows="3" class="form-control" id="content" data-pid='{$info.pid}' placeholder="请输入备注信息,仅管理员可见"></textarea></div>
+	</lt>
+	<input name='id' value='{$info.id}' type='hidden' id='id' />
+</div>
+<div class="modal-footer">
+    <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+    <lt name='info.status' value="2"><button class="btn btn-primary submit save" type="button">提交</button></lt>
+</div>
+<script>
+	$(function(){
+		$(".save").click(function(){
+			var status='{$info.status}';
+			var obj=$('textarea');
+			var content =obj.val();
+	        var id=$("input[name='id']").val();
+			$.post('{:U("RentalService/detail")}',{status:status,content:content,id:id},function(data){
+	            showInfo(data.info);
+	            $('#myModal').modal('hide');
+			});
+		});
+	});	
+</script>

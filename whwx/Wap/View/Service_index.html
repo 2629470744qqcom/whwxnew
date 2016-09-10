@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css?v=20160407" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e  fl">
+	<div class="head_title fl">
+		<span class="icon_img icon_location_green fl mt_9 ml_20"></span>
+		<span class="f_w_40">{$manInfo.area}</span>
+		<gt name='count.booking' value='0'><div class="red_circle mr_10"></div></gt>
+        <a href="{:U('Service/bookingList')}"><span class="icon_img icon_news_green fr mt_9"></span></a>
+	</div>
+    <div class="them_title fl relative">
+    	<img  class="them_title_img" src="{:IMG}maintainer_title.png">
+    	<div class="them_title_head mt_10"><img id='chooseImage' src="{$manInfo.pic|default='/Public/Wap/images/them_title_head.png'}?imageView2/1/h/200/w/200"></div>
+    	<p class="htem_title_head_text">{$manInfo.name}</p>
+    </div>
+    <ul class="nav_menu_3">
+    	<li data-id='0'>
+            <a href='{:U("Service/index")}'>
+            	<div class="nav_menu_left">
+    	        	<div <lt name='Think.get.type' value='1'> class="b_b3"</lt>>
+    	        		<span <lt name='Think.get.type' value='1'>class="f_c_g"</lt> >报修订单</span>
+    	        		<p>({$count.repair})</p>
+    	        	</div>
+        		</div>
+            </a>
+    		<span class="vertical_line_dc"></span>
+    	</li>
+    	<li data-id='1'>
+            <a href='{:U("Service/index?type=1")}'>
+            	<div class="nav_menu_left">
+            	    <div <eq name='Think.get.type' value='1'> class="b_b3"</eq> >
+            		    <span <eq name='Think.get.type' value='1'>class="f_c_g"</eq> >缴费通知</span>
+            		    <p>({$count.pay})</p>
+            		</div>
+            	</div>
+            </a>
+        	<span class="vertical_line_dc"></span>
+    	</li>
+    	<li data-id='2'>
+            <a href='{:U("Service/index?type=2")}'>
+            	<div class="nav_menu_left">
+            	    <div <eq name='Think.get.type' value='2'> class="b_b3"</eq> >
+            		    <span <eq name='Think.get.type' value='2'>class="f_c_g"</eq> >投诉建议</span>
+                        <p>({$count.suggest})</p>
+            		</div>
+            	</div>
+            </a>
+        	<span class="vertical_line_dc"></span>
+    	</li>
+    </ul>
+    <ul class="nav_menu_2 pb_56 fix_form">
+    	<lt name='Think.get.type' value='1'>
+    		<a href='{:U("Service/my_repair")}'><button type="button"  class="post bg_c_g mt_20 fl"> 我要报修 </button></a>
+	        <li class="fl w100" data-id='0'>
+	        	<volist name='list' id='repair'>
+			        <div class="community_game_title">
+				 		<div class="community_game_img">
+				 		    <span class="icon_img tool_green_img fl"></span>
+				 		    <div class="maintainer_right">
+					 		    <p class="fl f_z_16 f_c_3">{$repair.name}</p>
+					 		    <p class="fr f_z_14 f_c_9">{$repair.creat_time|date='Y-m-d H:i', ###}</p>
+					 		    <div class="maintainer_text_word"> 
+					 		    	<p>维修状态：
+						 		        <switch name='repair.status'>
+	                                        <case value='1'>维修预警</case>
+									 		<case value='2'>维修报错</case>
+											<case value='7'>处理完成</case>
+											<case value='8'>处理完成</case>
+											<case value='9'>评价完成</case>
+											<case value='10'>报修关闭</case>
+											<default />未处理
+	                                    </switch>
+	                                </p>
+	                                <p>维修内容：{$repair.desc}</p>
+                                </div>
+				 		    </div>
+				 		</div>
+				 		<eq name='repair.type' value='5'>
+				 			<div class="maintainer_title_text"><a href="{:U('Service/repair_detail?id='.$repair['id'])}">查看详情</a></div>
+				 		<else />
+				 			<div class="maintainer_title_text"><a href="{:U('Service/repair?id='.$repair['id'])}">查看详情</a></div>
+				 		</eq>
+			 	    </div>
+	        	</volist>
+	 	    </li>
+ 	    </lt>
+ 	    <eq name='Think.get.type' value='1'>
+	 	    <li class="fl w100" data-id='0'>
+	        	<volist name='list' id='repair'>
+			        <div class="community_game_title">
+				 		<div class="community_game_img">
+				 		    <span class="icon_img box_green_img fl"></span>
+				 		    <div class="maintainer_right">
+					 		    <p class="fl f_z_16 f_c_3">缴费通知</p>
+					 		    <p class="fr f_z_14 f_c_9">{$repair.times|date='Y-m-d H:i', ###}</p>
+					 		    <div class="maintainer_text_word"><p>缴费内容：{$repair.name}</p><p>业主信息：{$repair.desc}</p></div>
+				 		    </div>
+				 		</div>
+				 			<div class="maintainer_title_text"><a href="{:U('Service/notice?id='.$repair['id'])}">查看详情</a></div>
+			 	    </div>
+	        	</volist>
+	 	    </li>
+ 	    </eq>
+ 	    <eq name='Think.get.type' value='2'>
+	 	    <li class="fl w100" data-id='0'>
+	        	<volist name='list' id='repair'>
+			        <div class="community_game_title">
+				 		<div class="community_game_img">
+				 		    <span class="icon_img win_red_img fl"></span>
+				 		    <div class="maintainer_right">
+					 		    <p class="fl f_z_16 f_c_3">业主投诉</p>
+					 		    <p class="fr f_z_14 f_c_9">{$repair.times|date='Y-m-d H:i', ###}</p>
+					 		    <div class="maintainer_text_word"> 
+					 		    	<p>维修状态：
+						 		        <switch name='repair.status'>
+	                                        <case value='0'>未处理</case>
+									 		<case value='1'>已处理</case>
+									 		<case value='2'>已完成</case>
+	                                    </switch>
+	                                </p>
+	                                <p>投诉内容：{$repair.desc}</p>
+                                </div>
+				 		    </div>
+				 		</div>
+				 		<div class="maintainer_title_text"><a href="{:U('Service/complaint?id='.$repair['id'])}">查看详情</a></div>
+			 	    </div>
+	        	</volist>
+	 	    </li>
+ 	    </eq>
+	</ul>
+	{$page}
+	<div class="bottom_copyright"></div>
+    <!-- <a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb30 absolute_b0"></div></a> -->
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+var images = {localId: [],serverId: []}, imgs = '';
+//选择图片
+wx.ready(function () {
+	document.querySelector('#chooseImage').onclick = function () {
+		wx.chooseImage({
+		    count: 1,
+			success: function (res) {
+				images.localId = res.localIds;
+				upload(res.localIds.join());
+			}
+		});
+	};
+});
+function upload(pic){
+	wx.uploadImage({
+	    localId: pic,
+	    success: function (res) {
+	    	imgs = res.serverId;
+	    		waiting();
+	    		$.post('/Home/Upload/downPic', {pics : imgs}, function(data){
+	    			complete();
+	    			var pic = data;
+	    			$.post('{:U("Service/upload")}', {pic : pic}, function(data2){
+	    				showInfo(data2.info, 1, function(){
+	    					location.reload();
+	    				});
+	    			});
+	    		});
+	    },
+	    fail: function (res) {
+	      alert(JSON.stringify(res));
+	    }
+	});
+}
+</script>
+</body>
+</html>

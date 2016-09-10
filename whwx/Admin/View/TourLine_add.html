@@ -1,0 +1,152 @@
+<link href="{:COM}css/bootstrap-datetimepicker-diy.css" rel="stylesheet" />
+<div class="row"> <h3 class="page-header">产品管理<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form"  id="myform" method="post" class="form-horizontal">
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">线路名称：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control required" name="name" value="{$info.name}" maxlength="50">
+			        </div>
+			        <small>不超过五十个字</small>
+			    </div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">所属分类：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<select name='cid' class="form-control">
+                            <option value='0'>所属分类</option>
+                            <volist name="clist" id="clist">
+                                <option value='{$clist.id}' <eq name='info.cid' value='$clist["id"]'>selected</eq> >{$clist.name} </option>
+                            </volist>
+                        </select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">所属旅行社：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<select name='mid' class="form-control">
+                            <option value='0'>所属旅行社</option>
+                            <volist name="mlist" id="mlist">
+                                <option value='{$mlist.id}' <eq name='info.mid' value='$mlist["id"]'>selected</eq> >{$mlist.name} </option>
+                            </volist>
+                        </select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">导游电话：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required" name='phone' value="{$info.phone}">
+			    	</div>
+			    </div>
+			   	<div class="form-group">
+			        <label class="col-sm-3 control-label">图片：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			       		<div class="uploadify-div">
+				       		<notempty name='info.pics'>
+				       			<volist name='info.pics' id='pic'>
+				       				<li>
+								    	<img src="{$pic}" >
+								    	<input type="hidden"  value="{$pic}" id='pics{$i}' name="pic[]">
+								    	<a class='delImgBtn'>删除</a> 
+							    	</li>
+				       			</volist>
+						    </notempty>
+					    </div> 
+			       		<button data-multi='true' type="button" data-callback='showImg' class="upload" id="upload">选择图片</button>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">现价：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required number" name='sale' value="{$info.sale}">
+			    	</div>
+			    	<small>单位(元)</small>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">原价：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required number" name='price' value="{$info.price}">
+			    	</div>
+			    	<small>单位(元)</small>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">发团时间：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control required datepicker" name="dates" value="{$info.dates}" readonly="readonly" />
+			    	</div>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">其他：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			            <label class="radio-inline"><input type="checkbox" value="1" name="index" <eq name="info.index" value="1">checked</eq>>显示在首页</label>
+			            <label class="radio-inline"><input type="checkbox" value="1" name="recom" <eq name="info.recom" value="1">checked</eq>>精品推荐</label>
+			    	</div>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">标签：<span class="c-red">*</span></label>
+			    	<div class="col-sm-4">
+			    		<label class="radio-inline"><input type="checkbox" value="1" name="self" <eq name="info.self" value="1">checked</eq>>星管家</label>
+			            <label class="radio-inline"><input type="checkbox" value="1" name="jing" <eq name="info.jing" value="1">checked</eq>>精品</label>
+			            <label class="radio-inline"><input type="checkbox" value="1" name="hui" <eq name="info.hui" value="1">checked</eq>>特惠</label>
+			            <label class="radio-inline"><input type="checkbox" value="1" name="re" <eq name="info.re" value="1">checked</eq>>热门</label>
+			    	</div>
+			    </div>
+			    <div class="form-group">
+			    	<label  class="col-sm-3 control-label">自定义标签：</label>
+			    	<div class="col-sm-4">
+			    		<input type="text" class="form-control" name='tag' value="{$info.tag}">
+			    	</div>
+			    	<small>十个字以内</small>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">排序：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			         	<input class="form-control digits required" name="sort" value="{$info.sort|default=100}">
+			        </div>
+			        <small>请输入正整数</small>
+			    </div>
+			    <div class="form-group">
+					<label class="col-sm-3 control-label">状态：</label>
+					<div class="col-sm-4">
+			            <label class="radio-inline">
+			                <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+			            </label>
+			            <label class="radio-inline">
+			                <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+			            </label>
+		            </div>
+		        </div>
+			    <div class="form-group">
+		            <label class="col-sm-3 control-label">线路说明：</label>
+		            <div class="col-sm-4">
+		                <textarea rows="3" class="form-control keditor" data-simple="true" name="content"  maxlength="200">{$info.content}</textarea>
+		            </div>
+		        </div>
+		        <gt name='info.id' value='0'> <input type='hidden' name='id' id="id" value='{$info.id}'></gt>
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary" type="submit">保存</button>
+				       	<a href="{:U('TourLine/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src='{:COM}js/datetimepicker-diy.js'></script>
+	<script>
+		$('.datepicker').datetimepicker({format: 'yyyy-mm-dd', weekStart: 1, minView: 2,forceParse: 0});
+
+		function showImg(data){
+			data = $.parseJSON(data);
+			var div = $('#upload').parent().find('.uploadify-div'), html = '<li>';
+			html += "<img src='"+data.url+"' />";
+			html += "<input type='hidden' name='pic[]' value='"+data.url+"' /><a class='delImgBtn'>删除</a></li>";
+			div.append(html);
+		}
+		$(function(){
+			$('body').on('click', '.delImgBtn', function(){
+				$(this).parents('li').remove();
+			});
+		});
+	</script>

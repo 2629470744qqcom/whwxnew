@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}style.css" />
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body>
+<div class="appointment pb_66"> 
+	<div class="top clearfix">
+		<a href="javascript:history.go(-1);" class="return"></a>
+		我的预约
+		<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+	</div>
+    <!--我的-->
+    <volist name='list' id='list'>
+	    <div class="mine">
+	        <div class="cont">
+	            <ul class="clearfix">
+	                <li><i class="icon"></i></li>
+	                <li class="text">
+	                    <p><span class="name">我的预约</span><span class="date">{$list.submit_time|date='Y-m-d',###}</span></p>
+	                    <p class="fl">{$list.desc}</p>
+	                </li>
+	            </ul>
+	        </div>
+	        <div class="more"><a href="{:U('Booking/evaluate?id='.$list['id'])}">查看详情</a></div>
+	    </div>
+    </volist>
+      {$page}
+</div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script>
+    $('#index_icon').click(function(){
+        location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>

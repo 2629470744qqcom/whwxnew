@@ -1,0 +1,118 @@
+<div class="row"> <h3 class="page-header">商家分类</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Advanced Tables -->
+        <div class="panel panel-default">
+            <div class="panel-body">
+            	<label><a class="btn btn-primary addCate">添加分类</a></label>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>名称</th>
+                                <th>链接地址</th>
+                                <th width="75">排序</th>
+                                <th width="75">状态</th>
+                                <th width="120">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<volist name="list" id="list">
+	                            <tr>
+	                                <td>{$i}</td>
+	                                <td>{$list.name}</td>
+	                                <td>{:C('site_url')}/Wap/Shop/lists?id={$list.id}</td>
+	                                <td>
+	                               		<input class="setSort" type="text" size="2" data-url="{:U('MerchantType/setSort?id='.$list['id'])}" value="{$list.sort}">
+	                                </td>
+	                                <td class="center">
+	                                 	<button class='btn <eq name="list.status" value="1">btn-primary<else />btn-default</eq> btn-sm setStatus' type="button" data-url='{:U("MerchantType/setStatus?id=".$list["id"])}' data-status="{$list.status}"><eq name="list.status" value='1'>启用<else />禁用</eq></button>
+	                                </td>
+	                                <td class="center">
+	                                 	<a class="btn-sm btn btn-default editBtn" data-id='{$list.id}' >修改</a>
+	                                 	<button data-url='{:U("MerchantType/del?id=".$list["id"])}' class="btn-sm btn btn-default delBtn" type="button">删除</button>
+	                                </td>
+	                            </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	        <form action="{:U('MerchantType/add')}" id="myform" class="form-horizontal">
+	            <div class="modal-header">
+	                <button data-dismiss="modal" class="close" type="button">×</button>
+	                <h4 class="modal-title">添加页面</h4>
+	            </div>
+	            <div class="modal-body">
+				    <div class="form-group">
+				        <label class="col-sm-3 control-label">名称：<span class="c-red">*</span></label>
+				        <div class="col-sm-6">
+				         	<input class="form-control required" name="name" maxlength="10">
+				        </div>
+				        <small>不超过十个字</small>
+				    </div>
+				    <div class="form-group">
+				    	<label class="col-sm-3 control-label">分类图标：</label>
+				    	<div class="col-sm-6 imgreq">
+				    		<div class="uploadify-div"></div>
+							<button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+		               	<label class="col-sm-3 control-label">说明：</label>
+		               	<div class="col-sm-6">
+		               		<textarea rows="3" class="form-control" name="desc" maxlength='500'></textarea>
+		               	</div>
+			        </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button data-dismiss="modal" class=" btn btn-default" type="button">关闭</button>
+	                <input type="hidden" name="id" />
+	                <button class="btn btn-primary" type="submit">保存</button>
+	            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+	$('.editBtn').click(function(){
+		$('#myform')[0].reset();
+		var id = $(this).data('id');
+		$('.modal-title').html('修改商家分类');
+		waiting();
+		$.get('{:U("MerchantType/detail")}', {id:id}, function(data){
+			complete();
+			if(data){
+				$('#myform input[name="id"]').val(id);
+				$('#myform input[name="name"]').val(data.name);
+				$('#myform textarea[name="desc"]').html(data.desc);
+				$("#myform select").find("option[value='"+data.pid+"']").attr("selected",true);
+				$("#myform").attr('action', '{:U("MerchantType/detail")}');
+				if(data.pic){
+					if($('.uploadify-div').length > 0){
+						$('.uploadify-div').html('<li><img src="'+data.pic+'?"><input name="pic" type="hidden" value="'+data.pic+'"></li>');
+					}else{
+						$('#myModal #upload').before('<div class="uploadify-div"><li><img src="'+data.pic+'"><input name="pic" type="hidden" value="'+data.pic+'"></li></div>');
+					}
+				}
+			}
+		});
+		$('#myModal').modal('show');
+	});
+	$('.addCate').click(function(){
+		$('#myform')[0].reset();
+		$('.uploadify-div').html('');
+		$('.modal-title').html('添加商家分类');
+		$('#myModal').modal('show');
+	})
+})
+</script>

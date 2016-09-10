@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh" class="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" type="text/css" href="{:CSS}common.css" media="all">
+<link rel="stylesheet" type="text/css" href="{:CSS}css.css" />
+<title>{:C('site_name')}</title>
+</head>
+<body >
+<div class="people pb_66"> 
+	<div class="top clearfix">
+        <a href="javascript:history.go(-1);" class="return"></a>
+        个人中心<a class="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a>
+    </div>
+    <div class="list">
+    	<ul>
+        	<li><a href="{:U('Person/all')}"><p><img src="{$Think.session.fansInfo.pic}" /></p><p>账户详情</p></a></li>
+        	<lt name='pid' value='1'><li><a href='{:U("Owner/index")}'><p><span class="icon_img1 icon_people_green1"></span></p><p>亲友/租客</p></a></li></lt>
+            <li><a href='{:U("Forum/card")}'><p><i class="icon icon1"></i></p><p>我的发布</p></a></li>
+            <li><a href='{:U("Booking/mine")}'><p><i class="icon icon2"></i></p><p>我的预约</p></a></li>
+            <li><a href='{:U("Tour/orders")}'><p><i class="icon icon3"></i></p><p>我的旅游</p></a></li>
+        </ul>
+    	<ul>
+        	<li><a href='{:U("Preferential/orders")}'><p><span class="icon_img1 icon_pay_green1"></span></p><p>订单查询</p></a></li>
+            <li><a href="{:U('Fix/mine')}"><p><i class="icon icon4"></i></p><p>我的报修</p></a></li>
+            <li><a href="{:U('Payment/lists')}"><p><i class="icon icon5"></i></p><p>缴费记录</p></a></li>
+            <li><a href="{:U('Apply/index')}"><p><i class="icon icon6"></i></p><p>装修申请</p></a></li>
+        </ul>
+    	<ul>
+    		<li><a href="{:U('Integral/index')}"><p><i class="icon icon3"></i></p><p>积分查询</p></a></li>
+        	<li><a href="{:U('Notice/index')}"><p><i class="icon icon7"></i></p><p>通知公告</p></a></li>
+            <li><a href='{:U("Complaint/index")}'><p><i class="icon icon8"></i></p><p>投诉建议</p></a></li>
+            <li><a href='{:U("Person/tech")}'><p><i class="icon icon5"></i></p><p>技术支持</p></a></li>
+        </ul>
+    </div>
+</div>
+<!--版权-->
+<div class="copyright mb30 absolute_b0"></div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+// 首页跳转
+$(function(){
+    $('.index_icon').click(function(){
+        location.href = $(this).data('url');
+    })  
+})
+   
+</script>
+</body>
+</html>

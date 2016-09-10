@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html calss="relative">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link href="{:CSS}common.css" rel="stylesheet" />
+<link href="{:CSS}style.css" rel="stylesheet" />
+<title>{:C('site_name')}</title>
+</head>
+<body class="bg_c_e">
+<div class="pb_70 ">
+ 	<div class="forum_head b_b1">
+	 	<a href='javascript:history.go(-1);'><span class="icon_img icon_arrow_left"></span></a>
+	 	<div class="hr_forum fl"></div>
+	 	<p class="fl">发布帖子</p> 
+	 	<a id="index_icon" data-url="{:U('Index/index')}"><span class="icon_home_index fr"></span></a> 
+ 	</div>
+ 	<form id='form'>
+	 	<div class="forum_release_form"> 
+ 			<div><label>标题</label><input type="text" placeholder="请输入帖子标题" name='title' maxlength='32'></div>
+ 			<div><label>内容</label><div style="position: relative;top: 14px;left: -5px;"><span class="emotion" style="left:10px;"></span></div><textarea id='saytext' name='desc' maxlength='500'></textarea> </div>
+	 	</div>
+	 	<div class="forum_release_form"> 
+			<ul>
+				<li class="" data-id='0' style='height:40px;line-height:18px;'>
+					<label class="mr_30 fl">板块</label>
+					<div class="choice_admin">
+						<div class="choice_case fl" data-id="0">选择你所发布的板块</div>
+						<span class="icon_img icon_angle_bottom fr"></span>
+					</div>
+				</li>
+			</ul>
+	 	</div>
+	 	<div class="list-budget" >
+			<ul class="list-budget-text" data-id='0' style="display:none">
+				<volist name="plateList" id="plate">
+				    <li data-id="{$plate.id}">{$plate.name}</li>
+				</volist>
+			</ul>
+		</div>
+		<div class="list-budget-bg" style="display:none;"></div>
+		<input type="hidden" name="cate_id" value="" placeholder="请选择你想要发布的论坛板块" class="hide_input">
+	</form>
+ 	<div class="picture forum_release_form relative">
+	    <notempty name='Think.get.pics'>
+	    	<volist name='pics' id='pic'>
+	 	    	<div class="relative forum_release_form_img fl">
+					<img src="{$pic}">
+				</div>
+		    </volist>
+	    </notempty>
+ 	</div> 
+ 	<div class="mt_30 fix_form"><button type="submit"  class="post bg_c_g"> 发&nbsp;&nbsp;布 </button></div>
+</div>
+<!-- <div class="bottom_copyright mb_66">
+	<a href="http://www.weilt.net/html/weilaotou/" style="width:30%;margin-left:35%"><div class="copyright mb_66" ></div></a>
+</div> -->
+ 	<!-- <div class="copyright absolute_b0 mb_66"></div> -->
+ 	
+<div class="forum_bottom">
+    <ul class="clearfix">
+        <li><a href="{:U('Forum/index')}"><span class="icon_img icon_home"></span><span>首页</span></a></li>
+        <li class="on"><a><span class="icon_img icon_camera"></span><span>随手拍</span></a></li>
+        <li><a href="{:U('Forum/release?pid='.$info['pid'])}"><span class="icon_img icon_pencil"></span><span>发布</span></a></li>
+        <li><a href="{:U('Forum/card')}"><span class="icon_img icon_mine"></span><span>我的</span></a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="{:JQ}"></script>
+<script type="text/javascript" src="{:JS}common.min.js"></script>
+<script type="text/javascript" src="{:JS}jquery.qqFace.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+{$shareJs}
+<script type="text/javascript">
+$(function(){
+	var type = '{$Think.session.fansInfo.type}';
+	$('.forum_bottom li').click(function(){
+		if(type == -1 && $(this).index() != 0){
+			showInfo('你没有权限，请注册', 2, function(){
+				location.href = '{:U("Public/index")}';
+			});
+		}else if($(this).index() != 1){
+			location.href = $(this).find('a').data('url');
+		}
+	});
+	//显示可选择项
+    $(".forum_release_form li").click(function(){
+    	$('.list-budget ul').show();
+        $('.list-budget-bg').show();
+    });
+    $('.list-budget-text').on('click', 'li', function(){
+    	var d_id = $(this).parent().data('id');
+        $('.choice_case').html($(this).html());
+        $('input[name="cate_id"]').val($(this).data('id'));
+        $('.list-budget-text li').attr('class', 'bg_c_f');
+        $(this).attr('class', 'bg_c_g');
+        $(".list-budget-bg,.list-budget ul").hide();
+    });
+	var pics = '{$_GET["pics"]}';
+	$('.post').click(function(){
+		if(type == -1){
+			showInfo('你没有权限，请注册', 2, function(){location.href = '{:U("Public/index")}';});
+		}else{
+			var flag = true;
+	        $('#form input').each(function(i, v){
+	            if($(v).val() == ''){
+	                flag = false; showInfo($(v).attr('placeholder')); return false;
+	            }
+	        });
+	        if(flag){
+				var pic= new Array();
+				pic = pics.split(",");
+				var i = 0, length = pic.length, imgs='',result;
+				
+			    function upload() {
+			        wx.uploadImage({
+				        localId: pic[i],
+				        success: function (res) {
+					        i++; imgs = imgs + res.serverId + ',';
+					        if (i < length) {
+					            upload();
+					        }else{
+					        		waiting();
+					        		$.post('{:U("Forum/downPic")}', {pics : imgs}, function(data){
+					        			complete();
+										for(var i= 0; i< data.length; i++){
+											var html='<input type="hidden" name="pic['+i+']" value="'+data[i]+'" />';
+											$('#form').append(html);
+										}
+										$.post('{:U("Forum/release")}', $('#form').serialize(), function(data){
+						     				showInfo(data.info, 1, function(){
+							     				if(data.url != undefined){location.href = data.url;}
+						     				});
+						     			});
+									});
+					        }
+				        },
+				        fail: function (res) {
+				          alert(JSON.stringify(res));
+				        }
+			      	});
+			    }
+			    upload();
+	        }
+		}
+	});
+	$(function(){
+		$('.emotion').qqFace({
+			id : 'facebox',//表情盒子的ID
+			assign:'saytext',//给那个控件赋值
+			path:'/Public/Wap/face/'//表情存放的路径
+		});
+	});
+})
+ // 首页跳转
+  $('#index_icon').click(function(){
+       location.href = $(this).data('url');
+  })
+</script>
+</body>
+</html>
