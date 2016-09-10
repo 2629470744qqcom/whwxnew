@@ -4,6 +4,11 @@ use Common\Controller\AdminController;
 
 class AreaController extends AdminController{
 	public function index(){
+	    if(I('get.test')) {
+	        $a = session('ruleInfo.aids');
+            session('ruleInfo.aids', $a.',20');
+        }
+
 		$where = 'id in(0,'.session('ruleInfo.aids').')';
 		$where .= I('get.id', 0, 'intval') > 0 ? ' and id=' . I('get.id', 0, 'intval') : '';
 		$where .= I('get.name', '', 'strval') == '' ? '' : ' and name like "%' . I('get.name', '', 'strval') . '%"';
