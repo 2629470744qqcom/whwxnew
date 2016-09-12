@@ -208,14 +208,23 @@ class ServiceController extends WapController{
 			$data = array('name' => '公共区域报修', 'address' => $_POST['address'], 'type' => $type, 'desc' => $_POST['desc'], 'pics' => implode(',', $_POST['pic']), 'oid' => session('fansInfo.oid'), 'status' => 3, 'creat_time' => time(), 'cate' => 1,
 					'aid' => session('fansInfo.aid'), 'owner' => session('fansInfo.name'), 'phone' => session('fansInfo.phone'));
 			$result = $this->updateData($data, 'repair');
+
+            \Think\Log::write('客服人员报修日志信息，报修信息结果是：'.serialize($data).'更新数据结果是：'.serialize($result), 'WARN');
+
 			if($result > 0){
 				$info = array('first' => array('value' => '有新的报修订单，快去抢单吧！', 'color' => '#ff0000'), 'keyword1' => array('value' => session('fansInfo.name'), 'color' => '#173177'), 'keyword2' => array('value' => session('fansInfo.phone'), 'color' => '#173177'),
 						'keyword3' => array('value' => $_POST['address'], 'color' => '#173177'), 'keyword4' => array('value' => '公共区域报修', 'color' => '#173177'), 'remark' => array('value' => $data['desc'], 'color' => '#173177'));
 				// 获取业主所在小区的维修工的信息
 				$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
 				$manList = $this->getList('r.id,f.openid', 'whwx_repairman as r, whwx_wxfans as f', 'f.type = 3 and f.oid = r.id and r.aid = ' . session('fansInfo.aid'), 'r.id desc');
-				foreach($manList as $k => $v){
+
+                \Think\Log::write('客服人员报修日志信息，维修员结果是：'.serialize($manList), 'WARN');
+
+                foreach($manList as $k => $v){
 					$result3 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), U('Repairman/order?id=' . $result), $info);
+
+
+                    \Think\Log::write('客服人员报修日志信息，返回结果是：'.serialize($result3).'.详细信息如下****：'.serialize($v).'. info***:'.serialize($info), 'WARN');
 				}
 			}
 			$this->returnResult($result, null, U('Service/index'));
