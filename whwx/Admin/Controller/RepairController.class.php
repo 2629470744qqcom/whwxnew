@@ -288,6 +288,9 @@ class RepairController extends AdminController{
 		if(IS_POST){
 			$data = array('name' => '后台报修', 'address' => $_POST['address'], 'type' => 4, 'desc' => $_POST['desc'], 'pics' => implode(',', $_POST['pic']), 'status' => 3, 'creat_time' => time(), 'cate' => 1, 'aid' => I('post.aid', 0, 'intval'), 'owner' => $_POST['name'], 'phone' => $_POST['phone']);
 			$result = $this->updateData($data, 'repair');
+
+            \Think\Log::write('后台报修日志信息，报修信息结果是：'.serialize($data).'更新数据结果是：'.serialize($result), 'WARN');
+
 			if($result !== false){
 				$area = M('area')->where(array('id' => I('post.aid', 0, 'intval')))->getField('name');
 				// 发送报修通知抢单
@@ -296,7 +299,10 @@ class RepairController extends AdminController{
 				// 获取业主所在小区的维修工的信息
 				$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
 				$manList = $this->getList('r.id,f.openid,r.name', 'whwx_repairman as r, whwx_wxfans as f', 'f.type = 3 and f.oid = r.id and find_in_set(' . $_POST['aid'] . ',r.aid)', 'r.id desc');
-				foreach($manList as $k => $v){
+
+                \Think\Log::write('后台报修日志信息，维修员结果是：'.serialize($manList), 'WARN');
+
+                foreach($manList as $k => $v){
 					$result3 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), '/Wap/Repairman/order?id=' . $result, $info);
 
 					\Think\Log::write('后台报修日志信息，返回结果是：*****************'.serialize($result3).'.详细信息如下****：'.serialize($v).'. info****: '.serialize($info), 'WARN');
