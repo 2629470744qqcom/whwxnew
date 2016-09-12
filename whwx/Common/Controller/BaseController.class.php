@@ -28,7 +28,7 @@ class BaseController extends Controller{
 	 * @param number $listrows 分页大小
 	 *        zhangxinhe 2015-12-25
 	 */
-	protected function getList($field, $table, $where, $order, $page = false, $listrows = 12){
+	protected function getList($field, $table, $where, $order, $page = false, $listrows = 12, $showSql = false){
 		$table = stripos($table, ',') === false ? C('DB_PREFIX') . $table : $table;
 		$model = new Model();
 		if($page == true){
@@ -37,6 +37,11 @@ class BaseController extends Controller{
 			$limit = $page->firstRow . ',' . $page->listRows;
 			$this->assign('page', $page->show());
 		}
+
+		if ($showSql) {
+			return $model->table($table)->field($field)->where($where)->order($order)->limit($limit)->fetchSql(true)->select();
+		}
+
 		return $model->table($table)->field($field)->where($where)->order($order)->limit($limit)->select();
 	}
 	/**

@@ -298,6 +298,8 @@ class RepairController extends AdminController{
 				$manList = $this->getList('r.id,f.openid,r.name', 'whwx_repairman as r, whwx_wxfans as f', 'f.type = 3 and f.oid = r.id and find_in_set(' . $_POST['aid'] . ',r.aid)', 'r.id desc');
 				foreach($manList as $k => $v){
 					$result3 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), '/Wap/Repairman/order?id=' . $result, $info);
+
+					\Think\Log::write('后台报修日志信息，返回结果是：*****************'.serialize($result3).'.详细信息如下****：'.serialize($v).'. info****: '.serialize($info), 'WARN');
 				}
 			}
 			$this->returnResult($result);

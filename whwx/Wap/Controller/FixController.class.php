@@ -110,6 +110,8 @@ class FixController extends WapController{
 				$manList = $this->getList('r.id,f.openid', 'whwx_repairman as r, whwx_wxfans as f', 'f.type = 3 and f.oid = r.id and find_in_set(' . session('fansInfo.aid') . ',r.aid)', 'r.id desc');
 				foreach($manList as $k => $v){
 					$result3 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), U('Repairman/order?id=' . $result), $info);
+
+					\Think\Log::write('其他报修/公共报修日志信息，返回结果是：'.serialize($result3).'.详细信息如下****：'.serialize($v).'. info***:'.serialize($info), 'WARN');
 				}
 				// 添加预警
 				//$result2 = $this->updateData(array('type' => 1, 'type_id' => $result, 'time' => time()), 'warn');
@@ -179,6 +181,10 @@ class FixController extends WapController{
 				$manList = $this->getList('r.id,f.openid', 'whwx_repairman as r, whwx_wxfans as f', 'f.type = 3 and f.oid = r.id and r.aid = ' . session('fansInfo.aid'), 'r.id desc');
 				foreach($manList as $k => $v){
 					$result2 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), U('Repairman/order?id=' . $result), $info);
+
+
+					\Think\Log::write('室内报修日志信息，返回结果是：'.serialize($result2).'.详细信息如下****：'.serialize($v).'. info****: '.serialize($info), 'WARN');
+ 
 				}
 				// 添加预警
 				//$result2 = $this->updateData(array('type' => 1, 'type_id' => $result, 'time' => time()), 'warn');
