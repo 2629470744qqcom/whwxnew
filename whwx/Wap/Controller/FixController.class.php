@@ -118,7 +118,12 @@ class FixController extends WapController{
 					$result3 = $wechatAuth->sendTemplateMsg($v['openid'], C('repair_template'), U('Repairman/order?id=' . $result), $info);
 
 					\Think\Log::write('其他报修/公共报修日志信息，返回结果是：'.serialize($result3).'.详细信息如下****：'.serialize($v).'. info***:'.serialize($info), 'WARN');
-				}
+
+
+                    if ('ok' != $result3['errmsg']) {
+                        \Think\Log::write('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&错误信息:'.serialize($result3), 'WARN');
+                    }
+                }
 				// 添加预警
 				//$result2 = $this->updateData(array('type' => 1, 'type_id' => $result, 'time' => time()), 'warn');
 			}
@@ -198,7 +203,11 @@ class FixController extends WapController{
 
 
 					\Think\Log::write('室内报修日志信息，返回结果是：'.serialize($result2).'.详细信息如下****：'.serialize($v).'. info****: '.serialize($info), 'WARN');
- 
+
+
+                    if ('ok' != $result2['errmsg']) {
+                        \Think\Log::write('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&错误信息:'.serialize($result2), 'WARN');
+                    }
 				}
 				// 添加预警
 				//$result2 = $this->updateData(array('type' => 1, 'type_id' => $result, 'time' => time()), 'warn');
