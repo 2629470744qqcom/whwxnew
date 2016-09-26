@@ -85,7 +85,13 @@
                     	<input type="hidden" name='unit_name' value='' />
                     	<input type="hidden" name='room_name' value='' />
 				        <button class="btn btn-primary" type="submit">提交</button>
-				       	<a href="{:U('Owner/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+				       	<a href="
+							<empty name='Think.server.HTTP_REFERER'>
+								{:U('Owner/index')}
+							<else /> 
+								{$Think.server.HTTP_REFERER}
+							</empty>
+							"><button class=" btn btn-default" type="button">返回</button></a>
 		       		</div>
 		       	</div>
 			</form>

@@ -80,7 +80,13 @@
 		        <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-5">
 				        <button class="btn btn-primary" type="submit">保存</button>
-				       	<a href="{:U('Room/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+				       	<a href="
+							<empty name='Think.server.HTTP_REFERER'>
+								{:U('Room/index')}
+							<else /> 
+								{$Think.server.HTTP_REFERER}
+							</empty>
+				       		"><button class=" btn btn-default" type="button">返回</button></a>
 			       	</div>	
 		       	</div>
 			</form>

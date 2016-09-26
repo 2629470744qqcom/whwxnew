@@ -76,7 +76,8 @@
                                     </td>
                                     <td>
                                        <button class="btn btn-default btn-sm replayMsg" data-sid="{$list.sid}" data-id="{$list.id}">查看</button>
-                                        <a class=" btn btn-sm btn-default" id="order_button" data-id='{$list.id}' href="{:U("RentalService/intention?id=".$list['id'])}">意向</a>
+                                        <a class=" btn btn-sm btn-default" id="order_button" data-id='{$list.id}' href="{:U("RentalService/intention?id=".$list['id'])}"
+                                           <eq name="list.si_status" value="1">style="background-color: #5bc0de; color:white;"</eq> >意向</a>
                                         <eq name="list.oid" value="0">
                                         <a class=" btn btn-sm btn-default" href="{:U('RentalService/edit?id='.$list['id'])}">修改</a>
                                         </eq>

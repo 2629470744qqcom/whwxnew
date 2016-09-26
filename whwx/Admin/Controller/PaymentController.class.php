@@ -165,7 +165,7 @@ class PaymentController extends AdminController{
 	 * huying Dec 31, 2015
 	 */
 	public function group(){
-		$where = 'p.status=2 and p.type = 3 and p.typeid = g.id and p.aid=a.id and a.id in(0,' . session('ruleInfo.aids') . ')';
+		$where = 'p.status != 1 and p.type = 3 and p.typeid = g.id and p.aid=a.id and a.id in(0,' . session('ruleInfo.aids') . ')';
 		$where .= I('get.aid') > 0 ? ' and p.aid=' . I('get.aid', 'intval') : '';
 		$where .= I('get.pay_type', 0, 'intval') > 0 ? ' and p.pay_type=' . I('get.pay_type', 0, 'intval') : '';
 		$where .= I('get.start_time') ? ' and p.pay_time>' . strtotime(I('get.start_time')) : '';

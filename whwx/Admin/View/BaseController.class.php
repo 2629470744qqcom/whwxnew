@@ -103,13 +103,8 @@ class BaseController extends Controller{
 		}else{
 			$data = array('info' => $success, 'status' => 1);
 		}
-
 		if($url !== false){
 			$data['url'] = $url ? $url : U(CONTROLLER_NAME . '/index');
-
-			if ("Admin" == MODULE_NAME and !$url and array_key_exists('HTTP_REFERER', $_SERVER) and $_SERVER['HTTP_REFERER']) {
-				unset($data['url']);
-			}
 		}
 		$this->ajaxReturn(array_merge($data, $params));
 	}

@@ -17,6 +17,11 @@ class RentalServiceController extends AdminController{
 		$where .= I('get.type', '-1', 'intval') == -1 ? '' : ' and s.type=' . I('get.type', -1, 'intval');
 		$where .= I('get.status', '-1', 'intval') == -1 ? '' : ' and s.status=' . I('get.status', -1, 'intval');
 		$list = $this->getList('s.aid,s.oid,s.sort,s.status,s.pics,s.type,s.size,s.title,s.desc,s.times,s.price,o.name,o.id as oid,a.name as area,a.id as aid,s.id', 'whwx_rental_service s,whwx_owner o,whwx_area a', $where, 'times desc,sort asc', true);
+
+		foreach ($list as &$value) {
+			$value['si_status'] = M('rental_service_intention')->where('sid='.$value['id']." and status = 0")->getField("1");
+		}
+
 		$this->assign('list', $list);
 		$areaList = $this->getAreaList();
 		$this->assign('areaList', $areaList);

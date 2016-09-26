@@ -138,7 +138,7 @@ class ComplaintController extends AdminController{
 		$where .= I('post.aid', 0, 'intval') > 0 ? ' and c.aid=' . I('post.aid', 0, 'intval') : '';
 		$where .= I('post.start_time') ? ' and c.times>' . strtotime(I('post.start_time')) : '';
 		$where .= I('post.end_time') ? ' and c.times<' . (strtotime(I('post.end_time')) + 24 * 3600) : '';
-		$list = M()->table('whwx_complaint c,whwx_area a')->field('c.id,a.name aname,c.name,c.tel,c.times,c.status,c.desc,c.feedback,c.deal_time,c.oid')->where($where)->order('c.times desc')->limit(10000)->select();
+		$list = M()->table('whwx_complaint c,whwx_area a')->field('c.id,a.name aname,c.name,c.tel,c.times,c.status,c.desc,c.feedback,c.deal_time,c.sid')->where($where)->order('c.times desc')->limit(10000)->select();
 		foreach($list as $k => $v){
 			$list[$k]['times'] = date('Y-m-d H:i:s', $v['times']);
 			$list[$k]['deal_time'] = $v['deal_time'] > 0 ? date('Y-m-d H:i:s', $v['deal_time']) : '未处理';
@@ -153,8 +153,9 @@ class ComplaintController extends AdminController{
 					$list[$k]['status'] = '已完成';
 					break;
 			}
-			if($v['oid'] > 0){
-				$list[$k]['oid'] = M()->table('whwx_service s,whwx_owner o')->where('find_in_set(o.bid, s.bids) and o.id=' . $v['oid'])->getField('s.name');
+			if($v['sid'] > 0){
+				// $list[$k]['oid'] = M()->table('whwx_service s,whwx_owner o')->where('find_in_set(o.bid, s.bids) and o.id=' . $v['oid'])->getField('s.name');
+				$list[$k]['sid'] = M()->table('whwx_service')->where('id=' . $v['sid'])->getField('name');
 			}
 			if($v['status'] == 2){
 				$commentInfo = $this->getInfo('score,desc', 'comment', 'type<5 and rid=' . $v['id']);

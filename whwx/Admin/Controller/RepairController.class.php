@@ -208,7 +208,7 @@ class RepairController extends AdminController{
 		$where .= I('post.cate', 0, 'intval') > 0 ? ' and r.cate=' . I('post.cate', 0, 'intval') : '';
 		$where .= I('post.cate_id', 0, 'intval') > 0 ? ' and r.cate_id =' . I('post.cate_id', 0, 'intval') : '';
 		$where .= ' and creat_time > ' . $start_time . ' and creat_time < ' . $end_time;
-		$list = M()->table('whwx_repair as r,whwx_area a')->field('r.id,r.owner,r.phone,r.name,r.creat_time,r.desc,r.address,r.status,r.cate,r.cate_id,r.price,a.name area')->where($where)->limit(0, 10000)->select();
+		$list = M()->table('whwx_repair as r,whwx_area a')->field('r.id,r.owner,r.phone,r.name,r.creat_time,r.desc,r.address,r.status,r.cate,r.cate_id,r.price,a.name area')->where($where)->order('r.creat_time desc')->limit(0, 10000)->select();
 		foreach($list as $k => $v){
 			$list[$k]['creat_time'] = date('Y-m-d H:i:s', $v['creat_time']);
 			switch($v['status']){

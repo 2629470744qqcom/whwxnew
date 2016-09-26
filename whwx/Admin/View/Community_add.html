@@ -29,7 +29,7 @@
 			        	<select class="form-control" id="aid" name="aids">
 			        		<option value="0" >全部小区</option>
 			        		<volist name='areaList' id='area'>
-			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        			<option value="{$area.id}"<in name='area.id' value='$info.aids'> selected </in> >{$area.name}</option>
 			        		</volist>
 						</select>           
 			        </div>

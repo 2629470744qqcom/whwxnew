@@ -3,6 +3,13 @@
     <div class="form-group">
         <div class="col-sm-12"><div  class="link_text"><a href="">有<span>0</span>条未读消息,点击查看</a></div></div>
     </div>
+    <div>
+        <audio id="tip_audio">
+            <source src="{:COM}audio/tip_msg.mp3" type="audio/mpeg">
+            <source src="{:COM}audio/tip_msg.wav" type="audio/x-wav">
+            您的浏览器不支持 audio 元素。
+        </audio>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -146,6 +153,10 @@ $('.setStar').click(function(){
 setInterval(function(){
     $.get(window.location.href, {id: $('#max_id').val()}, function(data){
         data > 0 && $('.form-horizontal').show().find('span').html(data);
+
+        if (data > 0) {
+            document.getElementById("tip_audio").play();
+        }
     });
 }, 10000);
 </script>
