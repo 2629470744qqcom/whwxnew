@@ -94,7 +94,8 @@ class RepairmanController extends WapController{
 				$this->ajaxReturn(array('status' => 1, 'info' => '抢单成功'));
 			}
 		}
-		$this->ajaxReturn(array('status' => -1, 'info' => '你下手晚了一步'));
+		// $this->ajaxReturn(array('status' => -1, 'info' => '你下手晚了一步'));
+		$this->ajaxReturn(array('status' => -1, 'info' => '该单子已经过了抢单时间啦，不能抢单了哦，到主页刷新一下再试试吧'));
 	}
 	/**
 	 * 维修完成

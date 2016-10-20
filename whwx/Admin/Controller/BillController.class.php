@@ -186,6 +186,17 @@ class BillController extends AdminController{
 				$paymentInfo = array_merge($paymentInfo, $ownerInfo);
 			}
 			$this->assign('info', $paymentInfo);
+
+			$left_money = ($paymentInfo['porperty'] - $paymentInfo['porperty_pay']) + ($paymentInfo['energy'] - $paymentInfo['energy_pay']) + ($paymentInfo['water'] - $paymentInfo['water_pay']) + ($paymentInfo['carport'] - $paymentInfo['carport_pay']) + ($paymentInfo['car_manger'] - $paymentInfo['car_manger_pay']) + ($paymentInfo['arrear_money'] - $paymentInfo['arrear_money_pay']);
+
+			// echo "<pre>"; 
+
+			// echo $paymentInfo['porperty'], $paymentInfo['porperty_pay'], "eneygy:",$paymentInfo['energy'],$paymentInfo['energy_pay'],"water:",$paymentInfo['water'],$paymentInfo['water_pay'], "carpot:",$paymentInfo['carport'],$paymentInfo['carport_pay'],"car_manger:",$paymentInfo['car_manger'],$paymentInfo['car_manger_pay'],"arrear:",$paymentInfo['arrear_money'],$paymentInfo['arrear_money_pay'];
+
+			// print_r($left_money); print_r($paymentInfo);die;
+
+			$this->assign('left_money', $left_money);
+
 			$this->display();
 		}else{
 			$this->ajaxReturn(array('status' => -1, 'info' => '数据错误'));

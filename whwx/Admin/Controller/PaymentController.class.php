@@ -367,7 +367,7 @@ class PaymentController extends AdminController{
 	 */
 	public function pay(){
 		if(IS_POST){
-			//dump($_POST);exit;
+			// echo "<pre>"; print_r($_POST);exit;
 			if(empty($_POST['type'])){
 				$this->ajaxReturn(array('status' => 0, 'info' => '请选择缴费项'));
 			}

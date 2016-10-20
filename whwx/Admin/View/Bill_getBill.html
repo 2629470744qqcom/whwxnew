@@ -58,7 +58,13 @@
 		<div class="form-group"><label class='col-sm-3 control-label'>应缴费用：</label><div class='col-sm-4 f-s-22 money' style='color:red;'>{$info.total_money}元</div></div>
 		<div class="form-group">
         	<div class="col-sm-offset-3 col-sm-5">
-        		<gt name="info.total_money" value="0">
+        		<!-- <gt name="info.total_money" value="0"> -->
+					<!-- <button class="btn btn-primary pay" data-money="{$info.total_money}" data-pid='{$info.id}' type="button">缴费</button> -->
+				<!-- <else/> -->
+					<!-- <button class="btn btn-default pay" type="button" disabled>所有费用已缴清</button> -->
+				<!-- </gt> -->
+
+				<gt name="left_money" value="0">
 					<button class="btn btn-primary pay" data-money="{$info.total_money}" data-pid='{$info.id}' type="button">缴费</button>
 				<else/>
 					<button class="btn btn-default pay" type="button" disabled>所有费用已缴清</button>
