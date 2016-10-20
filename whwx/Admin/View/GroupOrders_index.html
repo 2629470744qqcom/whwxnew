@@ -41,7 +41,7 @@
                                     <th>支付方式</th>
                                     <th>支付金额</th>
                                     <th>支付时间</th>
-                                    <th width="75">状态</th>
+                                    <th width="150">状态</th>
                                     <th width="200">操作</th>
                                 </tr>
                             </thead>
@@ -76,6 +76,7 @@
                                                 <case value='5'>已完成</case>
                                                 <case value='6'>已删除</case>
                                             </switch>
+                                            <notempty name="list.remark"><small>({$list.remark})</small></notempty>
                                         </td>
                                         <td>
                                             <button class="btn-sm btn btn-default look" data-id='{$list.id}' type="button">查看</button>

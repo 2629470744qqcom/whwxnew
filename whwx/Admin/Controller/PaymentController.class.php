@@ -238,23 +238,23 @@ class PaymentController extends AdminController{
 	 * huying Dec 31, 2015
 	 */
 	public function tour(){
-		$where = 't.status=2 and t.aid=a.id and a.id in(0,' . session('ruleInfo.aids') . ')';
+		$where = 't.status in (2,3,4) and t.aid=a.id and a.id in(0,' . session('ruleInfo.aids') . ')';
 		$where .= I('get.aid') > 0 ? ' and t.aid=' . I('get.aid', 'intval') : '';
 		$where .= I('get.pay_type') ? ' and t.pay_type="' . I('get.pay_type') . '"' : '';
 		$where .= I('get.start_time') ? ' and t.pay_time>' . strtotime(I('get.start_time')) : '';
 		$where .= I('get.end_time') ? ' and t.pay_time<' . (strtotime(I('get.end_time')) + 24 * 3600) : '';
 		if($_GET['act'] == 1){
-			$list = $this->getList('a.name area,t.id,t.pname,t.money,t.pay_time,t.pay_type', 'whwx_area as a,whwx_tour_orders t', $where, 't.pay_time desc');
+			$list = $this->getList('a.name area,t.id,t.pname,t.dates,t.pnum,t.money,t.pay_time,t.pay_type', 'whwx_area as a,whwx_tour_orders t', $where, 't.pay_time desc');
 			foreach($list as $k => $v){
 				$list[$k]['id'] = "\t" . $v['id'];
 				$list[$k]['pay_time'] = date('Y-m-d H:i:s', $v['pay_time']);
 				$list[$k]['pay_type'] = $v['pay_type'] == 'weipay' ? '微信支付' : '线下支付';
 			}
-			$title = array('小区', '订单号', '产品名称', '订单金额', '支付时间', '支付方式');
+			$title = array('小区', '订单号', '产品名称', '产品日期', '产品人数', '订单金额', '支付时间', '支付方式');
 			array_unshift($list, $title);
 			$file = \Common\Api\PHPExcelApi::exportExcel($list, '旅游收款数据', true);
 		}else{
-			$list = $this->getList('a.name area,t.id,t.pname,t.money,t.pay_time,t.pay_type', 'whwx_area as a,whwx_tour_orders t', $where, 't.pay_time desc', true);
+			$list = $this->getList('a.name area,t.id,t.pname,t.dates,t.pnum,t.money,t.pay_time,t.pay_type', 'whwx_area as a,whwx_tour_orders t', $where, 't.pay_time desc', true);
 			$this->assign('list', $list);
 			$areaList = $this->getAreaList();
 			$this->assign('areaList', $areaList);

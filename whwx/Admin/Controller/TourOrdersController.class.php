@@ -81,7 +81,9 @@ class TourOrdersController extends AdminController{
 	}
 
 	public function export(){
-		$where = 'o.aid=a.id and o.aid in (0,' . session('ruleInfo.aids') . ')';
+		// $where = 'o.aid=a.id and o.aid in (0,' . session('ruleInfo.aids') . ')';
+		$where = 'o.aid in (0,' . session('ruleInfo.aids') . ')';
+
 		$where .= I('get.aid', 0, 'intval') > 0 ? ' and o.aid=' . I('get.aid', -1, 'intval') : '';
 		$where .= I('get.mid', 0, 'intval') > 0 ? ' and o.mid=' . I('get.mid', -1, 'intval') : '';
 		$where .= I('get.status', -1, 'intval') > -1 ? ' and o.status=' . I('get.status', -1, 'intval') : ' and o.status<5';
@@ -90,7 +92,11 @@ class TourOrdersController extends AdminController{
 		$where .= I('get.name') ? ' and o.pname like "%' . I('get.name') . '%"' : '';
 		$where .= I('get.start_time') ? ' and o.times>' . strtotime(I('get.start_time')) : '';
 		$where .= I('get.end_time') ? ' and o.times<' . (strtotime(I('get.end_time')) + 24 * 3600) : '';
-		$list = $this->getList('concat("\t", o.id) id,a.name area,o.times,o.pname,o.pnum,o.pprice,o.money,o.status,o.pay_type,o.pay_id,o.pay_time,o.use_time,o.oid,o.phone,o.dates,o.user,o.comment,o.comment_score,o.comment_time', 'whwx_tour_orders o,whwx_area a', $where, 'times desc', true);
+		
+		// $list = $this->getList('concat("\t", o.id) id,a.name area,o.times,o.pname,o.pnum,o.pprice,o.money,o.status,o.pay_type,o.pay_id,o.pay_time,o.use_time,o.oid,o.phone,o.dates,o.user,o.comment,o.comment_score,o.comment_time', 'whwx_tour_orders o,whwx_area a', $where, 'times desc', true);
+
+		$list = M('tour_orders')->alias('o')->join('whwx_area a on o.aid = a.id')->where($where)->order('times desc')->field('concat("\t", o.id) id,a.name area,o.times,o.pname,o.pnum,o.pprice,o.money,o.status,o.pay_type,o.pay_id,o.pay_time,o.use_time,o.oid,o.phone,o.dates,o.user,o.comment,o.comment_score,o.comment_time')->select();
+
 		foreach($list as $k => $v){
 			$list[$k]['times'] = date('Y-m-d H:i:s', $v['times']);
 			$list[$k]['pay_time'] = $v['pay_time'] ? date('Y-m-d H:i:s', $v['pay_time']) : '';
@@ -113,6 +119,7 @@ class TourOrdersController extends AdminController{
 			}
 			$list[$k]['status'] = $status;
 
+			$user_str = '';
 		}
 		
 		$title = array('订单号', '小区', '下单时间', '线路名称', '人数', '单价', '总价', '状态', '支付类型', '回执ID', '支付时间', '发团时间', '联系人', '手机号', '出行日期', '游客信息', '评论内容', '评分', '评论时间');

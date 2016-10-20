@@ -68,7 +68,10 @@
                                                 <case value='offline'>线下</case>
                                                 <default />未付
                                             </switch><br />
-											支付金额：<eq name="list.status" value="2">{$list.money}<else/>0</eq><br />
+											支付金额：
+												<!-- <eq name="list.status" value="2">{$list.money}<else/>0</eq> -->
+												<notempty name="list.money">{$list.money}<else />0</notempty>
+											<br />
 											回执单号：{$list.pay_id|default="无"}
                                         </td>
                                         <td>{$list.user.0.name}<br />{$list.phone}</td>

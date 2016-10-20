@@ -11,7 +11,12 @@ class GroupOrdersController extends AdminController{
 		$where .= I('get.pay_type', -1, 'intval') == -1 ? '' : ' and s.pay_type=' . I('get.pay_type', -1, 'intval');
 		$where .= I('get.gname')? ' and p.name like "%'.I('get.gname').'%"' : '';
 		$list = $this->getList('s.order_amount,s.pay_amount,s.single_time,s.pay_time,s.pay_type,s.status,s.oid,s.pid,s.total,s.prix,p.name,s.id as id,a.name as area', 'whwx_group_orders s,whwx_group_product p,whwx_area a,whwx_owner o', $where, 'single_time desc', true);
+		
+		foreach ($list as &$value) {
+			$value['remark'] = M('follow')->where('type=2 and typeid='.$value['id'])->order('times desc')->limit('1')->getField('content');
+		}
 		$this->assign('list', $list);
+		
 		$product = $this->getList('id,name', 'group_product', 'status = 1', 'id desc');
 		$this->assign('product', $product);
 		$areaList = $this->getAreaList();
