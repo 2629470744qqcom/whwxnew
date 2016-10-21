@@ -166,4 +166,17 @@ class TourOrdersController extends AdminController{
 		
 		return $status;
 	}
+
+	public function del () {
+		$id = I("get.id", 0, 'intval');
+		$status = M('tour_orders')->where('id='.$id)->getField('status');
+
+		if (1 == $status) {
+			$return = M('tour_orders')->where('id='.$id)->setField('status', 6);
+		} else {
+			$return = "只能删除未支付状态的订单!";
+		}
+
+		return $return;
+	}
 }

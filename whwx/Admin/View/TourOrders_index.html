@@ -54,6 +54,7 @@
                                     <th width="75">状态</th>
                                     <th width="80">操作</th>
                                     <th>备注</th>
+                                    <th>删除</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -102,7 +103,12 @@
                                         </td>
                                         <td>                                            
                                             <button type="button" class="btn btn-info btn-sm remark" data-id="{$list.id}">
-                                              查看
+                                                查看
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-info btn-sm del" data-id="{$list.id}" data-status="{$list.status}">
+                                                删除
                                             </button>
                                         </td>
                                     </tr>
@@ -127,7 +133,7 @@
                     <form action="#" method="post" id="remark_form">
                         <div id="remark_body"></div>
                         <div>
-                            <textarea id="remark_content" class="form-control" placeholder="这里是备注的信息，只有后台管理人员能够看到"></textarea>
+                            <textarea id="remark_content" class="form-control" rows="5" placeholder="这里是备注的信息，只有后台管理人员能够看到"></textarea>
                         </div>
                     </form>
                 </div>
@@ -195,5 +201,24 @@
             $("#remark").modal('hide');
             $("#remark_content").val('');
         })
+    })
+
+    $(".del").click(function() {
+        var id = $(this).data('id');
+        var status = $(this).data('status');
+
+        if (1 == status) {
+            if (confirm("Are you sure to del ?")) {
+                $.get("{:U('TourOrders/del')}", {id: id},function(status) {
+                    showInfo("删除成功");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                });
+            }
+        } else {
+            alert("只能删除未支付状态的订单!");
+            return false;
+        }
     })
     </script>
