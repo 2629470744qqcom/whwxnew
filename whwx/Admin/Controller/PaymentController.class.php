@@ -181,7 +181,12 @@ class PaymentController extends AdminController{
 			array_unshift($list, $title);
 			$file = \Common\Api\PHPExcelApi::exportExcel($list, '特惠团收款数据', true);
 		}else{
-			$list = $this->getList('a.name area,g.id,g.single_time,p.money,p.real_money,p.pay_time,p.pay_type,p.remark', 'whwx_payment as p,whwx_area as a,whwx_group_orders g', $where, 'p.pay_time desc', true, 12);
+			$list = $this->getList('a.name area,g.id,g.single_time,g.pid,p.money,p.real_money,p.pay_time,p.pay_type,p.remark', 'whwx_payment as p,whwx_area as a,whwx_group_orders g', $where, 'p.pay_time desc', true, 12);
+
+			foreach ($list as &$value) {
+				$value['product_name'] = M('group_product')->where('id='.$value['pid'])->getField('name');
+			}
+
 			$this->assign('list', $list);
 			$areaList = $this->getAreaList();
 			$this->assign('areaList', $areaList);
