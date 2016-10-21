@@ -126,4 +126,44 @@ class TourOrdersController extends AdminController{
 		array_unshift($list, $title);
 		\Common\Api\PHPExcelApi::exportExcel($list, '旅游订单', true);
 	}
+
+
+	public function getRemark () {
+		$id = I("get.id", 0, 'intval');
+
+		$content = M('tour_orders')->where("id=".$id)->getField("remark");
+
+		$arr = array();
+		if ($content) {
+			foreach (explode('^^^', $content) as $value) {
+				$t = explode('@@', $value);
+				
+				$tmp['name'] = $t[0];
+				$tmp['date'] = date('Y-m-d H:i:s', $t[1]);
+				$tmp['content'] = $t[2];
+
+				$arr[] = $tmp;
+			}
+		}
+
+		$this->ajaxReturn($arr);
+	}
+
+	public function setRemark () {
+		$id = I("get.id", 0, 'intval');
+		$content = I('get.content', '', 'strval');
+
+		$oldContent = M('tour_orders')->where('id='.$id)->getField('remark');
+		$str = session('aname') . "@@" . time() . "@@" . $content;
+
+		if ($oldContent) {
+			$newContent = join('^^^', array($oldContent, $str));
+		} else {
+			$newContent = $str;
+		}
+
+		$status = M('tour_orders')->where("id=".$id)->setField('remark', $newContent);
+		
+		return $status;
+	}
 }

@@ -53,6 +53,7 @@
                                     <th width="120">评论信息</th>
                                     <th width="75">状态</th>
                                     <th width="80">操作</th>
+                                    <th>备注</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,6 +100,11 @@
                                             <eq name='list.status' value='4'><button class="btn-sm btn btn-default actBtn" type="button" data-type='3' data-id='{$list.id}'>删除</button></eq>
                                             <gt name='list.comment_score' value='0'><br/><br/><button class="btn-sm btn btn-default actBtn" type="button" data-type='5' data-status='{$list.comment_status}' data-id='{$list.id}'><eq name='list.comment_status' value='1'>隐藏<else/>显示</eq>评论</button></gt>
                                         </td>
+                                        <td>                                            
+                                            <button type="button" class="btn btn-info btn-sm remark" data-id="{$list.id}">
+                                              查看
+                                            </button>
+                                        </td>
                                     </tr>
                                 </volist>
                             </tbody>
@@ -109,6 +115,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="remark" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="myModalLabel">备注信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="post" id="remark_form">
+                        <div id="remark_body"></div>
+                        <div>
+                            <textarea id="remark_content" class="form-control" placeholder="这里是备注的信息，只有后台管理人员能够看到"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary remark_save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
     <script type="text/javascript">
     $('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
@@ -129,4 +159,41 @@
         	});
         }
     });
+
+    $(".remark").click(function() {
+        var id = $(this).data('id');
+        $.get("{:U('TourOrders/getRemark')}", {id: id}, function(arr) {
+            var html = '';
+            console.log(arr);
+            if (arr) {
+                for(var c in arr) {
+                    console.log(arr[c]['name'])
+                    html += "<div><strong>name:</strong> " + arr[c]['name'] + " -- <strong>date:</strong> " + arr[c]['date'] + "</div> \
+                            <div>" + arr[c]['content'] + "</div><br/>";
+                }
+                $("#remark_body").html(html);
+            }
+
+            var url = "{:U('TourOrders/setRemark')}?id=" + id;
+            $("#remark_form").attr('action', url);
+
+            $("#remark").modal('show');
+        })
+    });
+
+    $(".remark_save").click(function() {
+        var url = $("#remark_form").attr('action');
+        var content = $("#remark_content").val();
+        
+        if (!content) {
+            alert("请输入备注内容！");
+            return false;
+        }
+
+        $.get(url, {'content':content}, function(status) {
+            showInfo('success');
+            $("#remark").modal('hide');
+            $("#remark_content").val('');
+        })
+    })
     </script>
