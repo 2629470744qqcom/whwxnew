@@ -1,0 +1,161 @@
+<link href="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+<script src="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<div class="row"> 
+	<h3 class="page-header">新建旅游订单&nbsp;&nbsp;<small>新建旅游订单</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">
+			    <!-- tour line -->
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">旅游路线：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+						<select class="form-control selectReq tour_line" name="tour_line_id">
+			        		<option value="0" >--- 请选择旅游路线 ---</option>
+			        		<volist name='tourLines' id='line'>
+			        			<option value="{$line.l_id}" data-lineprice="{$line.price}" data-lname="{$line.l_name}" data-mid="{$line.m_id}" data-dates="{$line.dates}">{$line.l_name} -- {$line.m_name}</option>
+			        		</volist>
+						</select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">旅游路线价格：</label>
+			        <div class="col-sm-4 tour_line_price" style="color: red;">
+			        	￥0
+			        </div>
+			        <input type="hidden" name="tour_line_price_input" class="tour_line_price_input">
+			        <input type="hidden" name="tour_line_lname">
+			        <input type="hidden" name="mid">
+			    </div>
+
+
+				<!-- contact -->
+				<div class="form-group">
+					<label class="col-sm-5 control-label"><h3>联系人信息</h3></label>
+				</div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">业主：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+						<input id="owner_search" class="form-control" name="name[]" placeholder="输入业主名称/手机号查询业主信息">
+						<input type="hidden" name="oid" value="0">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >--- 请选择小区 ---</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}">{$area.name}</option>
+			        		</volist>
+						</select> 
+			        </div>
+			    </div>			    
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">手机号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="phone" placeholder="请填写手机号码" />
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">身份证号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required" name="idcard[]" placeholder="请填写身份证号码" />
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">出游日期：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" name="dates">
+			        		<option value="0" >--- 请选择出游日期 ---</option>
+						</select>
+			        </div>
+			    </div>
+
+
+				<!-- tourist -->
+				<div class="form-group">
+					<label class="col-sm-5 control-label"><h3>游客</h3></label>				
+				</div>
+				<br/>
+				<br/>
+			</form>
+
+			<div class="form-group">
+                <div class="col-sm-offset-3 col-sm-5">
+			        <a class="btn btn-primary add">添加游客</a>
+			       	
+			       	<span style="color: red; line-height: 34px; text-indent: 20px; display: inline-block;">合计：<span id='total_money' data-price="{$info.sale}">￥{$info.sale}</span></span>
+
+			       	<a class="btn btn-primary submit" style="margin-left: 20px;">提交订单</a>
+	       		</div>
+	       	</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(function(){
+	//添加游客
+	var html = '<div class="form-group"> \
+			        <label class="col-sm-3 control-label">姓名：<span class="c-red">*</span></label>\
+			        <div class="col-sm-4">\
+			        	<input class="form-control required" name="name[]" placeholder="请填写真实姓名" />\
+			        </div>\
+			    </div>\
+			    <div class="form-group">\
+			        <label class="col-sm-3 control-label">身份证号：<span class="c-red">*</span></label>\
+			        <div class="col-sm-4">\
+			        	<input class="form-control required" name="idcard[]" placeholder="请填写身份证号码" />\
+			        </div>\
+			    </div>';
+
+	$('.add').click(function(){
+		$("form").append(html);
+        $('#total_money').html('￥' + parseFloat($('#total_money').data('price')) * $('input[name="name[]"]').length);
+	});
+	$(".submit").click(function() {
+		if (1) {
+			$("form").submit();
+		}
+	});
+
+
+ 
+    $( "#owner_search" ).autocomplete({
+      	source: "{:U('TourOrdersAdd/getOwnerAjax')}",
+      	minLength: 1,
+      	select: function( event, ui ) {
+      		$("#aid option[value='"+ ui.item.a_id +"']").prop('selected', 'selected');
+      		$("input[name='phone']").val(ui.item.o_phone);
+      		$("input[name='oid'").val(ui.item.id);
+      	}
+    });
+    $(".tour_line").change(function() {
+    	var price = $(".tour_line option:selected").data('lineprice');
+    	var lname = $(".tour_line option:selected").data('lname');
+    	var mid = $(".tour_line option:selected").data('mid');
+    	var dates = $(".tour_line option:selected").data('dates');
+
+    	dates = dates.split(',');
+
+    	if ('undefined' == typeof price) {
+    		price = 0;
+    	}
+
+    	$(".tour_line_price").html("￥: "+price);
+    	$(".tour_line_price_input").val(price);
+    	$("input[name='tour_line_lname']").val(lname);
+    	$("input[name='mid']").val(mid);
+
+    	var str = '';
+    	for (var i = dates.length - 1; i >= 0; i--) {
+    		str += "<option value='" + dates[i] + "'>" + dates[i] +"</option>";
+    	}
+    	var html = '<option value="0" >--- 请选择出游日期 ---</option>' + str;
+    	$("select[name='dates']").html(html);
+    })
+});
+</script>
