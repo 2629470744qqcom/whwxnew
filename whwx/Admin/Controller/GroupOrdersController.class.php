@@ -164,4 +164,69 @@ class GroupOrdersController extends AdminController{
 			$this->error('没有数据');
 		}
 	}
+
+
+	public function add () {
+		if (IS_POST) {
+			$productInfo = $this->getInfo('present_price, num,category,credit,status', "group_product", 'id=' . I('post.product_id', 0, 'intval'));
+
+			if($productInfo['num'] < I('post.num', 0, 'intval')){
+				$this->ajaxReturn(array('status' => -1, 'info' => '库存不足'));
+			}
+			if($productInfo["status"]==0){
+				$this->ajaxReturn(array('status' => -1, 'info' => '抱歉!商品已下架'));
+			}
+			$_POST['single_time'] = time();
+			$_POST['total'] = I('post.num', 0, 'intval');
+
+			// 判断钱币还是积分,实现各自的累加,将钱币或积分放在订单的单价prix中
+			if($productInfo["category"] == 0){
+				$_POST['order_amount'] = I('post.num', 0, 'intval') * $productInfo['present_price'];
+				$_POST["prix"] = $productInfo['present_price'];
+			}else{
+				$_POST['order_amount'] = I('post.num', 0, 'intval') * $productInfo['credit'];
+				$_POST["prix"] = $productInfo['credit'];
+			};
+
+			$_POST['oid'] = I('post.oid', 0, 'intval');
+			$_POST['pid'] = I('post.product_id', 0, 'intval');
+			$_POST['aid'] = I('post.aid', 0, 'intval');			
+			$_POST['style'] = $productInfo["category"]; // 订单表中的钱币或积分
+
+			$result = $this->updateData($_POST, 'group_orders');
+
+			if($result !== false){
+				if($_POST['style'] == 0){
+					$result3 = $this->updateData(array('money' => $_POST['order_amount'], 'creat_time' => time(), 'status' => 1, 'type' => 3, 'typeid' => $result, 'oid' => I('post.oid', 0, 'intval'), 'remark' => '特惠团支付','aid'=>I('post.aid', 0, 'intval')), 'payment');
+				}
+
+				$info = $this->getInfo('o.name ,o.phone,o.address,o.addr,o.aid,a.name as area,o.id', 'whwx_owner o,whwx_area a', 'o.aid=a.id and o.id=' . I('post.oid', 0, 'intval'));
+				$_POST['name'] = $info['name'];
+				$_POST['phone'] = $info['phone'];
+
+			    // 判断地址是否存在,不存在读取addr字段
+				if(empty($info['address'])){
+	                $_POST['address']= I("post.name", '', 'strval');
+				}else{
+					$_POST['address'] = $info['address'];
+				}
+
+				if($_POST){
+					$_POST["orderid"] = $result;
+					$result2 = $this->updateData($_POST, 'logistics');
+				}
+
+	 			M('group_product')->where('id=' . I('post.product_id', 0, 'intval'))->setDec('num', I('post.num', 0, 'intval'));
+
+	 			$this->ajaxReturn(array('status' => 1, 'id' => $result, 'info' => '操作成功'));
+			}
+		}
+
+		$products = M('group_product')->where('status = 1')->select();
+		$this->assign('products', $products);
+
+		$areaList = $this->getAreaList();
+		$this->assign('areaList', $areaList);
+		$this->display();
+	}
 }

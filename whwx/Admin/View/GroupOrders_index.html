@@ -4,7 +4,10 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                	<label><a class="btn btn-primary export" >导出数据</a></label>
+                	<label>
+                        <a class="btn btn-primary export" >导出数据</a>
+                        <a class="btn btn-primary" href="{:U('GroupOrders/add')}">添加订单</a>
+                    </label>
                     <form action='{:U("GroupOrders/index")}' class="form-inline text-right fr m-b-5" >
                 产品名称：<input type="text" name='gname' value='{$Think.get.gname}' class="form-control mr20 w150" > 
                 支付方式：<select name='pay_type' class="form-control mr20 w150" >

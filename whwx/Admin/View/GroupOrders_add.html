@@ -1,0 +1,113 @@
+<link href="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+<script src="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<div class="row"> 
+	<h3 class="page-header">新建特惠团订单&nbsp;&nbsp;<small>新建特惠团订单</small></h3>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" id="myform" method="post"  class="form-horizontal">			    
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">特惠团产品：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+						<select class="form-control selectReq product_id" name="product_id">
+			        		<option value="0" >--- 请选择特惠团产品 ---</option>
+			        		<volist name='products' id='p'>
+			        			<option value="{$p.id}" data-price="{$p.present_price}" data-left="{$p.num}">{$p.name} -- {$p.label}</option>
+			        		</volist>
+						</select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">特惠团产品价格：</label>
+			        <div class="col-sm-4" style="color: red;">
+			        	产品价格：<span class="product_price">￥0</span>
+			        	<br/>剩余数目：<span class="product_left">0</span>
+			        </div>
+			    </div>
+
+				<div class="form-group">
+					<label class="col-sm-5 control-label"><h3>购买者信息</h3></label>
+				</div>
+				<div class="form-group">
+			        <label class="col-sm-3 control-label">业主：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+						<input id="owner_search" class="form-control" name="name" placeholder="输入业主名称/手机号查询业主信息">
+						<input type="hidden" name="oid" value="0">
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >--- 请选择小区 ---</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}">{$area.name}</option>
+			        		</volist>
+						</select> 
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">购买数目：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input class="form-control required num" name="num" value="1" />
+			        </div>
+			    </div>
+			</form>
+
+
+
+			<div class="form-group">
+                <div class="col-sm-offset-3 col-sm-5">
+			        <span style="color: red; line-height: 34px; text-indent: 20px; display: inline-block;">合计：<span id='total_money'>￥0</span></span>
+			       	<a class="btn btn-primary submit" style="margin-left: 20px;">提交订单</a>
+	       		</div>
+	       	</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$(function(){
+		$( "#owner_search" ).autocomplete({
+		  	source: "{:U('TourOrdersAdd/getOwnerAjax')}",
+		  	minLength: 1,
+		  	select: function( event, ui ) {
+		  		$("#aid option[value='"+ ui.item.a_id +"']").prop('selected', 'selected');
+		  		$("input[name='oid'").val(ui.item.id);
+		  	}
+		});
+
+		$(".product_id").change(function() {
+	    	var price = $(".product_id option:selected").data('price');
+	    	var left = $(".product_id option:selected").data('left');
+
+	    	if ('undefined' == typeof price) {
+	    		price = 0;
+	    	}
+
+	    	$(".product_price").html("￥: "+price);
+	    	$(".product_left").html(left);
+
+	    	$('#total_money').html('￥' + parseFloat(price * $('input[name="num"]').val()));
+	    })
+
+	    $(".num").change(function() {
+	    	var price = $(".product_id option:selected").data('price');
+
+	    	if ('undefined' == typeof price) {
+	    		price = 0;
+	    	}
+
+	    	$('#total_money').html('￥' + parseFloat(price * $('input[name="num"]').val()));
+	    })
+
+	    $(".submit").click(function() {
+			if (1) {
+				$("form").submit();
+			}
+		});
+	})
+</script>
