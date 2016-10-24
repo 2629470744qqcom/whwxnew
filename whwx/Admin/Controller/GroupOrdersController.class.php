@@ -30,8 +30,11 @@ class GroupOrdersController extends AdminController{
 	 */
 	public function del(){
 		// $result= M('group_orders')->where('id=' . $_GET['id'] . ' and status='. 3 )->delete();
-		$result = $this->deleteData('id=' . $_GET['id'] . ' and status=3', 'group_orders');
-		$this->returnResult($result ? true : false, array('操作成功', '订单未完成,不可删除!'));
+		// $result = $this->deleteData('id=' . $_GET['id'] . ' and status=3', 'group_orders');
+		// $this->returnResult($result ? true : false, array('操作成功', '订单未完成,不可删除!'));
+
+		$result = M('group_orders')->where("status = 0 and id=".I('get.id'))->setField('status', 6);
+		$this->returnResult($result ? true : false, array('操作成功', '不可删除!'));
 	}
 
 	/**
