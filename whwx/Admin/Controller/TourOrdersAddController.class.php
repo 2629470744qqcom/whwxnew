@@ -33,7 +33,7 @@ class TourOrdersAddController extends AdminController{
 			$data['comment_status'] = 1;
 
 			$status = M('tour_orders')->data($data)->add();
-			$this->returnResult($status);
+			$this->returnResult($status, null, U('TourOrdersAdd/index'));
 		}
 
 		$tourLines = $this->getTourLines();
@@ -52,8 +52,8 @@ class TourOrdersAddController extends AdminController{
 			return 0;
 		}
 
-		$tmp_1 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name = "'.$keyword.'" or o.phone = "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->select();
-		$tmp_2 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name like "%'.$keyword.'%" or o.phone like "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->select();
+		$tmp_1 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name = "'.$keyword.'" or o.phone = "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->limit(10)->select();
+		$tmp_2 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name like "%'.$keyword.'%" or o.phone like "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->limit(10)->select();
 
 		$temp = array_merge($tmp_1, $tmp_2);
 

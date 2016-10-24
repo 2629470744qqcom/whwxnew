@@ -141,6 +141,16 @@ class PayController extends BaseController{
 			$real_money = $data['total_fee'] / 100;
 			$result = $this->updateData(array('id' => $data['out_trade_no'], 'real_money' => $real_money, 'pay_type' => 'weipay', 'pay_time' => time(), 'status' => 2, 'pay_id' => $data['transaction_id']), 'tour_orders', 2);
 			if($result){
+				//points
+				$get_point = floor($real_money * C('get_point') / C('get_money'));
+				$this->changePoint(session('fansInfo.oid'), $get_point, '旅游服务微信支付赠送', 4, null);
+
+				//send Template
+				$info = M('tour_orders')->where('id='.$data['out_trade_no'])->find();
+				$users = explode(',', $info['user']);
+				$contact_name = $users[0]['name'];
+				$this->sendTourMerchantWXTemplate($info['id'], $info['mid'], $info['pname'], $contact_name, $info['phone'], $info['dates'], $info['num']);
+
 				$result = array('return_code' => 'SUCCESS', 'return_msg' => 'OK');
 				exit(xmlencode($result));
 			}

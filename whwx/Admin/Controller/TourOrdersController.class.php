@@ -35,6 +35,12 @@ class TourOrdersController extends AdminController{
 			$status = M('tour_orders')->where(array('id' => $id))->getField('status');
 			if($status == 1){
 				$result = M('tour_orders')->where(array('id' => $id))->save(array('pay_type' => 'offline', 'pay_time' => time(), 'status' => 2));
+
+				//send Template
+				$info = M('tour_orders')->where('id='.$id)->find();
+				$users = explode(',', $info['user']);
+				$contact_name = $users[0]['name'];
+				$this->sendTourMerchantWXTemplate($info['id'], $info['mid'], $info['pname'], $contact_name, $info['phone'], $info['dates'], $info['num']);
 			}else{
 				$this->returnResult(false, array('', '当前状态不可支付'));
 			}

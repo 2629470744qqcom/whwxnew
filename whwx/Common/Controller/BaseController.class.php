@@ -136,5 +136,56 @@ class BaseController extends Controller{
 		}
 		return false;
 	}
+
+
+	/**
+	 * @param  $line_id        	tour_orders 的 id
+	 * @param  $merchant_id    	旅行社id
+	 * @param  $line_name      	线路名称
+	 * @param  $contact_name   	联系人的名称
+	 * @param  $contact_phone  	联系人的电话
+	 * @param  $dates     		本次旅游的时间
+	 * @param  $num       		本次旅游的总人数
+	 * @return [type]
+	 */
+	protected function sendTourMerchantWXTemplate ($line_id, $merchant_id, $line_name, $contact_name, $contact_phone, $dates, $num) {
+		$openid = M()->table('whwx_tour_merchant m,whwx_wxfans f')->where('m.fid>0 and m.fid=f.id and m.id=' . $merchant_id)->getField('openid');
+
+		if($openid){
+			$msgData = array(
+							'first' => array(
+								'value' => '有新的旅游订单，快去看看吧！', 
+								'color' => '#ff0000'
+							), 
+							'tradeDateTime' => array(
+								'value' => date('Y-m-d H:i'), 
+								'color' => '#173177'
+							), 
+							'orderType' => array(
+								'value' => $line_name, 
+								'color' => '#173177'
+							),
+							'customerInfo' => array(
+								'value' => $contact_name . ' ' . $contact_phone, 
+								'color' => '#173177'
+							), 
+							'orderItemName' => array(
+								'value' => '游玩信息'
+							), 
+							'orderItemData' => array(
+								'value' => $dates . '出发 共' . $num . '人', 
+								'color' => '#173177'
+							), 
+							'remark' => array(
+								'value' => '点击查看更多信息', 
+								'color' => '#173177'
+							)
+						);
+
+			// 获取业主所在小区的维修工的信息
+			$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
+			$wechatAuth->sendTemplateMsg($merchant_id, C('tour_template'), U('Wap/TourMerchant/ordersInfo?id='.$line_id), $msgData);
+		}
+	}
 }
 ?>
