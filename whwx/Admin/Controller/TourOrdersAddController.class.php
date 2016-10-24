@@ -8,6 +8,11 @@ class TourOrdersAddController extends AdminController{
 			$id = date('ymdHis') . mt_rand(100, 999);
 			
 			foreach($_POST['name'] as $k => $v){
+				if (strpos($v, ' -- ') !== false) {
+					$arr = explode(' -- ', $v);
+					$v = $arr[1];
+				}
+				
 				$userInfo[] = array('name' => $v, 'idcard' => $_POST['idcard'][$k]);
 			}
 				

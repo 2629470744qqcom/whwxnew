@@ -87,7 +87,7 @@
                 <div class="col-sm-offset-3 col-sm-5">
 			        <a class="btn btn-primary add">添加游客</a>
 			       	
-			       	<span style="color: red; line-height: 34px; text-indent: 20px; display: inline-block;">合计：<span id='total_money' data-price="{$info.sale}">￥{$info.sale}</span></span>
+			       	<span style="color: red; line-height: 34px; text-indent: 20px; display: inline-block;">合计：<span id='total_money'>￥{$info.sale}</span></span>
 
 			       	<a class="btn btn-primary submit" style="margin-left: 20px;">提交订单</a>
 	       		</div>
@@ -114,7 +114,7 @@ $(function(){
 
 	$('.add').click(function(){
 		$("form").append(html);
-        $('#total_money').html('￥' + parseFloat($('#total_money').data('price')) * $('input[name="name[]"]').length);
+        $('#total_money').html('￥' + parseFloat($('.tour_line_price_input').val()) * $('input[name="name[]"]').length);
 	});
 	$(".submit").click(function() {
 		if (1) {
@@ -150,6 +150,8 @@ $(function(){
     	$("input[name='tour_line_lname']").val(lname);
     	$("input[name='mid']").val(mid);
 
+    	$('#total_money').html('￥' + parseFloat($('.tour_line_price_input').val()) * $('input[name="name[]"]').length);
+    	
     	var str = '';
     	for (var i = dates.length - 1; i >= 0; i--) {
     		str += "<option value='" + dates[i] + "'>" + dates[i] +"</option>";
