@@ -156,6 +156,49 @@ class TourController extends WapController{
 		if($type == 1){
 			// 取消订单
 			$result = M('tour_orders')->where(array('id' => $id))->setField('status', 5);
+
+			if ($result) {
+				$info = M('tour_orders')->where('id='.$id)->find();
+				$openid = M()->table('whwx_tour_merchant m,whwx_wxfans f')->where('m.fid>0 and m.fid=f.id and m.id='.$info['mid'])->getField('openid');
+				$users = explode(',', $info['user']);
+				$contact_name = $users[0]['name'];
+				if($openid){
+					$msgData = array(
+									'first' => array(
+										'value' => '真遗憾，有人取消订单啦', 
+										'color' => '#ff0000'
+									), 
+									'tradeDateTime' => array(
+										'value' => date('Y-m-d H:i'), 
+										'color' => '#173177'
+									), 
+									'orderType' => array(
+										'value' => $info['pname'],
+										'color' => '#173177'
+									),
+									'customerInfo' => array(
+										'value' => $contact_name . ' ' . $info['phone'],
+										'color' => '#173177'
+									), 
+									'orderItemName' => array(
+										'value' => '游玩信息'
+									), 
+									'orderItemData' => array(
+										'value' => $info['dates'] . '出发 共' . $info['pnum'] . '人', 
+										'color' => '#173177'
+									), 
+									'remark' => array(
+										'value' => '点击查看更多信息', 
+										'color' => '#173177'
+									)
+								);
+
+					// 获取业主所在小区的维修工的信息
+					$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
+					$wechatAuth->sendTemplateMsg($info['mid'], C('tour_template'), U('TourMerchant/ordersInfo?id='.$id), $msgData);
+				}
+			}
+
 			$this->returnResult($result);
 		}elseif($type == 2){
 			// 订单评论
