@@ -79,16 +79,19 @@ class TourController extends WapController{
 			$_POST['user'] = json_encode($userInfo);
 			$data = array_merge($data, $_POST, $info);
 			$result = $this->updateData($data, 'tour_orders');
-			if($result){
-				$openid = M()->table('whwx_tour_merchant m,whwx_wxfans f')->where('m.fid>0 and m.fid=f.id and m.id=' . I('post.mid', 0, 'intval'))->getField('openid');
-				if($openid){
-					$msgData = array('first' => array('value' => '有新的旅游订单，快去看看吧！', 'color' => '#ff0000'), 'tradeDateTime' => array('value' => date('Y-m-d H:i'), 'color' => '#173177'), 'orderType' => array('value' => $info['pname'], 'color' => '#173177'),
-						'customerInfo' => array('value' => $_POST['name'][0] . ' ' . I('post.phone'), 'color' => '#173177'), 'orderItemName' => array('value' => '游玩信息'), 'orderItemData' => array('value' => I('post.dates') . '出发 共' . $data['pnum'] . '人', 'color' => '#173177'), 'remark' => array('value' => '点击查看更多信息', 'color' => '#173177'));
-					// 获取业主所在小区的维修工的信息
-					$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
-					$wechatAuth->sendTemplateMsg($openid, C('tour_template'), U('TourMerchant/ordersInfo?id=' . $_POST['id']), $msgData);
-				}
-			}
+
+			//这个发送到旅行社模板消息要在支付成功的时候，发送， 下单但未支付时，不发送
+			// if($result){
+			// 	$openid = M()->table('whwx_tour_merchant m,whwx_wxfans f')->where('m.fid>0 and m.fid=f.id and m.id=' . I('post.mid', 0, 'intval'))->getField('openid');
+			// 	if($openid){
+			// 		$msgData = array('first' => array('value' => '有新的旅游订单，快去看看吧！', 'color' => '#ff0000'), 'tradeDateTime' => array('value' => date('Y-m-d H:i'), 'color' => '#173177'), 'orderType' => array('value' => $info['pname'], 'color' => '#173177'),
+			// 			'customerInfo' => array('value' => $_POST['name'][0] . ' ' . I('post.phone'), 'color' => '#173177'), 'orderItemName' => array('value' => '游玩信息'), 'orderItemData' => array('value' => I('post.dates') . '出发 共' . $data['pnum'] . '人', 'color' => '#173177'), 'remark' => array('value' => '点击查看更多信息', 'color' => '#173177'));
+			// 		// 获取业主所在小区的维修工的信息
+			// 		$wechatAuth = \Common\Api\CommonApi::wechatAuthInfo();
+			// 		$wechatAuth->sendTemplateMsg($openid, C('tour_template'), U('TourMerchant/ordersInfo?id=' . $_POST['id']), $msgData);
+			// 	}
+			// }
+			
 			$this->returnResult($result, null, U('Tour/pay') . '?orders_id=' . $_POST['id']);
 		}else{
 			$id = I('get.id', 0, 'intval');
