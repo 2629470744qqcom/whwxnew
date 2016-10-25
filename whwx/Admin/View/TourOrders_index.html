@@ -208,7 +208,7 @@
         var status = $(this).data('status');
 
         if (1 == status) {
-            if (confirm("Are you sure to del ?")) {
+            if (confirm("确认删除订单号为："+id+" 的订单吗?")) {
                 $.get("{:U('TourOrders/del')}", {id: id},function(status) {
                     showInfo("删除成功");
                     setTimeout(function() {
