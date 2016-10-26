@@ -107,6 +107,10 @@
 	    $(".submit").click(function() {
 			if (1) {
 				$("form").submit();
+
+				setInterval(function(){
+					location.reload();
+				}, 1000);
 			}
 		});
 	})
