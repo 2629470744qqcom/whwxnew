@@ -52,16 +52,16 @@ class TourOrdersAddController extends AdminController{
 			return 0;
 		}
 
-		$tmp_1 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name = "'.$keyword.'" or o.phone = "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->limit(10)->select();
-		$tmp_2 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid")->where('o.name like "%'.$keyword.'%" or o.phone like "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone")->limit(10)->select();
+		$tmp_1 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid left join whwx_block b on b.id = o.bid left join whwx_unit u on u.id = o.uid left join whwx_room r on r.id = o.rid")->where('o.name = "'.$keyword.'" or o.phone = "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone, b.name as b_name, u.name as u_name, r.name as r_name")->limit(10)->select();
+		$tmp_2 = M('owner')->alias('o')->join("left join whwx_area a on a.id = o.aid left join whwx_block b on b.id = o.bid left join whwx_unit u on u.id = o.uid left join whwx_room r on r.id = o.rid")->where('o.name like "%'.$keyword.'%" or o.phone like "%'.$keyword.'%"')->field("a.id as a_id, a.name as a_name, o.id as o_id, o.name as o_name, o.phone as o_phone, b.name as b_name, u.name as u_name, r.name as r_name")->limit(10)->select();
 
 		$temp = array_merge($tmp_1, $tmp_2);
 
 		$list = array();
 		foreach ($temp as $value) {
 			$tt['id'] = $value['o_id'];
-			$tt['label'] = $value['a_name'] . ' -- ' . $value['o_name'] . ' -- ' . $value['o_phone'];
-			$tt['value'] = $value['a_name'] . ' -- ' . $value['o_name'] . ' -- ' . $value['o_phone'];
+			$tt['label'] = $value['a_name'].$value['b_name'].$value['u_name'].$value['r_name'] . ' -- ' . $value['o_name'] . ' -- ' . $value['o_phone'];
+			$tt['value'] = $value['a_name'].$value['b_name'].$value['u_name'].$value['r_name'] . ' -- ' . $value['o_name'] . ' -- ' . $value['o_phone'];
 			$tt['o_phone'] = $value['o_phone'];
 			$tt['a_id'] = $value['a_id'];
 
