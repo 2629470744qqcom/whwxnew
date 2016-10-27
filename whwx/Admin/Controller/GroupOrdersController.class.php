@@ -229,4 +229,20 @@ class GroupOrdersController extends AdminController{
 		$this->assign('areaList', $areaList);
 		$this->display();
 	}
+
+	public function pay () {
+		$id = I('get.id', 0, 'intval');
+		$real_money = M('payment')->where('type=3 and typeid='.$id)->getField("money");
+
+		//payment
+		$data = array('pay_type' => 2, 'status' => 2, 'pay_time' => time(), 'real_money' => $real_money);
+		$result = M('payment')->where('type=3 and typeid='.$id)->data($data)->save();
+
+		//group_orders
+		$data2 = array('pay_type' => 4, 'status' => 2, 'pay_amount' => $real_money, 'pay_time' => time());
+		$result1 = M('group_orders')->where('id='.$id)->data($data2)->save();
+
+
+		$this->returnResult($result && $result1);
+	}
 }
