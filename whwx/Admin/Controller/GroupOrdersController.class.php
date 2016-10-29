@@ -100,7 +100,7 @@ class GroupOrdersController extends AdminController{
 				$info['comment'] = $this->getInfo('times,desc,score', 'comment', 'type = 3 and rid = ' . I('get.id', 0, 'intval'));
 			}
 			if($info['status'] >= 3){
-				$info['ems'] = $this->getInfo('ems_name,ems_num,address', 'logistics', 'orderid=' . I('get.id', 0, 'intval'));
+				$info['ems'] = $this->getInfo('ems_name,ems_num,address', 'logistics', 'name="'.$info['name'].'" and orderid=' . I('get.id', 0, 'intval'));
 			}
 			if(!empty($info['pics'])){
 				$info['pics'] = explode(',', $info['pics']);

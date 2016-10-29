@@ -88,4 +88,82 @@ class RoomController extends AdminController{
 		array_unshift($list, $title);
 		\Common\Api\PHPExcelApi::exportExcel($list, '房间筛选结果导出', true);
 	}
+
+	/**
+	* 从excle表中导入数据
+	*/
+	public function import () {
+		if (IS_POST) {
+			vendor("PHPExcel.PHPExcel.IOFactory");
+			$file = $_FILES['file']['tmp_name'];
+			$obj = \PHPExcel_IOFactory::load($file);
+
+			$content = $obj->getSheet(0)->toArray();
+echo "<Pre>"; print_r($content);die;
+			foreach ($content as $key => $value) {
+				if (!$value[0] or strrpos($value[0], '-') === false) {
+					continue;
+				}
+
+				$tmp = array();
+
+				$tmp['addr']   = $value[0];
+				$tmp['name']   = substr($value[0], strrpos($value[0], '-')+1)."室";
+				$tmp['size']   = $value[1];
+				$tmp['owner']  = $this->filterData($value[2]);
+				$tmp['phone']  = $this->filterData($value[3]);
+				$tmp['aid']    = $_POST['aid'];
+				$tmp['bid']    = $_POST['bid'];
+				$tmp['uid']    = $_POST['uid'];
+				$tmp['sort']   = 100;
+				$tmp['status'] = 1;
+
+				$result = $this->updateData($tmp, 'room');
+			}
+
+			echo "<br/>
+					<h3>恭喜，导入成功！3秒后自动跳转到房号首页</h3>
+					<br/>
+					<h4 id='num'>3</h4>
+					<script>
+						setTimeout(function() {
+							location.href='".U('Room/index')."';
+							clearInterval('interval');
+						},3000);
+
+						var numDom = document.getElementById('num');
+						var num = numDom.innerText;
+						var interval = setInterval(function() {
+							num--;
+							numDom.innerText = num;
+						}, 1000);
+					</script>";
+
+			return '';
+		}
+
+		$areaList = $this->getAreaList();
+		$this->assign('areaList', $areaList);
+
+		$this->display();
+	}
+
+	/**
+	 * 过滤数据
+	 * 
+	 * @param  [type] $v [description]
+	 * @return [type]    [description]
+	 */
+	private function filterData ($v) {
+		$arr = explode(' ', trim($v));
+
+		$tmp = array();
+		foreach ($arr as $value) {
+			if ($value) {
+				$tmp[] = $value;
+			}
+		}
+
+		return join(',', $tmp) ?: '未知';
+	}
 }

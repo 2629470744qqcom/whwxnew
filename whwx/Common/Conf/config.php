@@ -4,7 +4,7 @@ return array(
 	'PAGE_NUM' => 8,
 	'TMPL_FILE_DEPR' => '_',
 	'LOAD_EXT_CONFIG' => 'info,point,about,share',
-	'TMPL_EXCEPTION_FILE' => '404.html',
+	// 'TMPL_EXCEPTION_FILE' => '404.html',
 	
 	'DB_TYPE'=>'mysqli',
 	'DB_HOST'=>'rm-bp122q7a509022671.mysql.rds.aliyuncs.com',

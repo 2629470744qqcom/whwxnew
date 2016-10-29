@@ -1,0 +1,190 @@
+<link rel="stylesheet" href="{:COM}css/bootstrap-datetimepicker.min.css" />
+<div class="row"><h3 class="page-header">房号管理&nbsp;&nbsp;<small><gt name='info.id' value=''>/修改<else/>/添加</gt></small></h3></div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form role="form" method="post" class="form-horizontal" enctype="multipart/form-data">
+                <div class="form-group">
+			        <label class="col-sm-3 control-label">小区：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="aid" name="aid">
+			        		<option value="0" >请选择小区</option>
+			        		<volist name='areaList' id='area'>
+			        			<option value="{$area.id}"<eq name='area.id' value='$info.aid'> selected </eq> >{$area.name}</option>
+			        		</volist>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">楼栋号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="bid" name="bid">
+			        		<option value="0" >请选择楼栋号</option>
+						</select>           
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">单元号：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<select class="form-control selectReq" id="uid" name="uid">
+			        		<option value="0" >请选择单元号</option>
+						</select>           
+			        </div>
+			    </div>			    		        		       
+		        <div class="form-group">
+			        <label class="col-sm-3 control-label">Excel 文件：<span class="c-red">*</span></label>
+			        <div class="col-sm-4">
+			        	<input type="file" name="file" class="form-control input-file" />          
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">Excel 说明：<span class="c-red">*</span></label>
+			        <div class="col-sm-4" style="padding-top: 7px; line-height: 22px;">
+			        	Excel表格为某一小区内某一栋内某一单元内的房号，注意不要重复导入，<br/>
+			        	excel表格需要按照以下顺序排列:<br/><br>
+			        	第一列:房号地址, 第二列:房间面积, 第三列:业主姓名， 第四列：业主联系方式<br/><br>
+			        	并有以下几点需要注意的地方:
+			        	<ol>
+			        		<li>第一行就是数据，不需要标题</li>
+			        		<li>房号地址：最后的房间号要与前面的使用“-”（英文状态的分隔符）分开</li>
+			        		<li>房间名称会自动填充</li>
+			        		<li>有多个的中间使用空格隔开即可</li>
+			        		<li>如果房号地址为空，则该条记录会被忽略</li>
+			        		<li>业主姓名或业主手机号为空时会自动填充为“未知”</li>
+			        		<li>如果添加的为新的小区、楼栋、单元，则需要在相应的模块中添加好相应的数据后，然后再在这里选择</li>
+			        	</ol>
+			        	样例如下图所示<br/>
+			        	<img src="{:COM}/images/room_excel_import_sample.png">
+			        </div>
+			    </div>
+
+		        <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+				        <button class="btn btn-primary save_btn" type="button">导入</button>
+				       	<a href="
+							<empty name='Think.server.HTTP_REFERER'>
+								{:U('Room/index')}
+							<else /> 
+								{$Think.server.HTTP_REFERER}
+							</empty>
+				       		"><button class=" btn btn-default" type="button">返回</button></a>
+			       	</div>	
+		       	</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" >
+	$(function(){
+		$(".save_btn").click(function() {
+			if (0 == $("#aid option:selected").val()) {
+				alert("aid not null");
+				return false;
+			}
+
+			if (0 == $("#bid option:selected").val()) {
+				alert("bid not null");
+				return false;
+			}
+
+			if (0 == $("#uid option:selected").val()) {
+				alert("uid not null");
+				return false;
+			}
+
+			if ('' == $(".input-file").val()) {
+				alert('file not null');
+				return false;
+			}
+
+			$("form").submit();
+		});
+
+
+		var aid1 = '{$info["aid"]}', bid1 = '{$info["bid"]}', uid1 = '{$info["uid"]}', rid1 = '{$info["rid"]}', id = '{$info["id"]}';
+		if(aid1 > 0){
+			waiting();
+			$.get('{:U("Block/getBlockByAid")}', {aid : aid1}, function(data){
+				var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(bid1 == data[i]['id']){
+							html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}else{
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}
+				}else{
+					html = '<option value="0" >该小区还没有楼栋</option>';
+				}
+				$('#bid').html(html);
+			});
+			$.get('{:U("Unit/getUnitByBid")}', {bid : bid1}, function(data){
+				var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(uid1 == data[i]['id']){
+							html += '<option selected value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}else{
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}
+				}else{
+					html = '<option value="0" >该楼栋还没有单元</option>';
+				}
+				$('#uid').html(html);
+			});
+			$.get('{:U("Room/getRoomByUid")}', {uid : uid1, bid : bid1}, function(data){
+				complete();var html = '';
+				if(data){
+					for(var i = 0; i< data.length; i++){
+						if(id == data[i]['oid']){
+							html += '<label class="radio-inline"><input type="radio" checked value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}else if(data[i]['oid'] > 0){
+							html += '<label class="radio-inline"><input type="radio" disabled="true" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}else{
+							html += '<label class="radio-inline"><input type="radio" value="'+data[i]['id']+'" name="rid" >'+data[i]['name']+'</label>';
+						}
+					}
+				}else{
+					html = '空';
+				}
+				$('.rooms').html(html);
+			});
+		}
+		$('#aid').change(function(){
+			var aid = $(this).val(), html='<option value="0" >请选择楼栋号</option>';
+			if(aid > 0){
+				waiting();
+				$.get('{:U("Block/getBlockByAid")}', {aid : aid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>'; }
+					}else{
+						html = '<option value="0" >该小区还没有楼栋</option>';
+					}
+					$('#bid').html(html);
+				});
+			}
+		});
+		$('#bid').change(function(){
+			var bid = $(this).val(), html='';
+			if(bid > 0){
+				waiting();
+				$.get('{:U("Unit/getUnitByBid")}', {bid : bid}, function(data){
+					complete();
+					if(data){
+						for(var i = 0; i< data.length; i++){
+							html += '<option value="'+data[i]['id']+'" >'+data[i]['name']+'</option>';
+						}
+					}else{
+						html = '<option value="0" >该楼栋还没有单元</option>';
+					}
+					$('#uid').html(html);
+				});
+			}
+		});
+	});
+</script>
+
