@@ -99,7 +99,7 @@ class RoomController extends AdminController{
 			$obj = \PHPExcel_IOFactory::load($file);
 
 			$content = $obj->getSheet(0)->toArray();
-echo "<Pre>"; print_r($content);die;
+
 			foreach ($content as $key => $value) {
 				if (!$value[0] or strrpos($value[0], '-') === false) {
 					continue;
