@@ -111,7 +111,8 @@ class PreferentialController extends WapController{
 			if(!empty($info['pics'])){
 				$info['pics'] = explode(',', $info['pics']);
 			}
-			$infoman = $this->getInfo('name,phone,address', 'logistics', 'orderid=' . $_GET['id']);
+
+			$infoman = $this->getInfo('name,phone,address', 'logistics', 'orderid=' . $_GET['id'].' and phone = "'.session('fansInfo.phone').'"');
 			$this->assign('infoman', $infoman);
 			$this->assign('info', $info);
 		
