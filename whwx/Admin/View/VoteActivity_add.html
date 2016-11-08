@@ -1,0 +1,98 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row">
+    <h3 class="page-header">投票活动&nbsp;&nbsp;<small>添加</small></h3>
+</div>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form" id="myform" method="post"  class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动名称：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control required" name="name" value="{$info.name}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动图片：<span class="c-red">*</span></label>
+                    <div class="col-sm-4 imgreq">
+                        <div class="uploadify-div">
+                            <notempty name='info.pic'>
+                                <li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+                            </notempty>
+                        </div>
+                        <button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动时间：<span class="c-red">*</span></label>
+                    <div class="col-sm-2">
+                        <input type="text"  name="start_time" value="<empty name='info.start_time'>{:date('Y-m-d')}<else/>{$info.start_time|date='Y-m-d', ###}</empty>" class="wid_10  pointer datepicker form-control" />
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" name="end_time" value="<empty name='info.end_time'>{:date('Y-m-d')}<else/>{$info.end_time|date='Y-m-d', ###}</empty>" class="wid_10  pointer datepicker form-control" />
+                    </div>
+                    <small>起始时间-结束时间</small>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动对象：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <volist name='levelList' id='levelList'>
+							<span class="ckbox">
+								<input type='checkbox' id='lid{$levelList.id}' name='lid[]' value='{$levelList.id}' <?php if(in_array($levelList['id'], $info['lid'])){echo 'checked';}?>>
+								<label class="check_label" for='lid{$levelList.id}'>{$levelList.name}</label>
+							</span>
+                        </volist>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动小区：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <volist name='areaList' id='areaList'>
+							<span class="ckbox">
+								<input type='checkbox' id='aid{$areaList.id}' name='aid[]' value='{$areaList.id}' <?php if(in_array($areaList['id'], $info['aid'])){echo 'checked';}?>>
+								<label class="check_label" for='aid{$areaList.id}'>{$areaList.name}</label>
+							</span>
+                        </volist>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-4">
+                        <input class="form-control digits" name="sort" value="{$info.sort|default=100}">
+                    </div>
+                    <small>请输入正整数</small>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">状态：</label>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动规则：</label>
+                    <div class="col-sm-4">
+                        <textarea rows="3" class="form-control keditor" name="desc">{$info.desc}</textarea>
+                    </div>
+                </div>
+                <gt name='info.id' value='0'><input type='hidden' name='id' id="id" value='{$info.id}'><else /></gt>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+                        <button class="btn btn-primary" type="submit">提交</button>
+                        <a href="{:U('VoteActivity/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script>
+    $(document).ready(function() {
+        $('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+    });
+</script>

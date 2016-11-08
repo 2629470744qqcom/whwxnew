@@ -142,5 +142,22 @@ class AdminController extends BaseController{
 		$fields = $fields == null ? 'id,name' : $fields;
 		return M('area')->field($fields)->where('status = 1 and id in (' . session('ruleInfo.aids') . ')')->select();
 	}
+	/**
+	 * 获取投票对象
+	 * huying Jan 7, 2016
+	 */
+	public function getLevelList($fields = null){
+		$fields = $fields == null ? 'id,name' : $fields;
+		return M('level')->field($fields)->where('id in (' . session('ruleInfo.aids') . ')')->select();
+	}
+
+	/**
+	 * 获取投票活动列表
+	 * huying Jan 7, 2016
+	 */
+	public function getActivityList($fields = null){
+		$fields = $fields == null ? 'id,name' : $fields;
+		return M('vote_activity')->field($fields)->where('id in (' . session('ruleInfo.aids') . ')')->select();
+	}
 }
 ?>

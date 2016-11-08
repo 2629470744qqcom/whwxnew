@@ -4,24 +4,25 @@ return array(
 	'PAGE_NUM' => 8,
 	'TMPL_FILE_DEPR' => '_',
 	'LOAD_EXT_CONFIG' => 'info,point,about,share',
-	'TMPL_EXCEPTION_FILE' => '404.html',
-	
+	//'TMPL_EXCEPTION_FILE' => '404.html',
+
 	'DB_TYPE'=>'mysqli',
-	'DB_HOST'=>'rm-bp122q7a509022671.mysql.rds.aliyuncs.com',
+	'DB_HOST'=>'localhost',
 	'DB_PORT'=>'3306',
 	'DB_NAME'=>'db_whwx',
-	'DB_USER'=>'db_whwx',
-	'DB_PWD'=>'zBZiS2UDsNY0zceS',
+	'DB_USER'=>'root',
+	'DB_PWD'=>'',
 	'DB_PREFIX'=>'whwx_',
 
 	'get_money' => '1',
 	'get_point' => '1',
 
-	'QINIU_AK' => 'XAX8AcIUuCVrjqOx3t6ZF9U3gHaIG9fVvc6xQSl1',
-	'QINIU_SK' => 'JZ6bJQR2nt4cjJBONXqaUnBp64DXTExN4iJtyPZk',
-	//'QINIU_HOST' => 'http://7xpf7u.com1.z0.glb.clouddn.com/',
-	'QINIU_HOST' => 'http://file.weixingwuye.com/',
-	'QINIU_BUCKET' => 'whwx',
+
+//	'QINIU_AK' => 'XAX8AcIUuCVrjqOx3t6ZF9U3gHaIG9fVvc6xQSl1',
+//	'QINIU_SK' => 'JZ6bJQR2nt4cjJBONXqaUnBp64DXTExN4iJtyPZk',
+//	//'QINIU_HOST' => 'http://7xpf7u.com1.z0.glb.clouddn.com/',
+//	'QINIU_HOST' => 'http://file.weixingwuye.com/',
+//	'QINIU_BUCKET' => 'whwx',
 	'site_email' => 'admin@weilt.net',
 
 	'repair_template' => 'dlGoEZzAdx6_SUhmVbjIoPW1EXdd9CXOxo-4dJfZqR8',

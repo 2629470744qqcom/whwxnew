@@ -1,6 +1,6 @@
 <?php 
 return array (
-  'site_name' => '星管家智慧社区',
+/*  'site_name' => '星管家智慧社区',
   'site_url' => 'http://weixingwuye.com',
   'site_tel' => '4008876608',
   'site_wxname' => '星管家智慧社区',
@@ -11,5 +11,5 @@ return array (
   'site_apikey' => 's9Gn1b0T6TnFqiOm5B4R8lXgKM26Mkue',
   'site_wxurl' => '微信',
   'site_subscribe' => '关注回复',
-  'site_default' => '默认回复',
+  'site_default' => '默认回复',*/
 );

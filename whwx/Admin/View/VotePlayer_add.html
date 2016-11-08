@@ -1,0 +1,100 @@
+<link href="{:COM}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="row">
+    <h3 class="page-header">投票选手&nbsp;&nbsp;<small>添加</small></h3>
+</div>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form" id="myform" method="post"  class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control required" name="name" value="{$info.name}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手序号：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control digits required" name="number" value="{$info.number}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手头像：<span class="c-red">*</span></label>
+                    <div class="col-sm-4 imgreq">
+                        <div class="uploadify-div">
+                            <notempty name='info.pic'>
+                                <li><img src="{$info.pic}"><input type="hidden"  value="{$info.pic}" name="pic"></li>
+                            </notempty>
+                        </div>
+                        <button type="button" class='upload' id='upload1' data-name="pic">选择图片</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手职位：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control " name="job" value="{$info.job}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手电话：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control required " name="phone" value="{$info.phone}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手访问量：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control digits " name="view_num" value="{$info.view_num|default=0}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手点赞数：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <input class="form-control digits " name="zan" value="{$info.zan|default=0}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">活动名称：<span class="c-red">*</span></label>
+                    <div class="col-sm-4">
+                        <select class="form-control " id="aid" name="aid">
+                            <option value="0" >请选择活动</option>
+                            <volist name='activityList' id='act'>
+                                <option value="{act.id}"<eq name='act.id' value='$info.aid'> selected </eq> >{$act.name}</option>
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">状态：</label>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input type="radio" value="1" id="status1" name="status" <neq name="info.status" value="0">checked</neq>>启用
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0"  id="status2" name="status" <eq name="info.status" value="0">checked</eq>>禁用
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">选手简介：</label>
+                    <div class="col-sm-4">
+                        <textarea rows="3" class="form-control  keditor" name="desc">{$info.desc}</textarea>
+                    </div>
+                </div>
+                <gt name='info.id' value='0'><input type='hidden' name='id' id="id" value='{$info.id}'><else /></gt>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-5">
+                        <button class="btn btn-primary" type="submit">提交</button>
+                        <a href="{:U('VotePlayer/index')}"><button class=" btn btn-default" type="button">返回</button></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
+<script>
+    $(document).ready(function() {
+        $('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
+    });
+</script>
