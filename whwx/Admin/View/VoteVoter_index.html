@@ -1,0 +1,59 @@
+<div class="row"> <h3 class="page-header">投票粉丝</h3></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <label><a class="btn btn-primary" href="{:U('VoteVoter/add')}">添加</a></label>
+                <form action='{:U("VoteVoter/index")}' class="form-inline text-right m-b-5" style="float:right;">
+                    活动名称：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20" style="width: 150px;">
+                    活动时间：<input type="text" name='start_time' value='{$Think.get.start_time}' placeholder="起始时间" class="form-control mr20 w100 datepicker" >
+                    - <input type="text" name='end_time' value='{$Think.get.end_time}' placeholder="结束时间" class="form-control mr20 w100 datepicker" >
+                    活动小区:<select name='aid' class="form-control mr20 w150">
+                    <option value='-1'>请选择小区</option>
+                    <volist name='areaList' id='area'>
+                        <option value='{$area.id}' <eq name='Think.get.aid' value='$area.id'>selected</eq> >{$area.name}</option>
+                    </volist>
+                </select>
+                    状态：<select name='status' class="form-control mr20" style="width: 150px;">
+                    <option value='-1'>全部</option>
+                    <option value='1' <eq name='Think.get.status' value='1'>selected</eq> >启用</option>
+                    <option value='0' <eq name='Think.get.status' value='0'>selected</eq> >禁用</option>
+                </select>
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                        <tr>
+                            <th width="60">序号</th>
+                            <th>粉丝昵称</th>
+                            <th>投票活动</th>
+                            <th>投票选手</th>
+                            <th width="250">投票时间</th>
+                            <th width="120">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="list" id="list">
+                            <tr class="odd gradeX">
+                                <td>{$i}</td>
+                                <td>{$list.fans}</td>
+                                <td>{$list.act}</td>
+                                <td>{$list.player}</td>
+                                <td>{$list.time|date='Y-m-d',###}</td>
+                                <td class="center">
+                                    <a href='{:U("VoteVoter/edit?id=".$list["id"])}'>
+                                        <button class="btn-sm btn btn-default">查看</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+

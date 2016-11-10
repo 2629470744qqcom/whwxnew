@@ -24,9 +24,10 @@ class WechatAuthApi{
 			$this->appid = $appid;
 			$this->appsecret = $appsecret;
 			$access_token && $this->access_token = $access_token;
-		}else{
-			throw new \Exception('缺少参数appid和appsecret');
 		}
+//		else{
+//			throw new \Exception('缺少参数appid和appsecret');
+//		}
 	}
 
 	/**
@@ -133,7 +134,6 @@ class WechatAuthApi{
 		$data[$type] = call_user_func(array(self, $type), $content);
 		return $this->api('cgi-bin/message/custom/send', $data);
 	}
-
 	/**
 	 * 发送模板消息
 	 * @param string $openid 粉丝ID

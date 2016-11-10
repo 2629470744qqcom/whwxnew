@@ -13,16 +13,21 @@ class VotePlayerController extends AdminController {
      */
     public function index()
     {
-        $where = '1 = 1';
-        $where .= I('get.act_id') > 0 ? ' and find_in_set("' . I('get.act_id', 0, 'intval') . '",act_id)' : '';
-        $where .= I('get.name')&&I('get.name') != '' ? ' and name like "%'.I('get.name').'%"' : '';
-        $where .= I('get.status', -1) > -1 ? ' and status ='.I('get.status') : '';
-        $list = $this->getList('id,number,name,phone,view_num,job,status,zan,desc', 'vote_player', $where, 'id desc',true);
+        $where = 'p.act_id = a.id and a.id in('.session('ruleInfo.aids').')';
+        $where .= I('get.name')&&I('get.name') != '' ? ' and p.name like "%'.I('get.name').'%"' : '';
+        $where .=I('get.number') && I('get.number') != '' ? 'and p.number ='.I('get.number') : '' ;
+        $where .=I('get.act_id') && I('get.act_id')>0 ? 'and p.act_id='.I('get.act_id',0,'intval') : '' ;
+        $where .= I('get.status', -1) > -1 ? ' and p.status ='.I('get.status') : '';
+        if('desc' == I('get.sort')){
+            $list = M('')->table('whwx_vote_player as p,whwx_vote_activity as a')->field('p.id,p.number,p.name,p.phone,p.view_num,p.job,p.status,p.zan,p.act_id,a.name as act')->where($where)->order('p.zan asc')->select();
+        }else
+        $list = $this->getList('p.id,p.number,p.name,p.phone,p.view_num,p.job,p.status,p.zan,p.act_id,a.name as act', 'whwx_vote_player as p,whwx_vote_activity as a', $where, 'p.id desc',true);
         $this->assign('list', $list);
         $activityList = $this->getActivityList();
         $this->assign('activityList', $activityList);
         $this->display();
     }
+
     /**
      * 添加投票活动
      * huying Dec 28, 2015
@@ -31,19 +36,16 @@ class VotePlayerController extends AdminController {
     {
         if(IS_POST)
         {
-            $_POST['start_time'] = strtotime($_POST['start_time']);
-            $_POST['end_time'] = strtotime($_POST['end_time']);
-            $_POST['add_time'] = time();
-            $_POST['aid'] = implode(',', $_POST['aid']);
-            $_POST['lid'] =implode(',',$_POST['lid']);
             $result = $this->updateData($_POST, 'vote_player');
             $this->returnResult($result);
         }else{
  			$activityList = $this->getActivityList();
+            //dump($activityList);
 			$this->assign('activityList', $activityList);
             $this->display();
         }
     }
+
     /**
      * 修改投票活动
      * huying Dec 28, 2015
@@ -52,24 +54,17 @@ class VotePlayerController extends AdminController {
     {
         if(IS_POST)
         {
-            $_POST['start_time'] = strtotime($_POST['start_time']);
-            $_POST['end_time'] = strtotime($_POST['end_time']);
-            $_POST['aid'] = implode(',', $_POST['aid']);
-            $_POST['lid'] =implode(',',$_POST['lid']);
             $result = $this->updateData($_POST, 'vote_player', 2);
             $this->returnResult($result);
         }else{
-            $info = $this->getInfo('id,start_time,end_time,name,pic,sort,status,desc,aid,lid', 'vote_player', 'id='.I('get.id', 0, 'intval'));
-            $info['aid'] = explode(',', $info['aid']);
-            $info['lid'] = explode(',', $info['lid']);
+            $info = $this->getInfo('id,name,pic,status,desc,phone,job,zan,view_num,number,act_id', 'vote_player', 'id='.I('get.id', 0, 'intval'));
             $this->assign('info', $info);
- 			$areaList = $this->getAreaList();
-			$this->assign('areaList', $areaList);
-            $levelList=$this->getLevelList();
-            $this->assign('levelList', $levelList);
+            $activityList = $this->getActivityList();
+            $this->assign('activityList', $activityList);
             $this->display('add');
         }
     }
+
     /**
      * 删除投票活动
      * huying Dec 28, 2015

@@ -36,30 +36,31 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">选手电话：<span class="c-red">*</span></label>
+                    <label class="col-sm-3 control-label">联系方式：<span class="c-red">*</span></label>
                     <div class="col-sm-4">
-                        <input class="form-control required " name="phone" value="{$info.phone}" >
+                        <input class="form-control required mobile" name="phone" value="{$info.phone}" maxlength="11" >
                     </div>
+                    <small>填写11位有效联系方式</small>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">选手访问量：<span class="c-red">*</span></label>
                     <div class="col-sm-4">
-                        <input class="form-control digits " name="view_num" value="{$info.view_num|default=0}" >
+                        <input class="form-control digits" name="view_num" value="{$info.view_num|default=0}" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">选手点赞数：<span class="c-red">*</span></label>
                     <div class="col-sm-4">
-                        <input class="form-control digits " name="zan" value="{$info.zan|default=0}" >
+                        <input class="form-control digits" name="zan" value="{$info.zan|default=0}" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">活动名称：<span class="c-red">*</span></label>
                     <div class="col-sm-4">
-                        <select class="form-control " id="aid" name="aid">
+                        <select class="form-control required" id="act_id" name="act_id">
                             <option value="0" >请选择活动</option>
                             <volist name='activityList' id='act'>
-                                <option value="{act.id}"<eq name='act.id' value='$info.aid'> selected </eq> >{$act.name}</option>
+                                <option value="{$act.id}"<eq name='act.id' value='$info.act_id'>selected</eq> >{$act.name}</option>
                             </volist>
                         </select>
                     </div>
@@ -92,9 +93,3 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src='{:COM}js/daterangepicker.min.js'></script>
-<script>
-    $(document).ready(function() {
-        $('input.datepicker').datetimepicker({format : "yyyy-mm-dd", minView : 2, autoclose : true});
-    });
-</script>

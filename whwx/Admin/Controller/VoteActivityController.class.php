@@ -16,7 +16,7 @@ class VoteActivityController extends AdminController {
         $where = '1 = 1';
         $where .= I('get.aid') > 0 ? ' and find_in_set("' . I('get.aid', 0, 'intval') . '",aid)' : '';
         $where .= I('get.name')&&I('get.name') != '' ? ' and name like "%'.I('get.name').'%"' : '';
-        $where .= I('get.status', -1) > -1 ? ' and status ='.I('get.status') : '';
+        $where .= I('get.status', -1) >-1 ? ' and status ='.I('get.status') : '';
         $where .= I('get.start_time') ? ' and start_time>' . strtotime(I('get.start_time')) : '';
         $where .= I('get.end_time') ? ' and end_time<' . (strtotime(I('get.end_time')) + 24 * 3600) : '';
         $list = $this->getList('id,name,start_time,end_time,view_num,sort,status,aid,desc,lid', 'vote_activity', $where, 'id desc',true);
