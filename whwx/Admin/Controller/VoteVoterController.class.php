@@ -13,27 +13,18 @@ class VoteVoterController extends AdminController {
      */
     public function index()
     {
-        $where = '1 = 1';
-//        $where .= I('get.aid') > 0 ? ' and find_in_set("' . I('get.aid', 0, 'intval') . '",aid)' : '';
-//        $where .= I('get.name')&&I('get.name') != '' ? ' and name like "%'.I('get.name').'%"' : '';
-        $where .= I('get.vote_time') ? ' and v.vote_time=' . strtotime(I('get.vote_time')) : '';
-        $list = $this->getList('v.id,v.fans_id,v.player_id,v.vote_time,v.act_id,p.name as player,a.name as act,f.nickname as fans', 'whwx_vote_voter as v,whwx_vote_player as p,whwx_vote_activity as a,whwx_wxfans as f', $where, 'v.id desc',true);
 
-//        //遍历活动小区
-//        foreach($list as $key => $value)
-//        {
-//            $areaInfo = M('area')->where('id in (' . $value['aid'] . ')')->getField('name', true);
-//            $list[$key]['area'] = implode(',', $areaInfo);
-//        }
-//        //获取活动对象
-//        foreach($list as $key => $value)
-//        {
-//            $areaInfo = M('level')->where('id in (' . $value['lid'] . ')')->getField('name', true);
-//            $list[$key]['level'] = implode(',', $areaInfo);
-//        }
+        $where = 'v.act_id = a.id and a.id in('.session('ruleInfo.aids').')';
+        $where .= 'and v.player_id = p.id and p.id in('.session('ruleInfo.aids').')';
+        $where .= I('get.vote_time') ? ' and v.vote_time=' . strtotime(I('get.vote_time')) : '';
+        $where .=I('get.act_id') && I('get.act_id')>0 ? 'and v.act_id='.I('get.act_id',0,'intval') : '' ;
+        $where .=I('get.player_id') && I('get.player_id')>0 ? 'and v.player_id='.I('get.player_id',0,'intval') : '' ;
+        $list = $this->getList('v.id,v.fans_id,v.player_id,v.vote_time,v.act_id,p.name as player,a.name as act,f.nickname as fans', 'whwx_vote_voter as v,whwx_vote_player as p,whwx_vote_activity as a,whwx_wxfans as f', $where, 'v.id desc',true);
         $this->assign('list', $list);
-        $areaList = $this->getAreaList();
-        $this->assign('areaList', $areaList);
+        $activityList = $this->getActivityList();
+        $this->assign('activityList', $activityList);
+        $playerList = $this->getPlayeryList();
+        $this->assign('playerList', $playerList);
         $this->display();
     }
     /**

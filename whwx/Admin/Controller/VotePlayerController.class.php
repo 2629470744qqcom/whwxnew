@@ -18,10 +18,23 @@ class VotePlayerController extends AdminController {
         $where .=I('get.number') && I('get.number') != '' ? 'and p.number ='.I('get.number') : '' ;
         $where .=I('get.act_id') && I('get.act_id')>0 ? 'and p.act_id='.I('get.act_id',0,'intval') : '' ;
         $where .= I('get.status', -1) > -1 ? ' and p.status ='.I('get.status') : '';
-        if('desc' == I('get.sort')){
-            $list = M('')->table('whwx_vote_player as p,whwx_vote_activity as a')->field('p.id,p.number,p.name,p.phone,p.view_num,p.job,p.status,p.zan,p.act_id,a.name as act')->where($where)->order('p.zan asc')->select();
-        }else
-        $list = $this->getList('p.id,p.number,p.name,p.phone,p.view_num,p.job,p.status,p.zan,p.act_id,a.name as act', 'whwx_vote_player as p,whwx_vote_activity as a', $where, 'p.id desc',true);
+
+        if('num_asc' == I('get.sort')){
+            $order = 'p.view_num asc';
+        }
+        if('num_desc' == I('get.sort')){
+            $order = 'p.view_num desc';
+        }
+        if('zan_asc' == I('get.sort')){
+            $order = 'p.zan asc';
+        }
+        if('zan_desc' == I('get.sort')){
+            $order = 'p.zan desc';
+        }
+        if('' ==I('get.sort')){
+            $order='p.number desc';
+        }
+        $list = $this->getList('p.id,p.number,p.name,p.phone,p.view_num,p.job,p.status,p.zan,p.act_id,a.name as act', 'whwx_vote_player as p,whwx_vote_activity as a', $where, $order,true);
         $this->assign('list', $list);
         $activityList = $this->getActivityList();
         $this->assign('activityList', $activityList);

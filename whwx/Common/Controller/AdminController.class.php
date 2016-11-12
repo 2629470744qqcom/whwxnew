@@ -159,5 +159,15 @@ class AdminController extends BaseController{
 		$fields = $fields == null ? 'id,name' : $fields;
 		return M('vote_activity')->field($fields)->where('id in (' . session('ruleInfo.aids') . ')')->select();
 	}
+	/**
+	 * 获取投票选手列表
+	 * huying Jan 7, 2016
+	 */
+	public function getPlayeryList($fields = null){
+		$fields = $fields == null ? 'id,name' : $fields;
+		return M('vote_player')->field($fields)->where('id in (' . session('ruleInfo.aids') . ')')->select();
+	}
+
+
 }
 ?>
