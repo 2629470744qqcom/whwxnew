@@ -8,11 +8,9 @@
             <div class="panel-body">
                 <label><a class="btn btn-primary" href="{:U('VotePlayer/add')}">添加</a></label>
                &nbsp;&nbsp;&nbsp;&nbsp;
-                访问量：<button class="view_sort btn btn-primary"><a href="{:U('VotePlayer/index?sort=num_desc')}" style="color:#fff;text-decoration: none">正序/倒序</a></button>
-                投票数：<button class="btn btn-primary zan"><a href="{:U('VotePlayer/index?sort=zan_asc')}" style="color:#fff;text-decoration: none">正序/倒序</a></button>
+                访问量：<button class="view_sort btn btn-primary"><a href="{:U('VotePlayer/index?sort=num_desc')}" class="view_sort" style="color:#fff;text-decoration: none">正序/倒序</a></button>
+                投票数：<button class="btn btn-primary zan"><a href="{:U('VotePlayer/index?sort=zan_desc')}" style="color:#fff;text-decoration: none">正序/倒序</a></button>
                 <form action='{:U("VotePlayer/index")}' class="form-inline text-right m-b-5" style="float:right;">
-
-                    <!--投票数：<a href="{:U('VotePlayer/index?sort=zan_asc')}"><button class="btn btn-primary zan">正序/倒序</button></a>-->
                     选手：<input type="text" name='name' value='{$Think.get.name}' class="form-control mr20" style="width: 150px;">
                     选手号码：<input type="text" name='number' value='{$Think.get.number}' class="form-control mr20" style="width: 150px;">
                     活动名称:<select name='act_id' class="form-control mr20 w150">
@@ -79,11 +77,11 @@
         $(".view_sort").click(function(){
             var url = location.href;
             var new_url;
-            if (url.indexOf('sort=num_asc') != -1) {
-                new_url = url.replace('sort=num_asc', 'sort=num_desc');
+            if (url.indexOf('num_asc') != -1) {
+                new_url = url.replace('num_asc', 'num_desc');
             }
-            if (url.indexOf('sort=num_desc') != -1) {
-                new_url = url.replace('sort=num_desc', 'sort=num_asc');
+            if (url.indexOf('num_desc') != -1) {
+                new_url = url.replace('num_desc', 'num_asc');
             }
 
             location.href = new_url;
